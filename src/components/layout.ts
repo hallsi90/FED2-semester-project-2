@@ -1,19 +1,17 @@
+import { createNavigation } from "./navigation";
+
 export function createLayout(content: string): string {
   return `
-    <div class="min-h-screen bg-[#F9FAFB] text-[#111827] flex flex-col">
+    <div class="flex min-h-screen flex-col bg-[#F9FAFB] text-[#111827]">
       <header class="border-b border-[#D1D5DB] bg-white">
         <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6 lg:px-8">
-          <a href="/" class="text-xl font-bold text-[#1F2937]">
-            Auction House
+          <a href="/" class="flex items-center gap-3">
+            <span class="text-xl font-bold text-[#1F2937]">
+              Auction House
+            </span>
           </a>
 
-          <nav aria-label="Main navigation">
-            <ul class="flex items-center gap-4 text-sm font-medium">
-              <li><a href="/" class="text-[#111827] hover:text-[#2563EB]">Listings</a></li>
-              <li><a href="/login/" class="text-[#111827] hover:text-[#2563EB]">Log in</a></li>
-              <li><a href="/register/" class="text-[#111827] hover:text-[#2563EB]">Register</a></li>
-            </ul>
-          </nav>
+          ${createNavigation()}
         </div>
       </header>
 
