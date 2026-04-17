@@ -1,4 +1,5 @@
 import { createListingCard } from "../components/listing-card";
+import { createSearchBar } from "../components/search-bar";
 import type { Listing } from "../types/api";
 
 // Creates the main listings page layout with a page intro,
@@ -20,20 +21,7 @@ export function createListingsPage(listings: Listing[]): string {
         class="rounded-xl border border-border-neutral bg-surface p-4 shadow-sm"
       >
         <div class="grid gap-4 md:grid-cols-[2fr_1fr]">
-          <div class="space-y-2">
-            <label
-              for="search"
-              class="block text-sm font-medium text-text-main"
-            >
-              Search listings
-            </label>
-            <input
-              id="search"
-              type="search"
-              placeholder="Search by title or keyword"
-              class="w-full rounded-[10px] border border-border-neutral bg-surface px-4 py-3 text-base text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-action focus:ring-2 focus:ring-primary-action/20"
-            />
-          </div>
+          ${createSearchBar()}
 
           <div class="space-y-2">
             <label
