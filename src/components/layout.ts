@@ -1,3 +1,6 @@
+// layout.ts
+// Creates the shared page layout with header, main content area, and footer wrapper used across the application.
+
 import { createNavigation } from "./navigation";
 
 export function createLayout(content: string): string {

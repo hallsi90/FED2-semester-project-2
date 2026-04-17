@@ -1,3 +1,6 @@
+// navigation.ts
+// Creates the shared navigation markup for logged-out and logged-in users across desktop and mobile views.
+
 import { STORAGE_KEYS } from "../constants/storage";
 import { getFromStorage } from "../utils/helpers";
 import type { AuthUser } from "../types/api";

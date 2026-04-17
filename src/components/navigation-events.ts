@@ -1,3 +1,6 @@
+// navigation-events.ts
+// Handles navigation interactions such as opening and closing the mobile menu and desktop profile dropdown.
+
 export function initializeMobileMenu(): void {
   const menuButton = document.querySelector<HTMLButtonElement>(
     "#mobile-menu-button",
@@ -49,6 +52,7 @@ export function initializeMobileMenu(): void {
   });
 }
 
+// Sets up the desktop profile dropdown menu behavior.
 export function initializeProfileMenu(): void {
   const profileButton = document.querySelector<HTMLButtonElement>(
     "#profile-menu-button",
