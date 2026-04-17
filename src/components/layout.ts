@@ -7,15 +7,15 @@ import { createFooter } from "./footer";
 export function createLayout(content: string): string {
   return `
 
-    <div class="flex min-h-screen flex-col bg-[#F9FAFB] text-[#111827]">
+    <div class="flex min-h-screen flex-col bg-background text-text-main">
 
-      <header class="border-b border-[#D1D5DB] bg-white">
+      <header class="border-b border-border-neutral bg-white">
 
         <div class="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-4 md:px-6 lg:px-8">
 
           <a href="/" class="flex items-center gap-3">
 
-            <span class="text-xl font-bold text-[#1F2937]">
+            <span class="text-xl font-bold text-primary-dark">
 
               Auction House
 

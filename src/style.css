@@ -1,1 +1,19 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary-dark: #1f2937;
+  --color-primary-action: #2563eb;
+  --color-primary-action-hover: #1d4ed8;
+  --color-accent: #f59e0b;
+
+  --color-background: #f9fafb;
+  --color-surface: #ffffff;
+  --color-border-neutral: #d1d5db;
+
+  --color-text-main: #111827;
+  --color-text-muted: #4b5563;
+
+  --color-success: #16a34a;
+  --color-error: #dc2626;
+  --color-warning: #ea580c;
+}
