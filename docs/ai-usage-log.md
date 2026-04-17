@@ -21,6 +21,13 @@
 **Details:** Used AI to help review manually tested Noroff Auction House API notes, identify relevant endpoints and data structures, refine shared TypeScript interfaces and types, and set up reusable constants and helper functions for API paths, storage keys, routes, date formatting, and localStorage handling. AI was also used to review whether the API test notes should be stored in the repository.  
 **Outcome:** Added `docs/api-test-notes.md`, created `src/types/api.ts`, and set up shared constants and helper utilities to support future API integration.
 
+## 17 April 2026
+
+**Tool used:** ChatGPT  
+**Purpose:** Base app layout setup  
+**Details:** Used AI to help plan and review the base app layout structure for the project. This included guidance on creating a reusable layout function, setting up the main page wrapper, header area, content area, and footer area, and confirming what belonged in the layout issue versus later navigation and footer issues.  
+**Outcome:** Created a reusable base layout in `src/components/layout.ts`, updated `src/main.ts`, and completed the first shared layout structure for the application.
+
 ## 14 April 2026
 
 **Tool used:** ChatGPT  
