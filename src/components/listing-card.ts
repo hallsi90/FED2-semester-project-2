@@ -11,26 +11,32 @@ export function createListingCard(listing: Listing): string {
   const imageAlt = listing.media[0]?.alt || listing.title;
   const description = listing.description || "No description available.";
   const shortDescription =
-    description.length > 100 ? `${description.slice(0, 100)}...` : description;
+    description.length > 88 ? `${description.slice(0, 88)}...` : description;
 
   return `
-    <article class="${cardStyles.interactive}">
+    <article class="${cardStyles.interactive} flex h-full flex-col">
       <img
         src="${imageUrl}"
         alt="${imageAlt}"
         class="mb-4 h-48 w-full rounded-lg object-cover"
       />
 
-      <div class="space-y-3">
+      <div class="flex flex-1 flex-col space-y-4">
         <div class="space-y-1">
-          <h2 class="text-xl font-semibold text-text-main">${listing.title}</h2>
-          <p class="text-sm font-medium text-primary-dark">Ends ${formatDate(listing.endsAt)}</p>
+          <h2 class="text-2xl font-semibold leading-tight text-text-main">
+            ${listing.title}
+          </h2>
+          <p class="text-sm font-medium text-primary-dark">
+            Ends ${formatDate(listing.endsAt)}
+          </p>
         </div>
 
-        <p class="text-sm leading-6 text-text-muted">${shortDescription}</p>
+        <p class="text-sm leading-7 text-text-muted">
+          ${shortDescription}
+        </p>
 
-        <div class="flex items-center justify-between">
-          <p class="text-sm font-medium text-text-main">
+        <div class="mt-auto flex items-center justify-between gap-4">
+          <p class="text-sm font-semibold text-text-main">
             Bids: ${listing._count.bids}
           </p>
 
