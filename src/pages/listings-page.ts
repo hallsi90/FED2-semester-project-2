@@ -1,9 +1,10 @@
 import { createListingCard } from "../components/listing-card";
 import { createSearchBar } from "../components/search-bar";
+import { createFilterControls } from "../components/filter-controls";
 import type { Listing } from "../types/api";
 
 // Creates the main listings page layout with a page intro,
-// search/filter placeholders, and a listings grid.
+// search, sort, filter controls, and a listings grid.
 export function createListingsPage(listings: Listing[]): string {
   return `
     <section class="space-y-8">
@@ -20,7 +21,7 @@ export function createListingsPage(listings: Listing[]): string {
         aria-label="Listings controls"
         class="rounded-xl border border-border-neutral bg-surface p-4 shadow-sm"
       >
-        <div class="grid gap-4 md:grid-cols-[2fr_1fr]">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           ${createSearchBar()}
 
           <div class="space-y-2">
@@ -39,6 +40,8 @@ export function createListingsPage(listings: Listing[]): string {
               <option>Most bids</option>
             </select>
           </div>
+
+          ${createFilterControls()}
         </div>
       </section>
 
