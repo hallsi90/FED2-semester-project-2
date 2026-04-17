@@ -1,17 +1,15 @@
 import "./style.css";
+import { createLayout } from "./components/layout";
 
-document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
-  <div class="min-h-screen">
-    <header class="border-b border-slate-200 p-4">
-      <div class="mx-auto max-w-6xl">
-        <h1 class="text-2xl font-bold">Semester Project 2</h1>
-      </div>
-    </header>
+const app = document.querySelector<HTMLDivElement>("#app");
 
-    <main class="mx-auto max-w-6xl p-4">
-      <p class="text-base text-slate-700">
-        Project setup is ready.
+if (app) {
+  app.innerHTML = createLayout(`
+    <section class="space-y-4">
+      <h1 class="text-3xl font-bold text-[#1F2937]">Auction House</h1>
+      <p class="text-base text-[#4B5563]">
+        Base app layout is ready.
       </p>
-    </main>
-  </div>
-`;
+    </section>
+  `);
+}
