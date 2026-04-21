@@ -4,12 +4,12 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "./components/navigation-events";
-import { createLoginPage } from "./pages/login-page";
+import { createRegisterPage } from "./pages/register-page";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
 if (app) {
-  app.innerHTML = createLayout(createLoginPage());
+  app.innerHTML = createLayout(createRegisterPage());
 
   initializeMobileMenu();
   initializeProfileMenu();
