@@ -4,9 +4,8 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "./components/navigation-events";
-import { initializeProfileSections } from "./components/profile-events";
-import { createProfilePage } from "./pages/profile-page";
-import type { Listing, Profile } from "./types/api";
+import { createEditProfilePage } from "./pages/edit-profile-page";
+import type { Profile } from "./types/api";
 
 const sampleProfile: Profile = {
   name: "Ingelinn",
@@ -17,63 +16,17 @@ const sampleProfile: Profile = {
     url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=80",
     alt: "Profile avatar",
   },
+  banner: {
+    url: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=80",
+    alt: "Soft workspace banner",
+  },
 };
-
-const sampleListings: Listing[] = [
-  {
-    id: "1",
-    title: "Vintage camera",
-    description:
-      "A well-kept vintage camera in good condition. Perfect for collectors or anyone interested in classic photography gear.",
-    tags: ["camera", "vintage"],
-    media: [
-      {
-        url: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80",
-        alt: "Vintage camera on a table",
-      },
-    ],
-    created: "2026-04-17T10:00:00.000Z",
-    updated: "2026-04-17T10:00:00.000Z",
-    endsAt: "2026-04-25T18:00:00.000Z",
-    _count: {
-      bids: 7,
-    },
-    seller: sampleProfile,
-  },
-  {
-    id: "2",
-    title: "Desk lamp",
-    description:
-      "Modern desk lamp with adjustable arm. Works perfectly and gives a warm light for studying or reading.",
-    tags: ["desk", "lighting"],
-    media: [
-      {
-        url: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
-        alt: "Desk lamp on a table",
-      },
-    ],
-    created: "2026-04-17T10:00:00.000Z",
-    updated: "2026-04-17T10:00:00.000Z",
-    endsAt: "2026-04-22T18:00:00.000Z",
-    _count: {
-      bids: 3,
-    },
-    seller: sampleProfile,
-  },
-];
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
 if (app) {
-  app.innerHTML = createLayout(
-    createProfilePage({
-      profile: sampleProfile,
-      createdListings: sampleListings,
-      bidListings: sampleListings,
-    }),
-  );
+  app.innerHTML = createLayout(createEditProfilePage(sampleProfile));
 
   initializeMobileMenu();
   initializeProfileMenu();
-  initializeProfileSections();
 }
