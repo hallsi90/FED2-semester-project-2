@@ -124,7 +124,9 @@ export function createSingleListingPage(listing: Listing): string {
                 <p class="text-sm font-medium text-primary-dark">
                   Ends ${formatDate(listing.endsAt)}
                 </p>
-                <h2 class="text-2xl font-semibold text-text-main">Description</h2>
+                <h2 class="text-2xl font-semibold text-text-main">
+                  Description
+                </h2>
               </div>
 
               <p class="text-base leading-8 text-text-muted">
@@ -171,7 +173,7 @@ export function createSingleListingPage(listing: Listing): string {
           </section>
 
           <section class="${cardStyles.base}">
-            <div class="space-y-4">
+            <form id="bid-form" class="space-y-4" novalidate>
               <div class="flex items-center justify-between">
                 <h2 class="text-xl font-semibold text-text-main">Place a bid</h2>
                 <span class="text-sm font-medium text-text-muted">
@@ -179,8 +181,10 @@ export function createSingleListingPage(listing: Listing): string {
                 </span>
               </div>
 
+              <div id="bid-message" class="hidden"></div>
+
               <p class="text-sm text-text-muted">
-                You must be logged in to place a bid.
+                Enter your bid amount below.
               </p>
 
               <div class="space-y-2">
@@ -189,17 +193,19 @@ export function createSingleListingPage(listing: Listing): string {
                 </label>
                 <input
                   id="bid-amount"
+                  name="bid-amount"
                   type="number"
+                  min="1"
+                  step="1"
                   placeholder="Enter your bid"
                   class="${formStyles.input}"
-                  disabled
                 />
               </div>
 
-              <a href="/login/" class="${buttonStyles.primary}">
-                Log in to bid
-              </a>
-            </div>
+              <button type="submit" class="${buttonStyles.primary}">
+                Place bid
+              </button>
+            </form>
           </section>
 
           <section class="${cardStyles.base}">

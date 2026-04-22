@@ -6,8 +6,9 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
-import { createSingleListingPage } from "../pages/single-listing-page";
 import { alertStyles } from "../components/ui";
+import { createSingleListingPage } from "../pages/single-listing-page";
+import { validateBidForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -15,6 +16,33 @@ function initializeNavigation(): void {
   initializeMobileMenu();
   initializeProfileMenu();
   initializeLogout();
+}
+
+function initializeBidForm(): void {
+  const form = document.querySelector<HTMLFormElement>("#bid-form");
+  const message = document.querySelector<HTMLDivElement>("#bid-message");
+  const amountInput = document.querySelector<HTMLInputElement>("#bid-amount");
+
+  if (!form || !message || !amountInput) {
+    return;
+  }
+
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const errors = validateBidForm({
+      amount: amountInput.value,
+    });
+
+    if (errors.amount) {
+      message.textContent = errors.amount;
+      message.className = alertStyles.error;
+      return;
+    }
+
+    message.textContent = "Bid validation passed. API request comes next.";
+    message.className = alertStyles.info;
+  });
 }
 
 function renderLoadingState(): void {
@@ -78,6 +106,7 @@ async function renderListingPage(): Promise<void> {
 
     app.innerHTML = createLayout(createSingleListingPage(listing));
     initializeNavigation();
+    initializeBidForm();
   } catch (error) {
     const errorMessage =
       error instanceof Error
