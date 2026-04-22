@@ -50,7 +50,7 @@ function createLoggedInDesktopNavigation(
         </li>
         <li>
           <span class="rounded-full bg-background px-3 py-1 text-sm font-semibold text-primary-action">
-            Credits: ${credits}
+            Credits: ${(credits ?? 0).toLocaleString("en-US")}
           </span>
         </li>
         <li class="relative">
@@ -153,7 +153,7 @@ function createLoggedInMobileNavigation(credits: number): string {
         class="absolute right-0 top-full z-50 mt-3 hidden w-64 rounded-2xl border border-border-neutral bg-white p-4 shadow-md"
       >
         <div class="mb-4 rounded-xl bg-background px-3 py-2 text-sm font-semibold text-primary-action">
-          Credits: ${credits}
+          Credits: ${(credits ?? 0).toLocaleString("en-US")}
         </div>
 
         <nav aria-label="Mobile navigation">
