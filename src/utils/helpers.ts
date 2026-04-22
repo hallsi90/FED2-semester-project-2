@@ -1,5 +1,3 @@
-import { STORAGE_KEYS } from "../constants/storage";
-
 // Format ISO date strings into a readable Norwegian date
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -9,11 +7,6 @@ export function formatDate(dateString: string): string {
     month: "short",
     year: "numeric",
   }).format(date);
-}
-
-// Check whether an access token exists in localStorage
-export function isLoggedIn(): boolean {
-  return Boolean(localStorage.getItem(STORAGE_KEYS.accessToken));
 }
 
 // Read and parse JSON data from localStorage
