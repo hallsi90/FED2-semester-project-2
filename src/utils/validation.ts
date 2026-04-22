@@ -12,6 +12,11 @@ export interface ValidationErrors {
   password?: string;
 }
 
+export interface LoginFormValues {
+  email: string;
+  password: string;
+}
+
 function isValidEmail(email: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -36,6 +41,23 @@ export function validateRegisterForm(
     errors.password = "Password is required.";
   } else if (values.password.length < 8) {
     errors.password = "Password must be at least 8 characters long.";
+  }
+
+  return errors;
+}
+
+// Validates the login form fields and returns field-specific errors.
+export function validateLoginForm(values: LoginFormValues): ValidationErrors {
+  const errors: ValidationErrors = {};
+
+  if (!values.email.trim()) {
+    errors.email = "Email is required.";
+  } else if (!isValidEmail(values.email)) {
+    errors.email = "Enter a valid email address.";
+  }
+
+  if (!values.password.trim()) {
+    errors.password = "Password is required.";
   }
 
   return errors;
