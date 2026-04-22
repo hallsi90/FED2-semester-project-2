@@ -1,4 +1,6 @@
-// navigation-events.ts
+import { ROUTES } from "../constants/routes";
+import { clearAuth } from "../utils/auth-storage";
+
 // Handles navigation interactions such as opening and closing the mobile menu and desktop profile dropdown.
 
 export function initializeMobileMenu(): void {
@@ -101,5 +103,23 @@ export function initializeProfileMenu(): void {
     ) {
       closeProfileMenu();
     }
+  });
+}
+
+// Clears auth data and redirects the user after logout.
+export function initializeLogout(): void {
+  const logoutButtons = document.querySelectorAll<HTMLButtonElement>(
+    "#logout-button-desktop, #logout-button-mobile",
+  );
+
+  if (!logoutButtons.length) {
+    return;
+  }
+
+  logoutButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      clearAuth();
+      window.location.href = ROUTES.home;
+    });
   });
 }

@@ -1,6 +1,7 @@
 import "../style.css";
 import { createLayout } from "../components/layout";
 import {
+  initializeLogout,
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
@@ -13,4 +14,5 @@ if (app) {
 
   initializeMobileMenu();
   initializeProfileMenu();
+  initializeLogout();
 }
