@@ -59,30 +59,60 @@ export function createCreateListingPage(): string {
             </p>
           </div>
 
-          <div class="space-y-2">
-            <label for="image-url" class="${formStyles.label}">
-              Image URL
-            </label>
-            <input
-              id="image-url"
-              name="image-url"
-              type="url"
-              placeholder="https://example.com/image.jpg"
-              class="${formStyles.input}"
-            />
-          </div>
+          <div class="space-y-3">
+            <div class="space-y-1">
+              <h2 class="text-xl font-semibold text-text-main">Media gallery</h2>
+              <p class="${formStyles.helperText}">
+                Add one or more images for your listing.
+              </p>
+            </div>
 
-          <div class="space-y-2">
-            <label for="image-alt" class="${formStyles.label}">
-              Image alt text
-            </label>
-            <input
-              id="image-alt"
-              name="image-alt"
-              type="text"
-              placeholder="Describe the listing image"
-              class="${formStyles.input}"
-            />
+            <section class="space-y-4 rounded-xl border border-border-neutral bg-background px-4 py-4">
+              <div class="flex items-center justify-between gap-4">
+                <h3 class="text-lg font-semibold text-text-main">
+                  Image 1
+                </h3>
+              </div>
+
+              <div class="overflow-hidden rounded-xl border border-border-neutral bg-surface">
+                <div class="flex h-48 items-center justify-center bg-surface px-4 text-center text-sm text-text-muted">
+                  No image preview available.
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <label for="image-url-0" class="${formStyles.label}">
+                  Image URL
+                </label>
+                <input
+                  id="image-url-0"
+                  name="image-url-0"
+                  type="url"
+                  placeholder="https://example.com/image.jpg"
+                  class="${formStyles.input}"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label for="image-alt-0" class="${formStyles.label}">
+                  Image alt text
+                </label>
+                <input
+                  id="image-alt-0"
+                  name="image-alt-0"
+                  type="text"
+                  placeholder="Describe the listing image"
+                  class="${formStyles.input}"
+                />
+              </div>
+            </section>
+
+            <button
+              type="button"
+              class="${buttonStyles.secondary}"
+            >
+              Add another image
+            </button>
           </div>
 
           <div class="space-y-2">
