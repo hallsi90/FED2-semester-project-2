@@ -84,6 +84,8 @@ export interface AuthUser extends Profile {
   accessToken: string;
 }
 
+export type LoginResponse = ApiResponse<AuthUser>;
+
 export interface ApiMeta {
   isFirstPage?: boolean;
   isLastPage?: boolean;
