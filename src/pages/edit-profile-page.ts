@@ -6,7 +6,6 @@ export function createEditProfilePage(profile: Profile): string {
   return `
     <section class="mx-auto w-full max-w-2xl space-y-8">
       <header class="space-y-3">
-        <p class="text-sm font-medium text-text-muted">Profile settings</p>
         <h1 class="text-3xl font-bold text-text-main md:text-4xl">
           Edit profile
         </h1>
