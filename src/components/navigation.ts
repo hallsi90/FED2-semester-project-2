@@ -1,27 +1,26 @@
 // navigation.ts
 // Creates the shared navigation markup for logged-out and logged-in users across desktop and mobile views.
 
-import { STORAGE_KEYS } from "../constants/storage";
-import { getFromStorage } from "../utils/helpers";
-import type { AuthUser } from "../types/api";
+import { ROUTES } from "../constants/routes";
+import { getAuthState } from "../utils/auth-state";
 
 function createLoggedOutDesktopNavigation(): string {
   return `
     <nav aria-label="Desktop navigation" class="hidden md:block">
       <ul class="flex items-center gap-6 text-sm font-medium">
         <li>
-          <a href="/" class="text-text-main transition hover:text-primary-action">
+          <a href="${ROUTES.home}" class="text-text-main transition hover:text-primary-action">
             Listings
           </a>
         </li>
         <li>
-          <a href="/login/" class="text-text-main transition hover:text-primary-action">
+          <a href="${ROUTES.login}" class="text-text-main transition hover:text-primary-action">
             Log in
           </a>
         </li>
         <li>
           <a
-            href="/register/"
+            href="${ROUTES.register}"
             class="rounded-xl bg-primary-action px-4 py-2 text-white transition hover:bg-primary-action-hover"
           >
             Register
@@ -40,17 +39,17 @@ function createLoggedInDesktopNavigation(
     <nav aria-label="Desktop navigation" class="hidden md:block">
       <ul class="flex items-center gap-6 text-sm font-medium">
         <li>
-          <a href="/" class="text-text-main transition hover:text-primary-action">
+          <a href="${ROUTES.home}" class="text-text-main transition hover:text-primary-action">
             Listings
           </a>
         </li>
         <li>
-          <a href="/listing/create/" class="text-text-main transition hover:text-primary-action">
+          <a href="${ROUTES.createListing}" class="text-text-main transition hover:text-primary-action">
             Create listing
           </a>
         </li>
         <li>
-          <span class="rounded-full bg-[#EFF6FF] px-3 py-1 text-sm font-semibold text-primary-action-hover">
+          <span class="rounded-full bg-background px-3 py-1 text-sm font-semibold text-primary-action">
             Credits: ${credits}
           </span>
         </li>
@@ -72,12 +71,13 @@ function createLoggedInDesktopNavigation(
           >
             <ul class="space-y-2 text-sm font-medium">
               <li>
-                <a href="/profile/" class="block text-text-main transition hover:text-primary-action">
+                <a href="${ROUTES.profile}" class="block text-text-main transition hover:text-primary-action">
                   Profile
                 </a>
               </li>
               <li>
                 <button
+                  id="logout-button-desktop"
                   type="button"
                   class="block text-text-main transition hover:text-primary-action"
                 >
@@ -113,17 +113,17 @@ function createLoggedOutMobileNavigation(): string {
         <nav aria-label="Mobile navigation">
           <ul class="space-y-3 text-sm font-medium">
             <li>
-              <a href="/" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.home}" class="block text-text-main transition hover:text-primary-action">
                 Listings
               </a>
             </li>
             <li>
-              <a href="/login/" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.login}" class="block text-text-main transition hover:text-primary-action">
                 Log in
               </a>
             </li>
             <li>
-              <a href="/register/" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.register}" class="block text-text-main transition hover:text-primary-action">
                 Register
               </a>
             </li>
@@ -152,29 +152,30 @@ function createLoggedInMobileNavigation(credits: number): string {
         id="mobile-menu"
         class="absolute right-0 top-full z-50 mt-3 hidden w-64 rounded-2xl border border-border-neutral bg-white p-4 shadow-md"
       >
-        <div class="mb-4 rounded-xl bg-[#EFF6FF] px-3 py-2 text-sm font-semibold text-primary-action-hover">
+        <div class="mb-4 rounded-xl bg-background px-3 py-2 text-sm font-semibold text-primary-action">
           Credits: ${credits}
         </div>
 
         <nav aria-label="Mobile navigation">
           <ul class="space-y-3 text-sm font-medium">
             <li>
-              <a href="/" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.home}" class="block text-text-main transition hover:text-primary-action">
                 Listings
               </a>
             </li>
             <li>
-              <a href="/listing/create/" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.createListing}" class="block text-text-main transition hover:text-primary-action">
                 Create listing
               </a>
             </li>
             <li>
-              <a href="/profile/" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.profile}" class="block text-text-main transition hover:text-primary-action">
                 Profile
               </a>
             </li>
             <li>
               <button
+                id="logout-button-mobile"
                 type="button"
                 class="block text-text-main transition hover:text-primary-action"
               >
@@ -189,14 +190,16 @@ function createLoggedInMobileNavigation(credits: number): string {
 }
 
 export function createNavigation(): string {
-  const profile = getFromStorage<AuthUser>(STORAGE_KEYS.profile);
-  const isLoggedIn = Boolean(localStorage.getItem(STORAGE_KEYS.accessToken));
+  const authState = getAuthState();
 
-  if (isLoggedIn && profile) {
+  if (authState.isAuthenticated && authState.profile) {
     return `
       <div class="relative flex items-center gap-3">
-        ${createLoggedInDesktopNavigation(profile.name, profile.credits)}
-        ${createLoggedInMobileNavigation(profile.credits)}
+        ${createLoggedInDesktopNavigation(
+          authState.profile.name,
+          authState.profile.credits,
+        )}
+        ${createLoggedInMobileNavigation(authState.profile.credits)}
       </div>
     `;
   }
