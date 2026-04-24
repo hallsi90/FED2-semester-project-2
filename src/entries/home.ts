@@ -6,15 +6,54 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
-import { createListingsPage } from "../pages/listings-page";
 import { alertStyles } from "../components/ui";
+import { createListingsPage } from "../pages/listings-page";
+import type { Listing } from "../types/api";
 
 const app = document.querySelector<HTMLDivElement>("#app");
+
+let allListings: Listing[] = [];
 
 function initializeNavigation(): void {
   initializeMobileMenu();
   initializeProfileMenu();
   initializeLogout();
+}
+
+function getSearchTerm(): string {
+  const searchInput = document.querySelector<HTMLInputElement>("#search");
+  return searchInput?.value.trim().toLowerCase() || "";
+}
+
+function filterListingsBySearch(
+  listings: Listing[],
+  searchTerm: string,
+): Listing[] {
+  if (!searchTerm) {
+    return listings;
+  }
+
+  return listings.filter((listing) => {
+    const title = listing.title.toLowerCase();
+    const description = listing.description?.toLowerCase() || "";
+    const tags = listing.tags.join(" ").toLowerCase();
+
+    return (
+      title.includes(searchTerm) ||
+      description.includes(searchTerm) ||
+      tags.includes(searchTerm)
+    );
+  });
+}
+
+function renderListings(listings: Listing[]): void {
+  if (!app) {
+    return;
+  }
+
+  app.innerHTML = createLayout(createListingsPage(listings));
+  initializeNavigation();
+  initializeSearch();
 }
 
 function renderLoadingState(): void {
@@ -55,6 +94,28 @@ function renderErrorState(message: string): void {
   initializeNavigation();
 }
 
+function initializeSearch(): void {
+  const searchInput = document.querySelector<HTMLInputElement>("#search");
+
+  if (!searchInput) {
+    return;
+  }
+
+  searchInput.addEventListener("input", () => {
+    const searchTerm = getSearchTerm();
+    const filteredListings = filterListingsBySearch(allListings, searchTerm);
+
+    renderListings(filteredListings);
+
+    const nextSearchInput = document.querySelector<HTMLInputElement>("#search");
+    if (nextSearchInput) {
+      nextSearchInput.value = searchTerm;
+      nextSearchInput.focus();
+      nextSearchInput.setSelectionRange(searchTerm.length, searchTerm.length);
+    }
+  });
+}
+
 async function renderHomePage(): Promise<void> {
   if (!app) {
     return;
@@ -63,10 +124,8 @@ async function renderHomePage(): Promise<void> {
   renderLoadingState();
 
   try {
-    const listings = await getListings();
-
-    app.innerHTML = createLayout(createListingsPage(listings));
-    initializeNavigation();
+    allListings = await getListings();
+    renderListings(allListings);
   } catch (error) {
     const errorMessage =
       error instanceof Error
