@@ -25,24 +25,31 @@ function getSearchTerm(): string {
   return searchInput?.value.trim().toLowerCase() || "";
 }
 
-function filterListingsBySearch(
+function getSelectedCategory(): string {
+  const categorySelect = document.querySelector<HTMLSelectElement>("#category");
+  return categorySelect?.value.trim().toLowerCase() || "";
+}
+
+function filterListings(
   listings: Listing[],
   searchTerm: string,
+  selectedCategory: string,
 ): Listing[] {
-  if (!searchTerm) {
-    return listings;
-  }
-
   return listings.filter((listing) => {
     const title = listing.title.toLowerCase();
     const description = listing.description?.toLowerCase() || "";
-    const tags = listing.tags.join(" ").toLowerCase();
+    const tags = listing.tags.map((tag) => tag.toLowerCase());
 
-    return (
+    const matchesSearch =
+      !searchTerm ||
       title.includes(searchTerm) ||
       description.includes(searchTerm) ||
-      tags.includes(searchTerm)
-    );
+      tags.some((tag) => tag.includes(searchTerm));
+
+    const matchesCategory =
+      !selectedCategory || tags.some((tag) => tag.includes(selectedCategory));
+
+    return matchesSearch && matchesCategory;
   });
 }
 
@@ -53,7 +60,7 @@ function renderListings(listings: Listing[]): void {
 
   app.innerHTML = createLayout(createListingsPage(listings));
   initializeNavigation();
-  initializeSearch();
+  initializeSearchAndFilter();
 }
 
 function renderLoadingState(): void {
@@ -94,26 +101,57 @@ function renderErrorState(message: string): void {
   initializeNavigation();
 }
 
-function initializeSearch(): void {
-  const searchInput = document.querySelector<HTMLInputElement>("#search");
+function applyFilters(): void {
+  const searchTerm = getSearchTerm();
+  const selectedCategory = getSelectedCategory();
+  const filteredListings = filterListings(
+    allListings,
+    searchTerm,
+    selectedCategory,
+  );
 
-  if (!searchInput) {
-    return;
+  renderListings(filteredListings);
+
+  const nextSearchInput = document.querySelector<HTMLInputElement>("#search");
+  const nextCategorySelect =
+    document.querySelector<HTMLSelectElement>("#category");
+
+  if (nextSearchInput) {
+    nextSearchInput.value = searchTerm;
   }
 
-  searchInput.addEventListener("input", () => {
-    const searchTerm = getSearchTerm();
-    const filteredListings = filterListingsBySearch(allListings, searchTerm);
+  if (nextCategorySelect) {
+    nextCategorySelect.value = selectedCategory;
+  }
+}
 
-    renderListings(filteredListings);
+function initializeSearchAndFilter(): void {
+  const searchInput = document.querySelector<HTMLInputElement>("#search");
+  const categorySelect = document.querySelector<HTMLSelectElement>("#category");
 
-    const nextSearchInput = document.querySelector<HTMLInputElement>("#search");
-    if (nextSearchInput) {
-      nextSearchInput.value = searchTerm;
-      nextSearchInput.focus();
-      nextSearchInput.setSelectionRange(searchTerm.length, searchTerm.length);
-    }
-  });
+  if (searchInput) {
+    searchInput.addEventListener("input", () => {
+      const cursorPosition =
+        searchInput.selectionStart ?? searchInput.value.length;
+      const currentValue = searchInput.value;
+
+      applyFilters();
+
+      const nextSearchInput =
+        document.querySelector<HTMLInputElement>("#search");
+      if (nextSearchInput) {
+        nextSearchInput.focus();
+        nextSearchInput.value = currentValue;
+        nextSearchInput.setSelectionRange(cursorPosition, cursorPosition);
+      }
+    });
+  }
+
+  if (categorySelect) {
+    categorySelect.addEventListener("change", () => {
+      applyFilters();
+    });
+  }
 }
 
 async function renderHomePage(): Promise<void> {

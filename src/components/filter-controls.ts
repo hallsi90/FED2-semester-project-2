@@ -13,6 +13,7 @@ export function createFilterControls(): string {
 
       <select
         id="category"
+        name="category"
         class="${formStyles.input}"
       >
         <option value="">All categories</option>
@@ -21,6 +22,10 @@ export function createFilterControls(): string {
         <option value="gaming">Gaming</option>
         <option value="electronics">Electronics</option>
         <option value="furniture">Furniture</option>
+        <option value="fashion">Fashion</option>
+        <option value="watch">Watch</option>
+        <option value="music">Music</option>
+        <option value="vintage">Vintage</option>
       </select>
     </div>
   `;
