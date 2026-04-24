@@ -1,6 +1,7 @@
+import { createFilterControls } from "../components/filter-controls";
 import { createListingCard } from "../components/listing-card";
 import { createSearchBar } from "../components/search-bar";
-import { createFilterControls } from "../components/filter-controls";
+import { formStyles } from "../components/ui";
 import type { Listing } from "../types/api";
 
 // Creates the main listings page layout with a page intro,
@@ -31,15 +32,36 @@ export function createListingsPage(listings: Listing[]): string {
             >
               Sort by
             </label>
-            <select
-              id="sort"
-              name="sort"
-              class="w-full rounded-[10px] border border-border-neutral bg-surface px-4 py-3 text-base text-text-main outline-none transition focus:border-primary-action focus:ring-2 focus:ring-primary-action/20"
-            >
-              <option value="newest">Newest</option>
-              <option value="ending-soon">Ending soon</option>
-              <option value="most-bids">Most bids</option>
-            </select>
+
+            <div class="relative">
+              <select
+                id="sort"
+                name="sort"
+                class="${formStyles.select}"
+              >
+                <option value="newest">Newest</option>
+                <option value="ending-soon">Ending soon</option>
+                <option value="most-bids">Most bids</option>
+              </select>
+
+              <span
+                aria-hidden="true"
+                class="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-text-muted"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.5a.75.75 0 0 1-1.08 0l-4.25-4.5a.75.75 0 0 1 .02-1.06Z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </span>
+            </div>
           </div>
 
           ${createFilterControls()}

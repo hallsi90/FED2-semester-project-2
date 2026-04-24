@@ -19,6 +19,8 @@ export const formStyles = {
     "w-full rounded-[10px] border border-border-neutral bg-surface px-4 py-3 text-base text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-action focus:ring-2 focus:ring-primary-action/20",
   textarea:
     "w-full rounded-[10px] border border-border-neutral bg-surface px-4 py-3 text-base text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-action focus:ring-2 focus:ring-primary-action/20",
+  select:
+    "w-full appearance-none rounded-[10px] border border-border-neutral bg-surface px-4 py-3 pr-12 text-base text-text-main outline-none transition focus:border-primary-action focus:ring-2 focus:ring-primary-action/20",
   helperText: "mt-2 text-sm text-text-muted",
   errorText: "mt-2 text-sm text-error",
 } as const;
@@ -26,7 +28,7 @@ export const formStyles = {
 export const cardStyles = {
   base: "rounded-xl border border-border-neutral bg-surface p-4 shadow-sm transition",
   interactive:
-    "rounded-xl border border-border-neutral bg-surface p-4 shadow-sm transition hover:shadow-md",
+    "rounded-xl border border-border-neutral bg-surface p-4 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-md",
 } as const;
 
 export const alertStyles = {
