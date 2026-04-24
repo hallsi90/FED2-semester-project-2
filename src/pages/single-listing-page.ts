@@ -35,21 +35,32 @@ export function createSingleListingPage(
   const thumbnailGallery =
     mediaItems.length > 1
       ? `
-        <div class="grid grid-cols-3 gap-3 sm:grid-cols-4">
+        <div
+          id="thumbnail-gallery"
+          class="grid grid-cols-3 gap-3 sm:grid-cols-4"
+          aria-label="Listing image gallery"
+        >
           ${mediaItems
             .map(
               (mediaItem, index) => `
-                <div class="overflow-hidden rounded-lg border ${
-                  index === 0
-                    ? "border-primary-action"
-                    : "border-border-neutral"
-                } bg-surface">
+                <button
+                  type="button"
+                  class="listing-thumbnail overflow-hidden rounded-lg border ${
+                    index === 0
+                      ? "border-primary-action"
+                      : "border-border-neutral"
+                  } bg-surface transition hover:border-primary-action focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2"
+                  data-image-url="${mediaItem.url}"
+                  data-image-alt="${mediaItem.alt || `Listing image ${index + 1}`}"
+                  aria-label="Show image ${index + 1}"
+                  aria-pressed="${index === 0 ? "true" : "false"}"
+                >
                   <img
                     src="${mediaItem.url}"
                     alt="${mediaItem.alt || `Listing image ${index + 1}`}"
                     class="h-20 w-full object-cover sm:h-24"
                   />
-                </div>
+                </button>
               `,
             )
             .join("")}
@@ -171,6 +182,7 @@ export function createSingleListingPage(
           <section class="${cardStyles.base}">
             <div class="space-y-4">
               <img
+                id="main-listing-image"
                 src="${mainImage.url}"
                 alt="${mainImage.alt || listing.title}"
                 class="h-80 w-full rounded-lg object-cover md:h-105"

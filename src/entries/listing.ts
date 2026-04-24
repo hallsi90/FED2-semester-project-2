@@ -25,6 +25,42 @@ function getListingIdFromUrl(): string | null {
   return params.get("id");
 }
 
+function initializeImageGallery(): void {
+  const mainImage = document.querySelector<HTMLImageElement>(
+    "#main-listing-image",
+  );
+  const thumbnailButtons =
+    document.querySelectorAll<HTMLButtonElement>(".listing-thumbnail");
+
+  if (!mainImage || !thumbnailButtons.length) {
+    return;
+  }
+
+  thumbnailButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const imageUrl = button.dataset.imageUrl;
+      const imageAlt = button.dataset.imageAlt;
+
+      if (!imageUrl) {
+        return;
+      }
+
+      mainImage.src = imageUrl;
+      mainImage.alt = imageAlt || "Listing image";
+
+      thumbnailButtons.forEach((thumbnailButton) => {
+        thumbnailButton.classList.remove("border-primary-action");
+        thumbnailButton.classList.add("border-border-neutral");
+        thumbnailButton.setAttribute("aria-pressed", "false");
+      });
+
+      button.classList.remove("border-border-neutral");
+      button.classList.add("border-primary-action");
+      button.setAttribute("aria-pressed", "true");
+    });
+  });
+}
+
 async function initializeBidForm(): Promise<void> {
   const form = document.querySelector<HTMLFormElement>("#bid-form");
   const message = document.querySelector<HTMLDivElement>("#bid-message");
@@ -155,6 +191,7 @@ async function renderListingPage(): Promise<void> {
       createSingleListingPage(listing, { isLoggedIn }),
     );
     initializeNavigation();
+    initializeImageGallery();
     await initializeBidForm();
   } catch (error) {
     const errorMessage =
