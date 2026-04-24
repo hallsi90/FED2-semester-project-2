@@ -33,11 +33,12 @@ export function createListingsPage(listings: Listing[]): string {
             </label>
             <select
               id="sort"
+              name="sort"
               class="w-full rounded-[10px] border border-border-neutral bg-surface px-4 py-3 text-base text-text-main outline-none transition focus:border-primary-action focus:ring-2 focus:ring-primary-action/20"
             >
-              <option>Newest</option>
-              <option>Ending soon</option>
-              <option>Most bids</option>
+              <option value="newest">Newest</option>
+              <option value="ending-soon">Ending soon</option>
+              <option value="most-bids">Most bids</option>
             </select>
           </div>
 

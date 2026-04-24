@@ -30,6 +30,11 @@ function getSelectedCategory(): string {
   return categorySelect?.value.trim().toLowerCase() || "";
 }
 
+function getSelectedSort(): string {
+  const sortSelect = document.querySelector<HTMLSelectElement>("#sort");
+  return sortSelect?.value || "newest";
+}
+
 function filterListings(
   listings: Listing[],
   searchTerm: string,
@@ -53,6 +58,26 @@ function filterListings(
   });
 }
 
+function sortListings(listings: Listing[], selectedSort: string): Listing[] {
+  const sortedListings = [...listings];
+
+  if (selectedSort === "ending-soon") {
+    sortedListings.sort((a, b) => {
+      return new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime();
+    });
+  } else if (selectedSort === "most-bids") {
+    sortedListings.sort((a, b) => {
+      return (b._count?.bids ?? 0) - (a._count?.bids ?? 0);
+    });
+  } else {
+    sortedListings.sort((a, b) => {
+      return new Date(b.created).getTime() - new Date(a.created).getTime();
+    });
+  }
+
+  return sortedListings;
+}
+
 function renderListings(listings: Listing[]): void {
   if (!app) {
     return;
@@ -60,7 +85,7 @@ function renderListings(listings: Listing[]): void {
 
   app.innerHTML = createLayout(createListingsPage(listings));
   initializeNavigation();
-  initializeSearchAndFilter();
+  initializeSearchFilterAndSort();
 }
 
 function renderLoadingState(): void {
@@ -101,20 +126,25 @@ function renderErrorState(message: string): void {
   initializeNavigation();
 }
 
-function applyFilters(): void {
+function applyListingControls(): void {
   const searchTerm = getSearchTerm();
   const selectedCategory = getSelectedCategory();
+  const selectedSort = getSelectedSort();
+
   const filteredListings = filterListings(
     allListings,
     searchTerm,
     selectedCategory,
   );
 
-  renderListings(filteredListings);
+  const sortedListings = sortListings(filteredListings, selectedSort);
+
+  renderListings(sortedListings);
 
   const nextSearchInput = document.querySelector<HTMLInputElement>("#search");
   const nextCategorySelect =
     document.querySelector<HTMLSelectElement>("#category");
+  const nextSortSelect = document.querySelector<HTMLSelectElement>("#sort");
 
   if (nextSearchInput) {
     nextSearchInput.value = searchTerm;
@@ -123,11 +153,16 @@ function applyFilters(): void {
   if (nextCategorySelect) {
     nextCategorySelect.value = selectedCategory;
   }
+
+  if (nextSortSelect) {
+    nextSortSelect.value = selectedSort;
+  }
 }
 
-function initializeSearchAndFilter(): void {
+function initializeSearchFilterAndSort(): void {
   const searchInput = document.querySelector<HTMLInputElement>("#search");
   const categorySelect = document.querySelector<HTMLSelectElement>("#category");
+  const sortSelect = document.querySelector<HTMLSelectElement>("#sort");
 
   if (searchInput) {
     searchInput.addEventListener("input", () => {
@@ -135,7 +170,7 @@ function initializeSearchAndFilter(): void {
         searchInput.selectionStart ?? searchInput.value.length;
       const currentValue = searchInput.value;
 
-      applyFilters();
+      applyListingControls();
 
       const nextSearchInput =
         document.querySelector<HTMLInputElement>("#search");
@@ -149,7 +184,13 @@ function initializeSearchAndFilter(): void {
 
   if (categorySelect) {
     categorySelect.addEventListener("change", () => {
-      applyFilters();
+      applyListingControls();
+    });
+  }
+
+  if (sortSelect) {
+    sortSelect.addEventListener("change", () => {
+      applyListingControls();
     });
   }
 }
@@ -163,7 +204,8 @@ async function renderHomePage(): Promise<void> {
 
   try {
     allListings = await getListings();
-    renderListings(allListings);
+    const sortedListings = sortListings(allListings, "newest");
+    renderListings(sortedListings);
   } catch (error) {
     const errorMessage =
       error instanceof Error
