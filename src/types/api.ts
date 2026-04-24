@@ -110,3 +110,11 @@ export interface ApiErrorResponse {
   status: string;
   statusCode: number;
 }
+
+export interface ApiKeyData {
+  name: string;
+  status: string;
+  key: string;
+}
+
+export type ApiKeyResponse = ApiResponse<ApiKeyData>;

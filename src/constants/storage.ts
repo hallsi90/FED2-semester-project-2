@@ -3,4 +3,5 @@
 export const STORAGE_KEYS = {
   accessToken: "accessToken",
   profile: "profile",
+  apiKey: "apiKey",
 } as const;

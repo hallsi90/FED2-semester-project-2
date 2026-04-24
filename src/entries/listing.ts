@@ -1,5 +1,6 @@
 import "../style.css";
 import { getListingById } from "../api/listings/get-listing";
+import { placeBid } from "../api/listings/place-bid";
 import { createLayout } from "../components/layout";
 import {
   initializeLogout,
@@ -8,6 +9,7 @@ import {
 } from "../components/navigation-events";
 import { alertStyles } from "../components/ui";
 import { createSingleListingPage } from "../pages/single-listing-page";
+import { getAccessToken, getApiKey } from "../utils/auth-storage";
 import { validateBidForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -18,7 +20,12 @@ function initializeNavigation(): void {
   initializeLogout();
 }
 
-function initializeBidForm(): void {
+function getListingIdFromUrl(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("id");
+}
+
+async function initializeBidForm(): Promise<void> {
   const form = document.querySelector<HTMLFormElement>("#bid-form");
   const message = document.querySelector<HTMLDivElement>("#bid-message");
   const amountInput = document.querySelector<HTMLInputElement>("#bid-amount");
@@ -27,8 +34,12 @@ function initializeBidForm(): void {
     return;
   }
 
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", async (event) => {
     event.preventDefault();
+
+    const listingId = getListingIdFromUrl();
+    const accessToken = getAccessToken();
+    const apiKey = getApiKey();
 
     const errors = validateBidForm({
       amount: amountInput.value,
@@ -40,8 +51,48 @@ function initializeBidForm(): void {
       return;
     }
 
-    message.textContent = "Bid validation passed. API request comes next.";
-    message.className = alertStyles.info;
+    if (!listingId) {
+      message.textContent = "Listing id is missing.";
+      message.className = alertStyles.error;
+      return;
+    }
+
+    if (!accessToken) {
+      message.textContent = "You must be logged in to place a bid.";
+      message.className = alertStyles.error;
+      return;
+    }
+
+    if (!apiKey) {
+      message.textContent = "API key is missing. Please log in again.";
+      message.className = alertStyles.error;
+      return;
+    }
+
+    try {
+      message.textContent = "Submitting bid...";
+      message.className = alertStyles.info;
+
+      await placeBid(
+        listingId,
+        { amount: Number(amountInput.value) },
+        accessToken,
+        apiKey,
+      );
+
+      message.textContent = "Bid placed successfully.";
+      message.className = alertStyles.success;
+
+      form.reset();
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while placing the bid.";
+
+      message.textContent = errorMessage;
+      message.className = alertStyles.error;
+    }
   });
 }
 
@@ -82,11 +133,6 @@ function renderErrorState(message: string): void {
   initializeNavigation();
 }
 
-function getListingIdFromUrl(): string | null {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("id");
-}
-
 async function renderListingPage(): Promise<void> {
   if (!app) {
     return;
@@ -106,7 +152,7 @@ async function renderListingPage(): Promise<void> {
 
     app.innerHTML = createLayout(createSingleListingPage(listing));
     initializeNavigation();
-    initializeBidForm();
+    await initializeBidForm();
   } catch (error) {
     const errorMessage =
       error instanceof Error

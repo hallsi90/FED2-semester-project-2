@@ -2,6 +2,7 @@ import { API_BASE_URL } from "../constants/api";
 
 interface ApiClientOptions extends RequestInit {
   token?: string;
+  apiKey?: string;
 }
 
 interface ApiErrorResponse {
@@ -14,7 +15,7 @@ export async function apiClient<T>(
   endpoint: string,
   options: ApiClientOptions = {},
 ): Promise<T> {
-  const { token, headers, ...fetchOptions } = options;
+  const { token, apiKey, headers, ...fetchOptions } = options;
 
   const requestHeaders = new Headers(headers);
 
@@ -22,6 +23,10 @@ export async function apiClient<T>(
 
   if (token) {
     requestHeaders.set("Authorization", `Bearer ${token}`);
+  }
+
+  if (apiKey) {
+    requestHeaders.set("X-Noroff-API-Key", apiKey);
   }
 
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {

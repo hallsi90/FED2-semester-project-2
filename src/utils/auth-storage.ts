@@ -18,6 +18,16 @@ export function getAccessToken(): string | null {
   return localStorage.getItem(STORAGE_KEYS.accessToken);
 }
 
+// Returns the saved API key, or null if missing.
+export function getApiKey(): string | null {
+  return localStorage.getItem(STORAGE_KEYS.apiKey);
+}
+
+// Saves the shared API key.
+export function saveApiKey(apiKey: string): void {
+  localStorage.setItem(STORAGE_KEYS.apiKey, apiKey);
+}
+
 // Returns the saved profile, or null if missing/invalid.
 export function getProfile(): Profile | null {
   return getFromStorage<Profile>(STORAGE_KEYS.profile);
