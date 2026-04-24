@@ -149,8 +149,11 @@ async function renderListingPage(): Promise<void> {
 
   try {
     const listing = await getListingById(listingId);
+    const isLoggedIn = Boolean(getAccessToken());
 
-    app.innerHTML = createLayout(createSingleListingPage(listing));
+    app.innerHTML = createLayout(
+      createSingleListingPage(listing, { isLoggedIn }),
+    );
     initializeNavigation();
     await initializeBidForm();
   } catch (error) {

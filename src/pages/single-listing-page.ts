@@ -2,8 +2,15 @@ import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 import { formatDate } from "../utils/helpers";
 import type { Listing } from "../types/api";
 
+interface SingleListingPageOptions {
+  isLoggedIn: boolean;
+}
+
 // Creates the single listing page layout for preview and later reuse.
-export function createSingleListingPage(listing: Listing): string {
+export function createSingleListingPage(
+  listing: Listing,
+  options: SingleListingPageOptions,
+): string {
   const mediaItems =
     listing.media.length > 0
       ? listing.media
@@ -95,6 +102,61 @@ export function createSingleListingPage(listing: Listing): string {
       `
       : "";
 
+  const bidSectionMarkup = options.isLoggedIn
+    ? `
+      <form id="bid-form" class="space-y-4" novalidate>
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-text-main">Place a bid</h2>
+          <span class="text-sm font-medium text-text-muted">
+            ${bidCount} bid${bidCount === 1 ? "" : "s"}
+          </span>
+        </div>
+
+        <div id="bid-message" class="hidden"></div>
+
+        <p class="text-sm text-text-muted">
+          Enter your bid amount below.
+        </p>
+
+        <div class="space-y-2">
+          <label for="bid-amount" class="${formStyles.label}">
+            Bid amount
+          </label>
+          <input
+            id="bid-amount"
+            name="bid-amount"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="Enter your bid"
+            class="${formStyles.input}"
+          />
+        </div>
+
+        <button type="submit" class="${buttonStyles.primary}">
+          Place bid
+        </button>
+      </form>
+    `
+    : `
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-text-main">Place a bid</h2>
+          <span class="text-sm font-medium text-text-muted">
+            ${bidCount} bid${bidCount === 1 ? "" : "s"}
+          </span>
+        </div>
+
+        <p class="text-sm text-text-muted">
+          You must be logged in to place a bid on this listing.
+        </p>
+
+        <a href="/login/" class="${buttonStyles.primary}">
+          Log in to bid
+        </a>
+      </div>
+    `;
+
   return `
     <section class="space-y-8">
       <header class="space-y-3">
@@ -173,39 +235,7 @@ export function createSingleListingPage(listing: Listing): string {
           </section>
 
           <section class="${cardStyles.base}">
-            <form id="bid-form" class="space-y-4" novalidate>
-              <div class="flex items-center justify-between">
-                <h2 class="text-xl font-semibold text-text-main">Place a bid</h2>
-                <span class="text-sm font-medium text-text-muted">
-                  ${bidCount} bid${bidCount === 1 ? "" : "s"}
-                </span>
-              </div>
-
-              <div id="bid-message" class="hidden"></div>
-
-              <p class="text-sm text-text-muted">
-                Enter your bid amount below.
-              </p>
-
-              <div class="space-y-2">
-                <label for="bid-amount" class="${formStyles.label}">
-                  Bid amount
-                </label>
-                <input
-                  id="bid-amount"
-                  name="bid-amount"
-                  type="number"
-                  min="1"
-                  step="1"
-                  placeholder="Enter your bid"
-                  class="${formStyles.input}"
-                />
-              </div>
-
-              <button type="submit" class="${buttonStyles.primary}">
-                Place bid
-              </button>
-            </form>
+            ${bidSectionMarkup}
           </section>
 
           <section class="${cardStyles.base}">
