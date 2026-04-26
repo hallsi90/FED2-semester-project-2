@@ -1,4 +1,5 @@
 import "../style.css";
+import { deleteListing } from "../api/listings/delete-listing";
 import { getListingById } from "../api/listings/get-listing";
 import { updateListing } from "../api/listings/update-listing";
 import { createLayout } from "../components/layout";
@@ -351,6 +352,52 @@ function initializeMediaGallery(): void {
   });
 }
 
+function initializeDeleteListingButton(listingId: string): void {
+  const accessToken = getAccessToken();
+  const apiKey = getApiKey();
+
+  const deleteButton = document.querySelector<HTMLButtonElement>(
+    "#delete-listing-button",
+  );
+  const message = document.querySelector<HTMLDivElement>(
+    "#edit-listing-message",
+  );
+
+  if (!deleteButton || !message) {
+    return;
+  }
+
+  deleteButton.addEventListener("click", async () => {
+    if (!accessToken || !apiKey) {
+      message.textContent = "You must be logged in to delete a listing.";
+      message.className = alertStyles.error;
+      return;
+    }
+
+    try {
+      message.textContent = "Deleting listing...";
+      message.className = alertStyles.info;
+
+      await deleteListing(listingId, accessToken, apiKey);
+
+      message.textContent = "Listing deleted successfully. Redirecting...";
+      message.className = alertStyles.success;
+
+      setTimeout(() => {
+        window.location.href = ROUTES.profile;
+      }, 1500);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while deleting the listing.";
+
+      message.textContent = errorMessage;
+      message.className = alertStyles.error;
+    }
+  });
+}
+
 function initializeEditListingForm(listingId: string): void {
   const accessToken = getAccessToken();
   const apiKey = getApiKey();
@@ -472,6 +519,7 @@ async function renderEditListingPage(): Promise<void> {
     initializeNavigation();
     initializeMediaGallery();
     initializeEditListingForm(listingId);
+    initializeDeleteListingButton(listingId);
   } catch (error) {
     const errorMessage =
       error instanceof Error

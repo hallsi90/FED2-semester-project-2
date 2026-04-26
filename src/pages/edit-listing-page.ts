@@ -178,7 +178,11 @@ export function createEditListingPage(listing: Listing): string {
               Cancel
             </a>
 
-            <button type="button" class="${buttonStyles.danger}">
+            <button
+              id="delete-listing-button"
+              type="button"
+              class="${buttonStyles.danger}"
+            >
               Delete listing
             </button>
           </div>
