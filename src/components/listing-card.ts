@@ -5,10 +5,7 @@ import type { Listing } from "../types/api";
 
 // Creates a reusable listing card for auction previews.
 export function createListingCard(listing: Listing): string {
-  const imageUrl =
-    listing.media[0]?.url ||
-    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=800&q=80";
-
+  const imageUrl = listing.media[0]?.url;
   const imageAlt = listing.media[0]?.alt || listing.title || "Listing image";
 
   const description =
@@ -27,11 +24,21 @@ export function createListingCard(listing: Listing): string {
         class="${cardStyles.interactive} group flex h-full flex-col focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2"
         aria-label="View listing: ${listing.title}"
       >
-        <img
-          src="${imageUrl}"
-          alt="${imageAlt}"
-          class="mb-4 h-48 w-full rounded-lg object-cover"
-        />
+        ${
+          imageUrl
+            ? `
+              <img
+                src="${imageUrl}"
+                alt="${imageAlt}"
+                class="mb-4 h-48 w-full rounded-lg object-cover"
+              />
+            `
+            : `
+              <div class="mb-4 flex h-48 w-full items-center justify-center rounded-lg bg-background text-sm text-text-muted">
+                No image available
+              </div>
+            `
+        }
 
         <div class="flex flex-1 flex-col space-y-4">
           <div class="space-y-1">

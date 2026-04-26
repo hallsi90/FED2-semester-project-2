@@ -11,17 +11,9 @@ export function createSingleListingPage(
   listing: Listing,
   options: SingleListingPageOptions,
 ): string {
-  const mediaItems =
-    listing.media.length > 0
-      ? listing.media
-      : [
-          {
-            url: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
-            alt: listing.title,
-          },
-        ];
-
+  const mediaItems = listing.media;
   const mainImage = mediaItems[0];
+
   const description =
     listing.description?.trim() || "No description available.";
   const bidCount = listing._count?.bids ?? 0;
@@ -181,14 +173,26 @@ export function createSingleListingPage(
         <div class="space-y-8">
           <section class="${cardStyles.base}">
             <div class="space-y-4">
-              <img
-                id="main-listing-image"
-                src="${mainImage.url}"
-                alt="${mainImage.alt || listing.title}"
-                class="h-80 w-full rounded-lg object-cover md:h-105"
-              />
+              ${
+                mainImage
+                  ? `
+                    <img
+                      id="main-listing-image"
+                      src="${mainImage.url}"
+                      alt="${mainImage.alt || listing.title}"
+                      class="h-80 w-full rounded-lg object-cover md:h-105"
+                    />
+                  `
+                  : `
+                    <div
+                      class="flex h-80 w-full items-center justify-center rounded-lg bg-background text-sm text-text-muted md:h-105"
+                    >
+                      No image available
+                    </div>
+                  `
+              }
 
-              ${thumbnailGallery}
+${thumbnailGallery}
             </div>
           </section>
 
