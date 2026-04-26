@@ -18,7 +18,7 @@ import {
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
-const sampleListings: Listing[] = [
+const sampleBidListings: Listing[] = [
   {
     id: "1",
     title: "Vintage camera",
@@ -73,7 +73,6 @@ function renderLoadingState(): void {
 
   app.innerHTML = createLayout(`
     <section class="space-y-4">
-      <p class="text-sm font-medium text-text-muted">Your profile</p>
       <h1 class="text-3xl font-bold text-text-main md:text-4xl">
         Loading profile...
       </h1>
@@ -90,7 +89,6 @@ function renderErrorState(message: string): void {
 
   app.innerHTML = createLayout(`
     <section class="space-y-4">
-      <p class="text-sm font-medium text-text-muted">Your profile</p>
       <h1 class="text-3xl font-bold text-text-main md:text-4xl">
         Profile unavailable
       </h1>
@@ -124,13 +122,16 @@ async function renderProfilePage(): Promise<void> {
       storedProfile.name,
       accessToken,
       apiKey,
+      { includeListings: true },
     );
+
+    const createdListings = profile.listings ?? [];
 
     app.innerHTML = createLayout(
       createProfilePage({
         profile,
-        createdListings: sampleListings,
-        bidListings: sampleListings,
+        createdListings,
+        bidListings: sampleBidListings,
       }),
     );
 

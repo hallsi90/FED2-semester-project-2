@@ -20,6 +20,7 @@ export interface Profile {
   banner?: MediaItem;
   credits: number;
   _count?: ProfileCount;
+  listings?: Listing[];
 }
 
 export interface Bid {
