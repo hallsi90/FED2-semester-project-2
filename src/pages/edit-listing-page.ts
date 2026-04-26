@@ -12,21 +12,24 @@ export function createEditListingPage(listing: Listing): string {
       const imageAlt = mediaItem.alt || "";
 
       return `
-        <section class="space-y-4 rounded-xl border border-border-neutral bg-background px-4 py-4">
+        <section
+          class="media-field space-y-4 rounded-xl border border-border-neutral bg-background px-4 py-4"
+          data-index="${index}"
+        >
           <div class="flex items-center justify-between gap-4">
-            <h2 class="text-lg font-semibold text-text-main">
+            <h3 class="text-lg font-semibold text-text-main">
               Image ${index + 1}
-            </h2>
+            </h3>
 
             <button
               type="button"
-              class="${buttonStyles.remove}"
+              class="${buttonStyles.remove} remove-image-button"
             >
               Remove
             </button>
           </div>
 
-          <div class="overflow-hidden rounded-xl border border-border-neutral bg-surface">
+          <div class="media-preview overflow-hidden rounded-xl border border-border-neutral bg-surface">
             ${
               imageUrl
                 ? `
@@ -143,9 +146,12 @@ export function createEditListingPage(listing: Listing): string {
               </p>
             </div>
 
-            ${mediaFields}
+            <div id="media-fields" class="space-y-4">
+              ${mediaFields}
+            </div>
 
             <button
+              id="add-image-button"
               type="button"
               class="${buttonStyles.secondary}"
             >

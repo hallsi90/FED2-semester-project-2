@@ -6,16 +6,6 @@ export interface RegisterFormValues {
   password: string;
 }
 
-export interface ValidationErrors {
-  name?: string;
-  title?: string;
-  email?: string;
-  password?: string;
-  amount?: string;
-  endsAt?: string;
-  media?: string;
-}
-
 export interface LoginFormValues {
   email: string;
   password: string;
@@ -38,6 +28,21 @@ export interface CreateListingFormValues {
   title: string;
   endsAt: string;
   media: CreateListingMediaValues[];
+}
+
+export interface UpdateListingFormValues {
+  title: string;
+  media: CreateListingMediaValues[];
+}
+
+export interface ValidationErrors {
+  name?: string;
+  title?: string;
+  email?: string;
+  password?: string;
+  amount?: string;
+  endsAt?: string;
+  media?: string;
 }
 
 function isValidEmail(email: string): boolean {
@@ -137,6 +142,29 @@ export function validateCreateListingForm(
     } else if (selectedDate <= now) {
       errors.endsAt = "End date must be in the future.";
     }
+  }
+
+  const hasInvalidMedia = values.media.some((mediaItem) => {
+    const hasUrl = mediaItem.url.trim().length > 0;
+
+    return hasUrl && !isValidUrl(mediaItem.url.trim());
+  });
+
+  if (hasInvalidMedia) {
+    errors.media = "Each image URL must be a valid URL.";
+  }
+
+  return errors;
+}
+
+// Validates the edit listing form fields and returns field-specific errors.
+export function validateUpdateListingForm(
+  values: UpdateListingFormValues,
+): ValidationErrors {
+  const errors: ValidationErrors = {};
+
+  if (!values.title.trim()) {
+    errors.title = "Title is required.";
   }
 
   const hasInvalidMedia = values.media.some((mediaItem) => {
