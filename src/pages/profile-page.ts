@@ -18,6 +18,34 @@ export function createProfilePage(data: ProfilePageData): string {
   const bio = data.profile.bio?.trim() || "No bio added yet.";
   const credits = data.profile.credits ?? 0;
 
+  const sortedCreatedListings = [...data.createdListings].sort((a, b) => {
+    return new Date(b.created).getTime() - new Date(a.created).getTime();
+  });
+
+  const createdListingsMarkup =
+    sortedCreatedListings.length > 0
+      ? sortedCreatedListings
+          .map((listing) => createListingCard(listing))
+          .join("")
+      : `
+        <div class="${cardStyles.base} md:col-span-2">
+          <p class="text-sm text-text-muted">
+            You have not created any listings yet.
+          </p>
+        </div>
+      `;
+
+  const bidListingsMarkup =
+    data.bidListings.length > 0
+      ? data.bidListings.map((listing) => createListingCard(listing)).join("")
+      : `
+        <div class="${cardStyles.base} md:col-span-2">
+          <p class="text-sm text-text-muted">
+            You have not placed any bids yet.
+          </p>
+        </div>
+      `;
+
   return `
     <section class="space-y-8">
       <header>
@@ -89,7 +117,7 @@ export function createProfilePage(data: ProfilePageData): string {
         </button>
 
         <div id="created-listings-content" class="grid gap-6 md:grid-cols-2">
-          ${data.createdListings.map((listing) => createListingCard(listing)).join("")}
+          ${createdListingsMarkup}
         </div>
       </section>
 
@@ -125,7 +153,7 @@ export function createProfilePage(data: ProfilePageData): string {
         </button>
 
         <div id="bid-listings-content" class="hidden gap-6 md:grid-cols-2">
-          ${data.bidListings.map((listing) => createListingCard(listing)).join("")}
+          ${bidListingsMarkup}
         </div>
       </section>
     </section>
