@@ -1,5 +1,6 @@
 import "../style.css";
 import { getProfileByName } from "../api/profile/get-profile";
+import { getProfileBids } from "../api/profile/get-profile-bids";
 import { createLayout } from "../components/layout";
 import {
   initializeLogout,
@@ -9,7 +10,7 @@ import {
 import { initializeProfileSections } from "../components/profile-events";
 import { alertStyles } from "../components/ui";
 import { createProfilePage } from "../pages/profile-page";
-import type { Listing, Profile } from "../types/api";
+import type { Bid, Listing, Profile } from "../types/api";
 import {
   getAccessToken,
   getApiKey,
@@ -17,47 +18,6 @@ import {
 } from "../utils/auth-storage";
 
 const app = document.querySelector<HTMLDivElement>("#app");
-
-const sampleBidListings: Listing[] = [
-  {
-    id: "1",
-    title: "Vintage camera",
-    description:
-      "A well-kept vintage camera in good condition. Perfect for collectors or anyone interested in classic photography gear.",
-    tags: ["camera", "vintage"],
-    media: [
-      {
-        url: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=800&q=80",
-        alt: "Vintage camera on a table",
-      },
-    ],
-    created: "2026-04-17T10:00:00.000Z",
-    updated: "2026-04-17T10:00:00.000Z",
-    endsAt: "2026-04-25T18:00:00.000Z",
-    _count: {
-      bids: 7,
-    },
-  },
-  {
-    id: "2",
-    title: "Desk lamp",
-    description:
-      "Modern desk lamp with adjustable arm. Works perfectly and gives a warm light for studying or reading.",
-    tags: ["desk", "lighting"],
-    media: [
-      {
-        url: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=800&q=80",
-        alt: "Desk lamp on a table",
-      },
-    ],
-    created: "2026-04-17T10:00:00.000Z",
-    updated: "2026-04-17T10:00:00.000Z",
-    endsAt: "2026-04-22T18:00:00.000Z",
-    _count: {
-      bids: 3,
-    },
-  },
-];
 
 function initializePage(): void {
   initializeMobileMenu();
@@ -101,6 +61,32 @@ function renderErrorState(message: string): void {
   initializePage();
 }
 
+function getBidListings(bids: Bid[]): Listing[] {
+  const listingsMap = new Map<string, Listing>();
+
+  bids.forEach((bid) => {
+    if (!bid.listing?.id) {
+      return;
+    }
+
+    const existingListing = listingsMap.get(bid.listing.id);
+
+    if (!existingListing) {
+      listingsMap.set(bid.listing.id, bid.listing);
+      return;
+    }
+
+    const existingDate = new Date(existingListing.updated).getTime();
+    const nextDate = new Date(bid.listing.updated).getTime();
+
+    if (nextDate > existingDate) {
+      listingsMap.set(bid.listing.id, bid.listing);
+    }
+  });
+
+  return Array.from(listingsMap.values());
+}
+
 async function renderProfilePage(): Promise<void> {
   if (!app) {
     return;
@@ -118,20 +104,21 @@ async function renderProfilePage(): Promise<void> {
   renderLoadingState();
 
   try {
-    const profile: Profile = await getProfileByName(
-      storedProfile.name,
-      accessToken,
-      apiKey,
-      { includeListings: true },
-    );
+    const [profile, bids]: [Profile, Bid[]] = await Promise.all([
+      getProfileByName(storedProfile.name, accessToken, apiKey, {
+        includeListings: true,
+      }),
+      getProfileBids(storedProfile.name, accessToken, apiKey),
+    ]);
 
     const createdListings = profile.listings ?? [];
+    const bidListings = getBidListings(bids);
 
     app.innerHTML = createLayout(
       createProfilePage({
         profile,
         createdListings,
-        bidListings: sampleBidListings,
+        bidListings,
       }),
     );
 
