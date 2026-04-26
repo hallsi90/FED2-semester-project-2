@@ -6,7 +6,7 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
-import { alertStyles } from "../components/ui";
+import { alertStyles, buttonStyles, formStyles } from "../components/ui";
 import { createCreateListingPage } from "../pages/create-listing-page";
 import { ROUTES } from "../constants/routes";
 import { getAccessToken, getApiKey } from "../utils/auth-storage";
@@ -51,19 +51,260 @@ function getTags(tagsValue: string): string[] {
 }
 
 function getMedia(): MediaItem[] {
-  const imageUrlInput =
-    document.querySelector<HTMLInputElement>("#image-url-0");
-  const imageAltInput =
-    document.querySelector<HTMLInputElement>("#image-alt-0");
+  const mediaFields = document.querySelectorAll<HTMLElement>(".media-field");
+  const mediaItems: MediaItem[] = [];
 
-  const url = imageUrlInput?.value.trim() || "";
-  const alt = imageAltInput?.value.trim() || "";
+  mediaFields.forEach((field) => {
+    const urlInput = field.querySelector<HTMLInputElement>(
+      'input[name^="image-url-"]',
+    );
+    const altInput = field.querySelector<HTMLInputElement>(
+      'input[name^="image-alt-"]',
+    );
 
-  if (!url) {
-    return [];
+    const url = urlInput?.value.trim() || "";
+    const alt = altInput?.value.trim() || "";
+
+    if (!url) {
+      return;
+    }
+
+    mediaItems.push({
+      url,
+      alt: alt || undefined,
+    });
+  });
+
+  return mediaItems;
+}
+
+function renderEmptyPreview(previewContainer: HTMLElement): void {
+  previewContainer.innerHTML = `
+    <div class="flex h-48 items-center justify-center bg-surface px-4 text-center text-sm text-text-muted">
+      No image preview available.
+    </div>
+  `;
+}
+
+function updateMediaPreview(mediaField: HTMLElement): void {
+  const urlInput = mediaField.querySelector<HTMLInputElement>(
+    'input[name^="image-url-"]',
+  );
+  const altInput = mediaField.querySelector<HTMLInputElement>(
+    'input[name^="image-alt-"]',
+  );
+  const previewContainer =
+    mediaField.querySelector<HTMLElement>(".media-preview");
+
+  if (!urlInput || !altInput || !previewContainer) {
+    return;
   }
 
-  return [{ url, alt }];
+  const imageUrl = urlInput.value.trim();
+  const imageAlt = altInput.value.trim() || "Listing image preview";
+
+  if (!imageUrl) {
+    renderEmptyPreview(previewContainer);
+    return;
+  }
+
+  previewContainer.innerHTML = `
+    <img
+      src="${imageUrl}"
+      alt="${imageAlt}"
+      class="h-48 w-full object-cover"
+    />
+  `;
+
+  const previewImage = previewContainer.querySelector<HTMLImageElement>("img");
+
+  if (!previewImage) {
+    renderEmptyPreview(previewContainer);
+    return;
+  }
+
+  previewImage.addEventListener("error", () => {
+    renderEmptyPreview(previewContainer);
+  });
+}
+
+function initializeMediaPreview(mediaField: HTMLElement): void {
+  const urlInput = mediaField.querySelector<HTMLInputElement>(
+    'input[name^="image-url-"]',
+  );
+  const altInput = mediaField.querySelector<HTMLInputElement>(
+    'input[name^="image-alt-"]',
+  );
+
+  if (!urlInput || !altInput) {
+    return;
+  }
+
+  urlInput.addEventListener("input", () => {
+    updateMediaPreview(mediaField);
+  });
+
+  altInput.addEventListener("input", () => {
+    updateMediaPreview(mediaField);
+  });
+}
+
+function initializeAllMediaPreviews(): void {
+  const mediaFields = document.querySelectorAll<HTMLElement>(".media-field");
+
+  mediaFields.forEach((mediaField) => {
+    initializeMediaPreview(mediaField);
+  });
+}
+
+function renumberMediaFields(): void {
+  const mediaFields = document.querySelectorAll<HTMLElement>(".media-field");
+
+  mediaFields.forEach((field, index) => {
+    field.dataset.index = String(index);
+
+    const heading = field.querySelector<HTMLHeadingElement>("h3");
+    const urlLabel = field.querySelector<HTMLLabelElement>(
+      'label[for^="image-url-"]',
+    );
+    const urlInput = field.querySelector<HTMLInputElement>(
+      'input[name^="image-url-"]',
+    );
+    const altLabel = field.querySelector<HTMLLabelElement>(
+      'label[for^="image-alt-"]',
+    );
+    const altInput = field.querySelector<HTMLInputElement>(
+      'input[name^="image-alt-"]',
+    );
+
+    if (heading) {
+      heading.textContent = `Image ${index + 1}`;
+    }
+
+    if (urlLabel) {
+      urlLabel.htmlFor = `image-url-${index}`;
+    }
+
+    if (urlInput) {
+      urlInput.id = `image-url-${index}`;
+      urlInput.name = `image-url-${index}`;
+    }
+
+    if (altLabel) {
+      altLabel.htmlFor = `image-alt-${index}`;
+    }
+
+    if (altInput) {
+      altInput.id = `image-alt-${index}`;
+      altInput.name = `image-alt-${index}`;
+    }
+  });
+}
+
+function createMediaField(index: number): string {
+  return `
+    <section
+      class="media-field space-y-4 rounded-xl border border-border-neutral bg-background px-4 py-4"
+      data-index="${index}"
+    >
+      <div class="flex items-center justify-between gap-4">
+        <h3 class="text-lg font-semibold text-text-main">
+          Image ${index + 1}
+        </h3>
+
+        <button
+          type="button"
+          class="${buttonStyles.remove} remove-image-button"
+        >
+          Remove
+        </button>
+      </div>
+
+      <div class="media-preview overflow-hidden rounded-xl border border-border-neutral bg-surface">
+        <div class="flex h-48 items-center justify-center bg-surface px-4 text-center text-sm text-text-muted">
+          No image preview available.
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label for="image-url-${index}" class="${formStyles.label}">
+          Image URL
+        </label>
+        <input
+          id="image-url-${index}"
+          name="image-url-${index}"
+          type="url"
+          placeholder="https://example.com/image.jpg"
+          class="${formStyles.input}"
+        />
+      </div>
+
+      <div class="space-y-2">
+        <label for="image-alt-${index}" class="${formStyles.label}">
+          Image alt text
+        </label>
+        <input
+          id="image-alt-${index}"
+          name="image-alt-${index}"
+          type="text"
+          placeholder="Describe the listing image"
+          class="${formStyles.input}"
+        />
+      </div>
+    </section>
+  `;
+}
+
+function initializeMediaGallery(): void {
+  const addImageButton =
+    document.querySelector<HTMLButtonElement>("#add-image-button");
+  const mediaFieldsContainer =
+    document.querySelector<HTMLDivElement>("#media-fields");
+
+  if (!addImageButton || !mediaFieldsContainer) {
+    return;
+  }
+
+  initializeAllMediaPreviews();
+
+  addImageButton.addEventListener("click", () => {
+    const mediaFields =
+      mediaFieldsContainer.querySelectorAll<HTMLElement>(".media-field");
+    const nextIndex = mediaFields.length;
+
+    mediaFieldsContainer.insertAdjacentHTML(
+      "beforeend",
+      createMediaField(nextIndex),
+    );
+
+    const newMediaFields =
+      mediaFieldsContainer.querySelectorAll<HTMLElement>(".media-field");
+    const newestMediaField = newMediaFields[newMediaFields.length - 1];
+
+    if (newestMediaField) {
+      initializeMediaPreview(newestMediaField);
+    }
+  });
+
+  mediaFieldsContainer.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+    const removeButton = target.closest<HTMLButtonElement>(
+      ".remove-image-button",
+    );
+
+    if (!removeButton) {
+      return;
+    }
+
+    const mediaField = removeButton.closest<HTMLElement>(".media-field");
+
+    if (!mediaField) {
+      return;
+    }
+
+    mediaField.remove();
+    renumberMediaFields();
+  });
 }
 
 if (app) {
@@ -76,6 +317,7 @@ if (app) {
     app.innerHTML = createLayout(createCreateListingPage());
 
     initializeNavigation();
+    initializeMediaGallery();
 
     const form = document.querySelector<HTMLFormElement>("form");
     const message = document.querySelector<HTMLDivElement>(

@@ -67,47 +67,53 @@ export function createCreateListingPage(): string {
               </p>
             </div>
 
-            <section class="space-y-4 rounded-xl border border-border-neutral bg-background px-4 py-4">
-              <div class="flex items-center justify-between gap-4">
-                <h3 class="text-lg font-semibold text-text-main">
-                  Image 1
-                </h3>
-              </div>
-
-              <div class="overflow-hidden rounded-xl border border-border-neutral bg-surface">
-                <div class="flex h-48 items-center justify-center bg-surface px-4 text-center text-sm text-text-muted">
-                  No image preview available.
+            <div id="media-fields" class="space-y-4">
+              <section
+                class="media-field space-y-4 rounded-xl border border-border-neutral bg-background px-4 py-4"
+                data-index="0"
+              >
+                <div class="flex items-center justify-between gap-4">
+                  <h3 class="text-lg font-semibold text-text-main">
+                    Image 1
+                  </h3>
                 </div>
-              </div>
 
-              <div class="space-y-2">
-                <label for="image-url-0" class="${formStyles.label}">
-                  Image URL
-                </label>
-                <input
-                  id="image-url-0"
-                  name="image-url-0"
-                  type="url"
-                  placeholder="https://example.com/image.jpg"
-                  class="${formStyles.input}"
-                />
-              </div>
+                <div class="media-preview overflow-hidden rounded-xl border border-border-neutral bg-surface">
+                  <div class="flex h-48 items-center justify-center bg-surface px-4 text-center text-sm text-text-muted">
+                    No image preview available.
+                  </div>
+                </div>
 
-              <div class="space-y-2">
-                <label for="image-alt-0" class="${formStyles.label}">
-                  Image alt text
-                </label>
-                <input
-                  id="image-alt-0"
-                  name="image-alt-0"
-                  type="text"
-                  placeholder="Describe the listing image"
-                  class="${formStyles.input}"
-                />
-              </div>
-            </section>
+                <div class="space-y-2">
+                  <label for="image-url-0" class="${formStyles.label}">
+                    Image URL
+                  </label>
+                  <input
+                    id="image-url-0"
+                    name="image-url-0"
+                    type="url"
+                    placeholder="https://example.com/image.jpg"
+                    class="${formStyles.input}"
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label for="image-alt-0" class="${formStyles.label}">
+                    Image alt text
+                  </label>
+                  <input
+                    id="image-alt-0"
+                    name="image-alt-0"
+                    type="text"
+                    placeholder="Describe the listing image"
+                    class="${formStyles.input}"
+                  />
+                </div>
+              </section>
+            </div>
 
             <button
+              id="add-image-button"
               type="button"
               class="${buttonStyles.secondary}"
             >
