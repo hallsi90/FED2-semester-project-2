@@ -1,11 +1,83 @@
 import { buttonStyles, cardStyles } from "../components/ui";
 import { createListingCard } from "../components/listing-card";
+import { ROUTES } from "../constants/routes";
+import { formatDate } from "../utils/helpers";
 import type { Listing, Profile } from "../types/api";
 
 interface ProfilePageData {
   profile: Profile;
   createdListings: Listing[];
   bidListings: Listing[];
+}
+
+function createOwnedListingCard(listing: Listing): string {
+  const imageUrl = listing.media[0]?.url;
+  const imageAlt = listing.media[0]?.alt || listing.title || "Listing image";
+  const description =
+    listing.description?.trim() || "No description available.";
+  const shortDescription =
+    description.length > 88 ? `${description.slice(0, 88)}...` : description;
+
+  const bidCount = listing._count?.bids ?? 0;
+  const listingUrl = `${ROUTES.singleListing}?id=${listing.id}`;
+  const editUrl = `${ROUTES.editListing}?id=${listing.id}`;
+
+  return `
+    <article class="${cardStyles.interactive} flex h-full flex-col">
+      ${
+        imageUrl
+          ? `
+            <img
+              src="${imageUrl}"
+              alt="${imageAlt}"
+              class="mb-4 h-48 w-full rounded-lg object-cover"
+            />
+          `
+          : `
+            <div class="mb-4 flex h-48 w-full items-center justify-center rounded-lg bg-background text-sm text-text-muted">
+              No image available
+            </div>
+          `
+      }
+
+      <div class="flex flex-1 flex-col space-y-4">
+        <div class="space-y-1">
+          <h3 class="text-2xl font-semibold leading-tight text-text-main">
+            ${listing.title}
+          </h3>
+          <p class="text-sm font-medium text-primary-dark">
+            Ends ${formatDate(listing.endsAt)}
+          </p>
+        </div>
+
+        <p class="text-sm leading-7 text-text-muted">
+          ${shortDescription}
+        </p>
+
+        <div class="mt-auto space-y-3">
+          <p class="text-sm font-semibold text-text-main">
+            Bids: ${bidCount}
+          </p>
+
+          <div class="flex flex-col gap-3 sm:flex-row">
+            <a
+              href="${listingUrl}"
+              class="${buttonStyles.primary} flex-1"
+            >
+              View listing
+            </a>
+
+            <a
+              href="${editUrl}"
+              class="${buttonStyles.secondary} flex-1"
+            >
+              Edit listing
+            </a>
+          </div>
+        </div>
+      </div>
+    </article>
+  `;
 }
 
 // Creates the profile page layout for preview and later profile logic.
@@ -29,7 +101,7 @@ export function createProfilePage(data: ProfilePageData): string {
   const createdListingsMarkup =
     sortedCreatedListings.length > 0
       ? sortedCreatedListings
-          .map((listing) => createListingCard(listing))
+          .map((listing) => createOwnedListingCard(listing))
           .join("")
       : `
         <div class="${cardStyles.base} md:col-span-2">
