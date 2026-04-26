@@ -188,6 +188,51 @@ export function createEditListingPage(listing: Listing): string {
           </div>
         </form>
       </section>
+
+      <div
+        id="delete-modal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-text-main/60 px-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="delete-modal-title"
+        aria-describedby="delete-modal-description"
+      >
+        <div class="w-full max-w-md rounded-2xl border border-border-neutral bg-white p-6 shadow-lg">
+          <div class="space-y-3">
+            <h2
+              id="delete-modal-title"
+              class="text-2xl font-semibold text-text-main"
+            >
+              Delete listing?
+            </h2>
+
+            <p
+              id="delete-modal-description"
+              class="text-base leading-7 text-text-muted"
+            >
+              This action cannot be undone. The listing will be permanently deleted.
+            </p>
+          </div>
+
+          <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+            <button
+              id="cancel-delete-button"
+              type="button"
+              class="${buttonStyles.secondary}"
+            >
+              Cancel
+            </button>
+
+            <button
+              id="confirm-delete-button"
+              type="button"
+              class="${buttonStyles.danger}"
+            >
+              Delete listing
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
   `;
 }

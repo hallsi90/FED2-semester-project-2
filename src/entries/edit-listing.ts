@@ -359,22 +359,70 @@ function initializeDeleteListingButton(listingId: string): void {
   const deleteButton = document.querySelector<HTMLButtonElement>(
     "#delete-listing-button",
   );
+  const confirmDeleteButton = document.querySelector<HTMLButtonElement>(
+    "#confirm-delete-button",
+  );
+  const cancelDeleteButton = document.querySelector<HTMLButtonElement>(
+    "#cancel-delete-button",
+  );
+  const modal = document.querySelector<HTMLDivElement>("#delete-modal");
   const message = document.querySelector<HTMLDivElement>(
     "#edit-listing-message",
   );
 
-  if (!deleteButton || !message) {
+  if (
+    !deleteButton ||
+    !confirmDeleteButton ||
+    !cancelDeleteButton ||
+    !modal ||
+    !message
+  ) {
     return;
   }
 
-  deleteButton.addEventListener("click", async () => {
+  const deleteModal = modal;
+
+  function openModal(): void {
+    deleteModal.classList.remove("hidden");
+    deleteModal.classList.add("flex");
+  }
+
+  function closeModal(): void {
+    deleteModal.classList.add("hidden");
+    deleteModal.classList.remove("flex");
+  }
+
+  deleteButton.addEventListener("click", () => {
+    openModal();
+  });
+
+  cancelDeleteButton.addEventListener("click", () => {
+    closeModal();
+  });
+
+  deleteModal.addEventListener("click", (event) => {
+    if (event.target === deleteModal) {
+      closeModal();
+    }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !deleteModal.classList.contains("hidden")) {
+      closeModal();
+    }
+  });
+
+  confirmDeleteButton.addEventListener("click", async () => {
     if (!accessToken || !apiKey) {
+      closeModal();
       message.textContent = "You must be logged in to delete a listing.";
       message.className = alertStyles.error;
       return;
     }
 
     try {
+      closeModal();
+
       message.textContent = "Deleting listing...";
       message.className = alertStyles.info;
 
