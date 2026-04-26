@@ -8,6 +8,7 @@ import {
 } from "../components/navigation-events";
 import { alertStyles } from "../components/ui";
 import { createEditListingPage } from "../pages/edit-listing-page";
+import { getProfile as getStoredProfile } from "../utils/auth-storage";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -72,10 +73,27 @@ async function renderEditListingPage(): Promise<void> {
     return;
   }
 
+  const storedProfile = getStoredProfile();
+
+  if (!storedProfile?.name) {
+    renderErrorState("You must be logged in to edit a listing.");
+    return;
+  }
+
   renderLoadingState();
 
   try {
     const listing = await getListingById(listingId);
+
+    if (!listing.seller?.name) {
+      renderErrorState("This listing has no owner information.");
+      return;
+    }
+
+    if (listing.seller.name !== storedProfile.name) {
+      renderErrorState("You are not allowed to edit this listing.");
+      return;
+    }
 
     app.innerHTML = createLayout(createEditListingPage(listing));
     initializeNavigation();
