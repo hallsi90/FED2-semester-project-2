@@ -16,9 +16,7 @@ export function initializeProfileSections(): void {
   const bidContent = document.querySelector<HTMLDivElement>(
     "#bid-listings-content",
   );
-  const bidIcon = document.querySelector<HTMLSpanElement>(
-    "#bid-listings-icon",
-  );
+  const bidIcon = document.querySelector<HTMLSpanElement>("#bid-listings-icon");
 
   if (
     !createdToggle ||
@@ -44,6 +42,7 @@ export function initializeProfileSections(): void {
 
     bidToggle.setAttribute("aria-expanded", String(!isExpanded));
     bidContent.classList.toggle("hidden");
+    bidContent.classList.toggle("grid");
     bidIcon.textContent = isExpanded ? "▸" : "▾";
   });
 }
