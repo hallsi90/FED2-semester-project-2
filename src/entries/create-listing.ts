@@ -375,15 +375,19 @@ if (app) {
           message.textContent = "Creating listing...";
           message.className = alertStyles.info;
 
-          await createListing(listingData, accessToken, apiKey);
+          const createdListing = await createListing(
+            listingData,
+            accessToken,
+            apiKey,
+          );
 
-          message.textContent = "Listing created successfully.";
+          message.textContent = "Listing created successfully. Redirecting...";
           message.className = alertStyles.success;
 
           form.reset();
 
           setTimeout(() => {
-            window.location.href = ROUTES.profile;
+            window.location.href = `${ROUTES.singleListing}?id=${createdListing.id}`;
           }, 1500);
         } catch (error) {
           const errorMessage =
