@@ -1,4 +1,5 @@
 import "../style.css";
+import { getProfileByName } from "../api/profile/get-profile";
 import { createLayout } from "../components/layout";
 import {
   initializeLogout,
@@ -6,19 +7,16 @@ import {
   initializeProfileMenu,
 } from "../components/navigation-events";
 import { initializeProfileSections } from "../components/profile-events";
+import { alertStyles } from "../components/ui";
 import { createProfilePage } from "../pages/profile-page";
 import type { Listing, Profile } from "../types/api";
+import {
+  getAccessToken,
+  getApiKey,
+  getProfile as getStoredProfile,
+} from "../utils/auth-storage";
 
-const sampleProfile: Profile = {
-  name: "Ingelinn",
-  email: "ingelinn@stud.noroff.no",
-  bio: "Frontend student interested in creating clean, modern, and user-friendly web interfaces.",
-  credits: 1200,
-  avatar: {
-    url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=80",
-    alt: "Profile avatar",
-  },
-};
+const app = document.querySelector<HTMLDivElement>("#app");
 
 const sampleListings: Listing[] = [
   {
@@ -39,7 +37,6 @@ const sampleListings: Listing[] = [
     _count: {
       bids: 7,
     },
-    seller: sampleProfile,
   },
   {
     id: "2",
@@ -59,23 +56,93 @@ const sampleListings: Listing[] = [
     _count: {
       bids: 3,
     },
-    seller: sampleProfile,
   },
 ];
 
-const app = document.querySelector<HTMLDivElement>("#app");
-
-if (app) {
-  app.innerHTML = createLayout(
-    createProfilePage({
-      profile: sampleProfile,
-      createdListings: sampleListings,
-      bidListings: sampleListings,
-    }),
-  );
-
+function initializePage(): void {
   initializeMobileMenu();
   initializeProfileMenu();
   initializeProfileSections();
   initializeLogout();
 }
+
+function renderLoadingState(): void {
+  if (!app) {
+    return;
+  }
+
+  app.innerHTML = createLayout(`
+    <section class="space-y-4">
+      <p class="text-sm font-medium text-text-muted">Your profile</p>
+      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
+        Loading profile...
+      </h1>
+    </section>
+  `);
+
+  initializePage();
+}
+
+function renderErrorState(message: string): void {
+  if (!app) {
+    return;
+  }
+
+  app.innerHTML = createLayout(`
+    <section class="space-y-4">
+      <p class="text-sm font-medium text-text-muted">Your profile</p>
+      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
+        Profile unavailable
+      </h1>
+      <div class="${alertStyles.error}">
+        ${message}
+      </div>
+    </section>
+  `);
+
+  initializePage();
+}
+
+async function renderProfilePage(): Promise<void> {
+  if (!app) {
+    return;
+  }
+
+  const storedProfile = getStoredProfile();
+  const accessToken = getAccessToken();
+  const apiKey = getApiKey();
+
+  if (!storedProfile?.name || !accessToken || !apiKey) {
+    renderErrorState("You must be logged in to view your profile.");
+    return;
+  }
+
+  renderLoadingState();
+
+  try {
+    const profile: Profile = await getProfileByName(
+      storedProfile.name,
+      accessToken,
+      apiKey,
+    );
+
+    app.innerHTML = createLayout(
+      createProfilePage({
+        profile,
+        createdListings: sampleListings,
+        bidListings: sampleListings,
+      }),
+    );
+
+    initializePage();
+  } catch (error) {
+    const errorMessage =
+      error instanceof Error
+        ? error.message
+        : "Something went wrong while loading the profile.";
+
+    renderErrorState(errorMessage);
+  }
+}
+
+void renderProfilePage();
