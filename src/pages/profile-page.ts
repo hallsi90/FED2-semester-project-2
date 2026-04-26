@@ -22,6 +22,10 @@ export function createProfilePage(data: ProfilePageData): string {
     return new Date(b.created).getTime() - new Date(a.created).getTime();
   });
 
+  const sortedBidListings = [...data.bidListings].sort((a, b) => {
+    return new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime();
+  });
+
   const createdListingsMarkup =
     sortedCreatedListings.length > 0
       ? sortedCreatedListings
@@ -36,8 +40,8 @@ export function createProfilePage(data: ProfilePageData): string {
       `;
 
   const bidListingsMarkup =
-    data.bidListings.length > 0
-      ? data.bidListings.map((listing) => createListingCard(listing)).join("")
+    sortedBidListings.length > 0
+      ? sortedBidListings.map((listing) => createListingCard(listing)).join("")
       : `
         <div class="${cardStyles.base} md:col-span-2">
           <p class="text-sm text-text-muted">
