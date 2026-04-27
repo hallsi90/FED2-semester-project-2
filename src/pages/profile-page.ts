@@ -260,7 +260,7 @@ export function createProfilePage(data: ProfilePageData): string {
             </p>
             <span
               id="created-listings-icon"
-              class="flex h-5 w-5 items-center justify-center text-text-muted transition duration-200 group-hover:text-primary-action"
+              class="flex h-5 w-5 rotate-180 items-center justify-center text-text-muted transition duration-200 group-hover:text-primary-action"
               aria-hidden="true"
             >
               ${chevronIcon}
