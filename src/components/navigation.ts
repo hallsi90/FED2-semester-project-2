@@ -34,6 +34,8 @@ function createLoggedOutDesktopNavigation(): string {
 function createLoggedInDesktopNavigation(
   profileName: string,
   credits: number,
+  avatarUrl?: string,
+  avatarAlt?: string,
 ): string {
   return `
     <nav aria-label="Desktop navigation" class="hidden md:block">
@@ -60,9 +62,21 @@ function createLoggedInDesktopNavigation(
             aria-label="Open profile menu"
             aria-expanded="false"
             aria-controls="profile-menu"
-            class="flex h-10 w-10 items-center justify-center rounded-full border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
+            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
           >
-            <span class="text-sm font-semibold">${profileName.charAt(0).toUpperCase()}</span>
+            ${
+              avatarUrl
+                ? `
+                  <img
+                    src="${avatarUrl}"
+                    alt="${avatarAlt || `${profileName} avatar`}"
+                    class="h-full w-full object-cover"
+                  />
+                `
+                : `
+                  <span class="text-sm font-semibold">${profileName.charAt(0).toUpperCase()}</span>
+                `
+            }
           </button>
 
           <div
@@ -198,6 +212,8 @@ export function createNavigation(): string {
         ${createLoggedInDesktopNavigation(
           authState.profile.name,
           authState.profile.credits,
+          authState.profile.avatar?.url,
+          authState.profile.avatar?.alt,
         )}
         ${createLoggedInMobileNavigation(authState.profile.credits)}
       </div>
