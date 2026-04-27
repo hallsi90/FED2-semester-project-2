@@ -1,6 +1,7 @@
 import "../style.css";
 import { getProfileByName } from "../api/profile/get-profile";
 import { getProfileBids } from "../api/profile/get-profile-bids";
+import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createLayout } from "../components/layout";
 import {
   initializeLogout,
@@ -9,13 +10,13 @@ import {
 } from "../components/navigation-events";
 import { initializeProfileSections } from "../components/profile-events";
 import { alertStyles } from "../components/ui";
-import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createProfilePage } from "../pages/profile-page";
 import type { Bid, Listing, Profile } from "../types/api";
 import {
   getAccessToken,
   getApiKey,
   getProfile as getStoredProfile,
+  saveProfile,
 } from "../utils/auth-storage";
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -140,6 +141,10 @@ async function renderProfilePage(): Promise<void> {
 
     const createdListings = profile.listings ?? [];
     const bidListings = isOwnProfile ? getBidListings(bids) : [];
+
+    if (isOwnProfile) {
+      saveProfile(profile);
+    }
 
     app.innerHTML = createLayout(
       createProfilePage({
