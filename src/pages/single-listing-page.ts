@@ -8,7 +8,7 @@ interface SingleListingPageOptions {
   isOwner: boolean;
 }
 
-// Creates the single listing page layout for preview and later reuse.
+// Creates the single listing page layout.
 export function createSingleListingPage(
   listing: Listing,
   options: SingleListingPageOptions,
@@ -203,12 +203,14 @@ export function createSingleListingPage(
               ${
                 mainImage
                   ? `
-                    <img
-                      id="main-listing-image"
-                      src="${mainImage.url}"
-                      alt="${mainImage.alt || listing.title}"
-                      class="h-80 w-full rounded-lg object-cover md:h-105"
-                    />
+                    <div class="flex h-80 w-full items-center justify-center rounded-lg bg-background p-2 md:h-105">
+                      <img
+                        id="main-listing-image"
+                        src="${mainImage.url}"
+                        alt="${mainImage.alt || listing.title}"
+                        class="h-full w-full rounded-lg object-contain"
+                      />
+                    </div>
                   `
                   : `
                     <div

@@ -3,7 +3,7 @@ import { ROUTES } from "../constants/routes";
 import { formatDate } from "../utils/helpers";
 import type { Listing } from "../types/api";
 
-// Creates a reusable listing card for auction previews.
+// Creates a reusable listing card.
 export function createListingCard(listing: Listing): string {
   const imageUrl = listing.media[0]?.url;
   const imageAlt = listing.media[0]?.alt || listing.title || "Listing image";
