@@ -34,7 +34,7 @@ export function initializeProfileSections(): void {
 
     createdToggle.setAttribute("aria-expanded", String(!isExpanded));
     createdContent.classList.toggle("hidden");
-    createdIcon.textContent = isExpanded ? "▸" : "▾";
+    createdIcon.classList.toggle("rotate-180", !isExpanded);
   });
 
   bidToggle.addEventListener("click", () => {
@@ -43,6 +43,6 @@ export function initializeProfileSections(): void {
     bidToggle.setAttribute("aria-expanded", String(!isExpanded));
     bidContent.classList.toggle("hidden");
     bidContent.classList.toggle("grid");
-    bidIcon.textContent = isExpanded ? "▸" : "▾";
+    bidIcon.classList.toggle("rotate-180", !isExpanded);
   });
 }

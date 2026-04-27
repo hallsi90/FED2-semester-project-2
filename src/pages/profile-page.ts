@@ -80,15 +80,48 @@ function createOwnedListingCard(listing: Listing): string {
   `;
 }
 
-// Creates the profile page layout for preview and later profile logic.
+// Creates the profile page layout.
 export function createProfilePage(data: ProfilePageData): string {
-  const avatarUrl =
-    data.profile.avatar?.url ||
-    "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=400&q=80";
+  const bannerUrl = data.profile.banner?.url || "";
+  const bannerAlt = data.profile.banner?.alt || `${data.profile.name} banner`;
 
+  const avatarUrl = data.profile.avatar?.url || "";
   const avatarAlt = data.profile.avatar?.alt || `${data.profile.name} avatar`;
   const bio = data.profile.bio?.trim() || "No bio added yet.";
   const credits = data.profile.credits ?? 0;
+  const profileInitial = data.profile.name.charAt(0).toUpperCase();
+
+  const avatarMarkup = avatarUrl
+    ? `
+      <img
+        src="${avatarUrl}"
+        alt="${avatarAlt}"
+        class="h-28 w-28 shrink-0 rounded-full border-4 border-white object-cover shadow-sm md:h-32 md:w-32"
+      />
+    `
+    : `
+      <div
+        class="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-white bg-background text-2xl font-semibold text-text-main shadow-sm md:h-32 md:w-32"
+        aria-label="${data.profile.name} avatar placeholder"
+      >
+        ${profileInitial}
+      </div>
+    `;
+
+  const chevronIcon = `
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      class="h-4 w-4"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M5.23 7.21a.75.75 0 0 1 1.06.02L10 11.168l3.71-3.938a.75.75 0 1 1 1.08 1.04l-4.25 4.51a.75.75 0 0 1-1.08 0l-4.25-4.51a.75.75 0 0 1 .02-1.06Z"
+        clip-rule="evenodd"
+      />
+    </svg>
+  `;
 
   const sortedCreatedListings = [...data.createdListings].sort((a, b) => {
     return new Date(b.created).getTime() - new Date(a.created).getTime();
@@ -130,33 +163,76 @@ export function createProfilePage(data: ProfilePageData): string {
         </h1>
       </header>
 
-      <section class="${cardStyles.base}">
-        <div class="space-y-6">
-          <div class="flex flex-col items-center gap-5 text-center md:flex-row md:items-center md:gap-6 md:text-left">
-            <img
-              src="${avatarUrl}"
-              alt="${avatarAlt}"
-              class="h-28 w-28 rounded-full object-cover md:h-30 md:w-30"
-            />
+      <section class="${cardStyles.base} overflow-hidden p-0">
+        ${
+          bannerUrl
+            ? `
+              <div class="h-48 w-full overflow-hidden rounded-t-2xl md:h-64">
+                <img
+                  src="${bannerUrl}"
+                  alt="${bannerAlt}"
+                  class="h-full w-full rounded-t-2xl object-cover"
+                />
+              </div>
+            `
+            : `
+              <div class="h-24 w-full rounded-t-2xl bg-background md:h-28"></div>
+            `
+        }
 
-            <div class="w-full max-w-xl">
-              <p class="text-base leading-8 text-text-muted text-center md:text-left">
+        <div class="px-5 pb-5 pt-0 md:hidden">
+          <div class="flex flex-col items-center text-center">
+            <div class="-mt-9 mb-1">
+             ${avatarMarkup}
+            </div>
+
+            <div class="w-full max-w-xs">
+              <p class="whitespace-pre-line text-base leading-7 text-text-muted">
                 ${bio}
               </p>
             </div>
-          </div>
 
-          <div class="rounded-xl bg-background px-5 py-4 text-left">
-            <p class="text-sm font-medium text-text-muted">Credits balance</p>
-            <p class="mt-2 text-3xl font-bold text-primary-action">
-              ${credits}
-            </p>
-          </div>
+            <div class="mt-6 w-full rounded-xl bg-background px-5 py-4 text-left">
+              <p class="text-sm font-medium text-text-muted">Credits balance</p>
+              <p class="mt-2 text-3xl font-bold text-primary-action">
+                ${credits}
+              </p>
+            </div>
 
-          <div class="text-left">
-            <a href="/profile/edit/" class="${buttonStyles.secondary}">
-              Edit profile
-            </a>
+            <div class="mt-5 w-full text-left">
+              <a href="/profile/edit/" class="${buttonStyles.secondary}">
+                Edit profile
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="hidden px-6 pb-6 pt-0 md:block">
+          <div class="-mt-16 space-y-6">
+            <div class="grid grid-cols-[8rem_minmax(0,1fr)] gap-6">
+              <div>
+                ${avatarMarkup}
+              </div>
+
+              <div class="pt-14">
+                <p class="whitespace-pre-line text-base leading-8 text-text-muted">
+                  ${bio}
+                </p>
+              </div>
+            </div>
+
+            <div class="rounded-xl bg-background px-5 py-4 text-left">
+              <p class="text-sm font-medium text-text-muted">Credits balance</p>
+              <p class="mt-2 text-3xl font-bold text-primary-action">
+                ${credits}
+              </p>
+            </div>
+
+            <div class="text-left">
+              <a href="/profile/edit/" class="${buttonStyles.secondary}">
+                Edit profile
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -184,10 +260,10 @@ export function createProfilePage(data: ProfilePageData): string {
             </p>
             <span
               id="created-listings-icon"
-              class="text-lg font-semibold text-text-muted transition group-hover:text-primary-action"
+              class="flex h-5 w-5 items-center justify-center text-text-muted transition duration-200 group-hover:text-primary-action"
               aria-hidden="true"
             >
-              ▾
+              ${chevronIcon}
             </span>
           </div>
         </button>
@@ -220,10 +296,10 @@ export function createProfilePage(data: ProfilePageData): string {
             </p>
             <span
               id="bid-listings-icon"
-              class="text-lg font-semibold text-text-muted transition group-hover:text-primary-action"
+              class="flex h-5 w-5 items-center justify-center text-text-muted transition duration-200 group-hover:text-primary-action"
               aria-hidden="true"
             >
-              ▸
+              ${chevronIcon}
             </span>
           </div>
         </button>

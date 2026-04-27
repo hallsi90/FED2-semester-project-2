@@ -1,7 +1,7 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 import type { Profile } from "../types/api";
 
-// Creates the edit profile page layout for preview and later update logic.
+// Creates the edit profile page layout.
 export function createEditProfilePage(profile: Profile): string {
   return `
     <section class="mx-auto w-full max-w-2xl space-y-8">
