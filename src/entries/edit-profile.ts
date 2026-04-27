@@ -158,19 +158,8 @@ async function renderEditProfilePage(): Promise<void> {
       const currentBannerUrl = profile.banner?.url ?? "";
       const currentBannerAlt = profile.banner?.alt ?? "";
 
-      if (!trimmedAvatarUrl && currentAvatarUrl) {
-        message.textContent =
-          "Clearing the avatar image is not supported in this form yet.";
-        message.className = alertStyles.error;
-        return;
-      }
-
-      if (!trimmedBannerUrl && currentBannerUrl) {
-        message.textContent =
-          "Clearing the banner image is not supported in this form yet.";
-        message.className = alertStyles.error;
-        return;
-      }
+      const triedToClearAvatar = !trimmedAvatarUrl && Boolean(currentAvatarUrl);
+      const triedToClearBanner = !trimmedBannerUrl && Boolean(currentBannerUrl);
 
       const profileData: {
         bio?: string;
@@ -205,6 +194,13 @@ async function renderEditProfilePage(): Promise<void> {
       }
 
       if (Object.keys(profileData).length === 0) {
+        if (triedToClearAvatar || triedToClearBanner) {
+          message.textContent =
+            "Removing avatar or banner images is not supported. Add a new image URL to replace the current one.";
+          message.className = alertStyles.error;
+          return;
+        }
+
         message.textContent = "Make at least one change before saving.";
         message.className = alertStyles.error;
         return;
