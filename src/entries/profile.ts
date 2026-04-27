@@ -9,6 +9,7 @@ import {
 } from "../components/navigation-events";
 import { initializeProfileSections } from "../components/profile-events";
 import { alertStyles } from "../components/ui";
+import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createProfilePage } from "../pages/profile-page";
 import type { Bid, Listing, Profile } from "../types/api";
 import {
@@ -97,7 +98,13 @@ async function renderProfilePage(): Promise<void> {
   const apiKey = getApiKey();
 
   if (!storedProfile?.name || !accessToken || !apiKey) {
-    renderErrorState("You must be logged in to view your profile.");
+    app.innerHTML = createLayout(
+      renderAuthRequiredState(
+        "Profile unavailable",
+        "You must be logged in to view your profile.",
+      ),
+    );
+    initializePage();
     return;
   }
 

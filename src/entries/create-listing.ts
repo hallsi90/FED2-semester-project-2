@@ -7,6 +7,7 @@ import {
   initializeProfileMenu,
 } from "../components/navigation-events";
 import { alertStyles, buttonStyles, formStyles } from "../components/ui";
+import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createCreateListingPage } from "../pages/create-listing-page";
 import { ROUTES } from "../constants/routes";
 import { getAccessToken, getApiKey } from "../utils/auth-storage";
@@ -26,19 +27,12 @@ function renderUnauthorizedState(): void {
     return;
   }
 
-  app.innerHTML = createLayout(`
-    <section class="mx-auto w-full max-w-2xl space-y-4">
-      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-        Create listing
-      </h1>
-      <div class="${alertStyles.error}">
-        You must be logged in to create a listing.
-      </div>
-      <a href="${ROUTES.login}" class="inline-flex items-center justify-center rounded-xl bg-primary-action px-4 py-2 text-base font-semibold text-white transition hover:bg-primary-action-hover">
-        Log in
-      </a>
-    </section>
-  `);
+  app.innerHTML = createLayout(
+    renderAuthRequiredState(
+      "Create listing",
+      "You must be logged in to create a listing.",
+    ),
+  );
 
   initializeNavigation();
 }

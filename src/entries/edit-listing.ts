@@ -9,6 +9,7 @@ import {
   initializeProfileMenu,
 } from "../components/navigation-events";
 import { alertStyles, buttonStyles, formStyles } from "../components/ui";
+import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createEditListingPage } from "../pages/edit-listing-page";
 import { ROUTES } from "../constants/routes";
 import {
@@ -544,7 +545,13 @@ async function renderEditListingPage(): Promise<void> {
   const storedProfile = getStoredProfile();
 
   if (!storedProfile?.name) {
-    renderErrorState("You must be logged in to edit a listing.");
+    app.innerHTML = createLayout(
+      renderAuthRequiredState(
+        "Edit listing unavailable",
+        "You must be logged in to edit a listing.",
+      ),
+    );
+    initializeNavigation();
     return;
   }
 
