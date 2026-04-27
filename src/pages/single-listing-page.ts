@@ -251,7 +251,7 @@ export function createSingleListingPage(
               <h2 class="text-xl font-semibold text-text-main">Seller</h2>
 
               <a
-                href="/profile/"
+                href="${ROUTES.profile}?name=${encodeURIComponent(sellerName)}"
                 class="group flex items-center gap-4 rounded-xl transition hover:bg-background/60"
               >
                 ${

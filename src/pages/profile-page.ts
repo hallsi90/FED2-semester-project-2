@@ -8,76 +8,7 @@ interface ProfilePageData {
   profile: Profile;
   createdListings: Listing[];
   bidListings: Listing[];
-}
-
-function createOwnedListingCard(listing: Listing): string {
-  const imageUrl = listing.media[0]?.url;
-  const imageAlt = listing.media[0]?.alt || listing.title || "Listing image";
-  const description =
-    listing.description?.trim() || "No description available.";
-  const shortDescription =
-    description.length > 88 ? `${description.slice(0, 88)}...` : description;
-
-  const bidCount = listing._count?.bids ?? 0;
-  const listingUrl = `${ROUTES.singleListing}?id=${listing.id}`;
-  const editUrl = `${ROUTES.editListing}?id=${listing.id}`;
-
-  return `
-    <article class="${cardStyles.interactive} flex h-full flex-col">
-      ${
-        imageUrl
-          ? `
-            <img
-              src="${imageUrl}"
-              alt="${imageAlt}"
-              class="mb-4 h-48 w-full rounded-lg object-cover"
-            />
-          `
-          : `
-            <div class="mb-4 flex h-48 w-full items-center justify-center rounded-lg bg-background text-sm text-text-muted">
-              No image available
-            </div>
-          `
-      }
-
-      <div class="flex flex-1 flex-col space-y-4">
-        <div class="space-y-1">
-          <h3 class="text-2xl font-semibold leading-tight text-text-main">
-            ${listing.title}
-          </h3>
-          <p class="text-sm font-medium text-primary-dark">
-            Ends ${formatDate(listing.endsAt)}
-          </p>
-        </div>
-
-        <p class="text-sm leading-7 text-text-muted">
-          ${shortDescription}
-        </p>
-
-        <div class="mt-auto space-y-3">
-          <p class="text-sm font-semibold text-text-main">
-            Bids: ${bidCount}
-          </p>
-
-          <div class="flex flex-col gap-3 sm:flex-row">
-            <a
-              href="${listingUrl}"
-              class="${buttonStyles.primary} flex-1"
-            >
-              View listing
-            </a>
-
-            <a
-              href="${editUrl}"
-              class="${buttonStyles.secondary} flex-1"
-            >
-              Edit listing
-            </a>
-          </div>
-        </div>
-      </div>
-    </article>
-  `;
+  isOwnProfile: boolean;
 }
 
 // Creates the profile page layout.
@@ -134,12 +65,91 @@ export function createProfilePage(data: ProfilePageData): string {
   const createdListingsMarkup =
     sortedCreatedListings.length > 0
       ? sortedCreatedListings
-          .map((listing) => createOwnedListingCard(listing))
+          .map((listing) => {
+            if (!data.isOwnProfile) {
+              return createListingCard(listing);
+            }
+
+            const imageUrl = listing.media[0]?.url;
+            const imageAlt =
+              listing.media[0]?.alt || listing.title || "Listing image";
+            const description =
+              listing.description?.trim() || "No description available.";
+            const shortDescription =
+              description.length > 88
+                ? `${description.slice(0, 88)}...`
+                : description;
+
+            const bidCount = listing._count?.bids ?? 0;
+            const listingUrl = `${ROUTES.singleListing}?id=${listing.id}`;
+            const editUrl = `${ROUTES.editListing}?id=${listing.id}`;
+
+            return `
+              <article class="${cardStyles.interactive} flex h-full flex-col">
+                ${
+                  imageUrl
+                    ? `
+                      <img
+                        src="${imageUrl}"
+                        alt="${imageAlt}"
+                        class="mb-4 h-48 w-full rounded-lg object-cover"
+                      />
+                    `
+                    : `
+                      <div class="mb-4 flex h-48 w-full items-center justify-center rounded-lg bg-background text-sm text-text-muted">
+                        No image available
+                      </div>
+                    `
+                }
+
+                <div class="flex flex-1 flex-col space-y-4">
+                  <div class="space-y-1">
+                    <h3 class="text-2xl font-semibold leading-tight text-text-main">
+                      ${listing.title}
+                    </h3>
+                    <p class="text-sm font-medium text-primary-dark">
+                      Ends ${formatDate(listing.endsAt)}
+                    </p>
+                  </div>
+
+                  <p class="text-sm leading-7 text-text-muted">
+                    ${shortDescription}
+                  </p>
+
+                  <div class="mt-auto space-y-3">
+                    <p class="text-sm font-semibold text-text-main">
+                      Bids: ${bidCount}
+                    </p>
+
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                      <a
+                        href="${listingUrl}"
+                        class="${buttonStyles.primary} flex-1"
+                      >
+                        View listing
+                      </a>
+
+                      <a
+                        href="${editUrl}"
+                        class="${buttonStyles.secondary} flex-1"
+                      >
+                        Edit listing
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            `;
+          })
           .join("")
       : `
         <div class="${cardStyles.base} md:col-span-2">
           <p class="text-sm text-text-muted">
-            You have not created any listings yet.
+            ${
+              data.isOwnProfile
+                ? "You have not created any listings yet."
+                : `${data.profile.name} has not created any listings yet.`
+            }
           </p>
         </div>
       `;
@@ -183,7 +193,7 @@ export function createProfilePage(data: ProfilePageData): string {
         <div class="px-5 pb-5 pt-0 md:hidden">
           <div class="flex flex-col items-center text-center">
             <div class="-mt-9 mb-1">
-             ${avatarMarkup}
+              ${avatarMarkup}
             </div>
 
             <div class="w-full max-w-xs">
@@ -192,18 +202,24 @@ export function createProfilePage(data: ProfilePageData): string {
               </p>
             </div>
 
-            <div class="mt-6 w-full rounded-xl bg-background px-5 py-4 text-left">
-              <p class="text-sm font-medium text-text-muted">Credits balance</p>
-              <p class="mt-2 text-3xl font-bold text-primary-action">
-                ${credits}
-              </p>
-            </div>
+            ${
+              data.isOwnProfile
+                ? `
+                  <div class="mt-6 w-full rounded-xl bg-background px-5 py-4 text-left">
+                    <p class="text-sm font-medium text-text-muted">Credits balance</p>
+                    <p class="mt-2 text-3xl font-bold text-primary-action">
+                      ${credits}
+                    </p>
+                  </div>
 
-            <div class="mt-5 w-full text-left">
-              <a href="/profile/edit/" class="${buttonStyles.secondary}">
-                Edit profile
-              </a>
-            </div>
+                  <div class="mt-5 w-full text-left">
+                    <a href="/profile/edit/" class="${buttonStyles.secondary}">
+                      Edit profile
+                    </a>
+                  </div>
+                `
+                : ""
+            }
           </div>
         </div>
 
@@ -221,18 +237,24 @@ export function createProfilePage(data: ProfilePageData): string {
               </div>
             </div>
 
-            <div class="rounded-xl bg-background px-5 py-4 text-left">
-              <p class="text-sm font-medium text-text-muted">Credits balance</p>
-              <p class="mt-2 text-3xl font-bold text-primary-action">
-                ${credits}
-              </p>
-            </div>
+            ${
+              data.isOwnProfile
+                ? `
+                  <div class="rounded-xl bg-background px-5 py-4 text-left">
+                    <p class="text-sm font-medium text-text-muted">Credits balance</p>
+                    <p class="mt-2 text-3xl font-bold text-primary-action">
+                      ${credits}
+                    </p>
+                  </div>
 
-            <div class="text-left">
-              <a href="/profile/edit/" class="${buttonStyles.secondary}">
-                Edit profile
-              </a>
-            </div>
+                  <div class="text-left">
+                    <a href="/profile/edit/" class="${buttonStyles.secondary}">
+                      Edit profile
+                    </a>
+                  </div>
+                `
+                : ""
+            }
           </div>
         </div>
       </section>
@@ -247,10 +269,14 @@ export function createProfilePage(data: ProfilePageData): string {
         >
           <div class="space-y-1">
             <h2 class="text-2xl font-semibold text-text-main transition group-hover:text-primary-action">
-              My listings
+              ${data.isOwnProfile ? "My listings" : `${data.profile.name}'s listings`}
             </h2>
             <p class="text-sm text-text-muted transition group-hover:text-primary-action">
-              Listings you have created.
+              ${
+                data.isOwnProfile
+                  ? "Listings you have created."
+                  : "Listings created by this user."
+              }
             </p>
           </div>
 
@@ -273,41 +299,47 @@ export function createProfilePage(data: ProfilePageData): string {
         </div>
       </section>
 
-      <section class="space-y-4">
-        <button
-          id="bid-listings-toggle"
-          type="button"
-          aria-expanded="false"
-          aria-controls="bid-listings-content"
-          class="group flex w-full cursor-pointer items-end justify-between gap-4 text-left transition"
-        >
-          <div class="space-y-1">
-            <h2 class="text-2xl font-semibold text-text-main transition group-hover:text-primary-action">
-              Listings I’ve bid on
-            </h2>
-            <p class="text-sm text-text-muted transition group-hover:text-primary-action">
-              Listings where you have placed a bid.
-            </p>
-          </div>
+      ${
+        data.isOwnProfile
+          ? `
+            <section class="space-y-4">
+              <button
+                id="bid-listings-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="bid-listings-content"
+                class="group flex w-full cursor-pointer items-end justify-between gap-4 text-left transition"
+              >
+                <div class="space-y-1">
+                  <h2 class="text-2xl font-semibold text-text-main transition group-hover:text-primary-action">
+                    Listings I’ve bid on
+                  </h2>
+                  <p class="text-sm text-text-muted transition group-hover:text-primary-action">
+                    Listings where you have placed a bid.
+                  </p>
+                </div>
 
-          <div class="flex items-center gap-3">
-            <p class="text-sm text-text-muted transition group-hover:text-primary-action">
-              ${data.bidListings.length} listing${data.bidListings.length === 1 ? "" : "s"}
-            </p>
-            <span
-              id="bid-listings-icon"
-              class="flex h-5 w-5 items-center justify-center text-text-muted transition duration-200 group-hover:text-primary-action"
-              aria-hidden="true"
-            >
-              ${chevronIcon}
-            </span>
-          </div>
-        </button>
+                <div class="flex items-center gap-3">
+                  <p class="text-sm text-text-muted transition group-hover:text-primary-action">
+                    ${data.bidListings.length} listing${data.bidListings.length === 1 ? "" : "s"}
+                  </p>
+                  <span
+                    id="bid-listings-icon"
+                    class="flex h-5 w-5 items-center justify-center text-text-muted transition duration-200 group-hover:text-primary-action"
+                    aria-hidden="true"
+                  >
+                    ${chevronIcon}
+                  </span>
+                </div>
+              </button>
 
-        <div id="bid-listings-content" class="hidden gap-6 md:grid-cols-2">
-          ${bidListingsMarkup}
-        </div>
-      </section>
+              <div id="bid-listings-content" class="hidden gap-6 md:grid-cols-2">
+                ${bidListingsMarkup}
+              </div>
+            </section>
+          `
+          : ""
+      }
     </section>
   `;
 }

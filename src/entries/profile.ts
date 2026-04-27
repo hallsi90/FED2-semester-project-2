@@ -27,6 +27,11 @@ function initializePage(): void {
   initializeLogout();
 }
 
+function getProfileNameFromUrl(): string | null {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("name");
+}
+
 function renderLoadingState(): void {
   if (!app) {
     return;
@@ -101,31 +106,47 @@ async function renderProfilePage(): Promise<void> {
     app.innerHTML = createLayout(
       renderAuthRequiredState(
         "Profile unavailable",
-        "You must be logged in to view your profile.",
+        "You must be logged in to view profiles.",
       ),
     );
     initializePage();
     return;
   }
 
+  const requestedProfileName = getProfileNameFromUrl();
+  const targetProfileName = requestedProfileName || storedProfile.name;
+  const isOwnProfile = targetProfileName === storedProfile.name;
+
   renderLoadingState();
 
   try {
-    const [profile, bids]: [Profile, Bid[]] = await Promise.all([
-      getProfileByName(storedProfile.name, accessToken, apiKey, {
+    const profilePromise = getProfileByName(
+      targetProfileName,
+      accessToken,
+      apiKey,
+      {
         includeListings: true,
-      }),
-      getProfileBids(storedProfile.name, accessToken, apiKey),
+      },
+    );
+
+    const bidsPromise = isOwnProfile
+      ? getProfileBids(storedProfile.name, accessToken, apiKey)
+      : Promise.resolve([]);
+
+    const [profile, bids]: [Profile, Bid[]] = await Promise.all([
+      profilePromise,
+      bidsPromise,
     ]);
 
     const createdListings = profile.listings ?? [];
-    const bidListings = getBidListings(bids);
+    const bidListings = isOwnProfile ? getBidListings(bids) : [];
 
     app.innerHTML = createLayout(
       createProfilePage({
         profile,
         createdListings,
         bidListings,
+        isOwnProfile,
       }),
     );
 
