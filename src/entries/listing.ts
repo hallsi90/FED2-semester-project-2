@@ -9,7 +9,11 @@ import {
 } from "../components/navigation-events";
 import { alertStyles } from "../components/ui";
 import { createSingleListingPage } from "../pages/single-listing-page";
-import { getAccessToken, getApiKey } from "../utils/auth-storage";
+import {
+  getAccessToken,
+  getApiKey,
+  getProfile as getStoredProfile,
+} from "../utils/auth-storage";
 import { validateBidForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -23,42 +27,6 @@ function initializeNavigation(): void {
 function getListingIdFromUrl(): string | null {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
-}
-
-function initializeImageGallery(): void {
-  const mainImage = document.querySelector<HTMLImageElement>(
-    "#main-listing-image",
-  );
-  const thumbnailButtons =
-    document.querySelectorAll<HTMLButtonElement>(".listing-thumbnail");
-
-  if (!mainImage || !thumbnailButtons.length) {
-    return;
-  }
-
-  thumbnailButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const imageUrl = button.dataset.imageUrl;
-      const imageAlt = button.dataset.imageAlt;
-
-      if (!imageUrl) {
-        return;
-      }
-
-      mainImage.src = imageUrl;
-      mainImage.alt = imageAlt || "Listing image";
-
-      thumbnailButtons.forEach((thumbnailButton) => {
-        thumbnailButton.classList.remove("border-primary-action");
-        thumbnailButton.classList.add("border-border-neutral");
-        thumbnailButton.setAttribute("aria-pressed", "false");
-      });
-
-      button.classList.remove("border-border-neutral");
-      button.classList.add("border-primary-action");
-      button.setAttribute("aria-pressed", "true");
-    });
-  });
 }
 
 async function initializeBidForm(): Promise<void> {
@@ -132,6 +100,42 @@ async function initializeBidForm(): Promise<void> {
   });
 }
 
+function initializeImageGallery(): void {
+  const mainImage = document.querySelector<HTMLImageElement>(
+    "#main-listing-image",
+  );
+  const thumbnails =
+    document.querySelectorAll<HTMLButtonElement>(".listing-thumbnail");
+
+  if (!mainImage || thumbnails.length === 0) {
+    return;
+  }
+
+  thumbnails.forEach((thumbnail) => {
+    thumbnail.addEventListener("click", () => {
+      const imageUrl = thumbnail.dataset.imageUrl;
+      const imageAlt = thumbnail.dataset.imageAlt;
+
+      if (!imageUrl) {
+        return;
+      }
+
+      mainImage.src = imageUrl;
+      mainImage.alt = imageAlt || "Listing image";
+
+      thumbnails.forEach((item) => {
+        item.setAttribute("aria-pressed", "false");
+        item.classList.remove("border-primary-action");
+        item.classList.add("border-border-neutral");
+      });
+
+      thumbnail.setAttribute("aria-pressed", "true");
+      thumbnail.classList.remove("border-border-neutral");
+      thumbnail.classList.add("border-primary-action");
+    });
+  });
+}
+
 function renderLoadingState(): void {
   if (!app) {
     return;
@@ -185,14 +189,25 @@ async function renderListingPage(): Promise<void> {
 
   try {
     const listing = await getListingById(listingId);
+    const storedProfile = getStoredProfile();
     const isLoggedIn = Boolean(getAccessToken());
+    const isOwner =
+      Boolean(storedProfile?.name) &&
+      storedProfile?.name === listing.seller?.name;
 
     app.innerHTML = createLayout(
-      createSingleListingPage(listing, { isLoggedIn }),
+      createSingleListingPage(listing, {
+        isLoggedIn,
+        isOwner,
+      }),
     );
+
     initializeNavigation();
     initializeImageGallery();
-    await initializeBidForm();
+
+    if (!isOwner) {
+      await initializeBidForm();
+    }
   } catch (error) {
     const errorMessage =
       error instanceof Error

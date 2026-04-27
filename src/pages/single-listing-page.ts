@@ -1,9 +1,11 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
+import { ROUTES } from "../constants/routes";
 import { formatDate } from "../utils/helpers";
 import type { Listing } from "../types/api";
 
 interface SingleListingPageOptions {
   isLoggedIn: boolean;
+  isOwner: boolean;
 }
 
 // Creates the single listing page layout for preview and later reuse.
@@ -105,8 +107,31 @@ export function createSingleListingPage(
       `
       : "";
 
-  const bidSectionMarkup = options.isLoggedIn
-    ? `
+  let bidSectionMarkup = "";
+
+  if (options.isOwner) {
+    bidSectionMarkup = `
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-text-main">Manage listing</h2>
+          <span class="text-sm font-medium text-text-muted">
+            ${bidCount} bid${bidCount === 1 ? "" : "s"}
+          </span>
+        </div>
+
+        <p class="text-sm text-text-muted">
+          You own this listing, so bidding is disabled.
+        </p>
+
+        <div class="flex flex-col gap-3 sm:flex-row">
+          <a href="${ROUTES.editListing}?id=${listing.id}" class="${buttonStyles.primary}">
+            Edit listing
+          </a>
+        </div>
+      </div>
+    `;
+  } else if (options.isLoggedIn) {
+    bidSectionMarkup = `
       <form id="bid-form" class="space-y-4" novalidate>
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-semibold text-text-main">Place a bid</h2>
@@ -140,8 +165,9 @@ export function createSingleListingPage(
           Place bid
         </button>
       </form>
-    `
-    : `
+    `;
+  } else {
+    bidSectionMarkup = `
       <div class="space-y-4">
         <div class="flex items-center justify-between">
           <h2 class="text-xl font-semibold text-text-main">Place a bid</h2>
@@ -154,11 +180,12 @@ export function createSingleListingPage(
           You must be logged in to place a bid on this listing.
         </p>
 
-        <a href="/login/" class="${buttonStyles.primary}">
+        <a href="${ROUTES.login}" class="${buttonStyles.primary}">
           Log in to bid
         </a>
       </div>
     `;
+  }
 
   return `
     <section class="space-y-8">
@@ -192,7 +219,7 @@ export function createSingleListingPage(
                   `
               }
 
-${thumbnailGallery}
+              ${thumbnailGallery}
             </div>
           </section>
 
