@@ -43,6 +43,15 @@ export interface ValidationErrors {
   amount?: string;
   endsAt?: string;
   media?: string;
+  bio?: string;
+  avatarUrl?: string;
+  bannerUrl?: string;
+}
+
+export interface EditProfileFormValues {
+  bio: string;
+  avatarUrl: string;
+  bannerUrl: string;
 }
 
 function isValidEmail(email: string): boolean {
@@ -175,6 +184,27 @@ export function validateUpdateListingForm(
 
   if (hasInvalidMedia) {
     errors.media = "Each image URL must be a valid URL.";
+  }
+
+  return errors;
+}
+
+// Validates the edit profile form fields and returns field-specific errors.
+export function validateEditProfileForm(
+  values: EditProfileFormValues,
+): ValidationErrors {
+  const errors: ValidationErrors = {};
+
+  if (values.bio.trim().length > 160) {
+    errors.bio = "Bio must be 160 characters or fewer.";
+  }
+
+  if (values.avatarUrl.trim() && !isValidUrl(values.avatarUrl.trim())) {
+    errors.avatarUrl = "Enter a valid avatar image URL.";
+  }
+
+  if (values.bannerUrl.trim() && !isValidUrl(values.bannerUrl.trim())) {
+    errors.bannerUrl = "Enter a valid banner image URL.";
   }
 
   return errors;
