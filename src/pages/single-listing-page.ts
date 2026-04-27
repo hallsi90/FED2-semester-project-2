@@ -25,6 +25,8 @@ export function createSingleListingPage(
   const sellerAvatarAlt = listing.seller?.avatar?.alt || `${sellerName} avatar`;
 
   const visibleTags = listing.tags.filter((tag) => tag.trim().length > 0);
+  const loginRedirectUrl = `${ROUTES.singleListing}?id=${listing.id}`;
+  const loginToBidUrl = `${ROUTES.login}?redirect=${encodeURIComponent(loginRedirectUrl)}`;
 
   const thumbnailGallery =
     mediaItems.length > 1
@@ -180,7 +182,7 @@ export function createSingleListingPage(
           You must be logged in to place a bid on this listing.
         </p>
 
-        <a href="${ROUTES.login}" class="${buttonStyles.primary}">
+        <a href="${loginToBidUrl}" class="${buttonStyles.primary}">
           Log in to bid
         </a>
       </div>

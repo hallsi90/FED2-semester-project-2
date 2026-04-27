@@ -1,6 +1,7 @@
 import "../style.css";
 import { createApiKey } from "../api/auth/create-api-key";
 import { loginUser } from "../api/auth/login";
+import { getProfileByName } from "../api/profile/get-profile";
 import { createLayout } from "../components/layout";
 import {
   initializeLogout,
@@ -9,10 +10,31 @@ import {
 } from "../components/navigation-events";
 import { alertStyles } from "../components/ui";
 import { createLoginPage } from "../pages/login-page";
-import { getApiKey, saveApiKey, saveAuth } from "../utils/auth-storage";
+import { ROUTES } from "../constants/routes";
+import {
+  getApiKey,
+  saveApiKey,
+  saveAuth,
+  saveProfile,
+} from "../utils/auth-storage";
 import { validateLoginForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
+
+function getRedirectUrl(): string {
+  const params = new URLSearchParams(window.location.search);
+  const redirect = params.get("redirect");
+
+  if (!redirect) {
+    return ROUTES.profile;
+  }
+
+  if (!redirect.startsWith("/")) {
+    return ROUTES.profile;
+  }
+
+  return redirect;
+}
 
 if (app) {
   app.innerHTML = createLayout(createLoginPage());
@@ -56,20 +78,30 @@ if (app) {
           profile: response.data,
         });
 
-        const existingApiKey = getApiKey();
+        let apiKey = getApiKey();
 
-        if (!existingApiKey) {
-          const apiKey = await createApiKey(response.data.accessToken);
+        if (!apiKey) {
+          apiKey = await createApiKey(response.data.accessToken);
           saveApiKey(apiKey);
         }
+
+        const freshProfile = await getProfileByName(
+          response.data.name,
+          response.data.accessToken,
+          apiKey,
+        );
+
+        saveProfile(freshProfile);
 
         message.textContent = "Login successful. Redirecting...";
         message.className = alertStyles.success;
 
         form.reset();
 
+        const redirectUrl = getRedirectUrl();
+
         setTimeout(() => {
-          window.location.href = "/profile/";
+          window.location.href = redirectUrl;
         }, 1500);
       } catch (error) {
         const errorMessage =
