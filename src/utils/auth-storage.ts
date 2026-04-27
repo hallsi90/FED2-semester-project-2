@@ -13,6 +13,11 @@ export function saveAuth(auth: StoredAuth): void {
   saveToStorage(STORAGE_KEYS.profile, auth.profile);
 }
 
+// Saves the current profile data after profile updates.
+export function saveProfile(profile: Profile): void {
+  saveToStorage(STORAGE_KEYS.profile, profile);
+}
+
 // Returns the saved access token, or null if missing.
 export function getAccessToken(): string | null {
   return localStorage.getItem(STORAGE_KEYS.accessToken);
