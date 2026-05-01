@@ -1,10 +1,10 @@
 export interface MediaItem {
-  url: string;
+  url?: string;
   alt?: string;
 }
 
 export interface ListingCount {
-  bids: number;
+  bids?: number;
 }
 
 export interface ProfileCount {
@@ -13,12 +13,12 @@ export interface ProfileCount {
 }
 
 export interface Profile {
-  name: string;
+  name?: string;
   email: string;
   bio?: string;
   avatar?: MediaItem;
   banner?: MediaItem;
-  credits: number;
+  credits?: number;
   _count?: ProfileCount;
   listings?: Listing[];
 }
@@ -26,21 +26,21 @@ export interface Profile {
 export interface Bid {
   id: string;
   amount: number;
-  bidder: Profile;
+  bidder?: Profile;
   created: string;
   listing?: Listing;
 }
 
 export interface Listing {
   id: string;
-  title: string;
+  title?: string;
   description?: string;
-  tags: string[];
-  media: MediaItem[];
+  tags?: string[];
+  media?: MediaItem[];
   created: string;
   updated: string;
   endsAt: string;
-  _count: ListingCount;
+  _count?: ListingCount;
   seller?: Profile;
   bids?: Bid[];
 }

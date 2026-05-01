@@ -5,7 +5,9 @@ import type { Listing } from "../types/api";
 // Creates the edit listing page layout.
 export function createEditListingPage(listing: Listing): string {
   const mediaItems =
-    listing.media.length > 0 ? listing.media : [{ url: "", alt: "" }];
+    listing.media && listing.media.length > 0
+      ? listing.media
+      : [{ url: "", alt: "" }];
 
   const mediaFields = mediaItems
     .map((mediaItem, index) => {
@@ -105,7 +107,7 @@ export function createEditListingPage(listing: Listing): string {
               type="text"
               placeholder="Enter listing title"
               class="${formStyles.input}"
-              value="${listing.title}"
+              value="${listing.title || ""}"
             />
           </div>
 
@@ -132,7 +134,7 @@ export function createEditListingPage(listing: Listing): string {
               type="text"
               placeholder="camera, vintage, electronics"
               class="${formStyles.input}"
-              value="${listing.tags.join(", ")}"
+              value="${(listing.tags || []).join(", ")}"
             />
             <p class="${formStyles.helperText}">
               Separate tags with commas.

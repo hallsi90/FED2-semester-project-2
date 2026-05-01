@@ -17,31 +17,38 @@ export function createSingleListingPage(
   listing: Listing,
   options: SingleListingPageOptions,
 ): string {
-  const mediaItems = listing.media;
-  const mainImage = mediaItems[0];
+  const title = listing.title?.trim() || "Untitled listing";
+  const mediaItems = listing.media ?? [];
+  const validMediaItems = mediaItems.filter((mediaItem) =>
+    mediaItem.url?.trim(),
+  );
+  const mainImage = validMediaItems[0];
 
   const description =
     listing.description?.trim() || "No description available.";
   const bidCount = listing._count?.bids ?? 0;
 
-  const sellerName = listing.seller?.name || "Unknown seller";
-  const sellerAvatarUrl = listing.seller?.avatar?.url || "";
-  const sellerAvatarAlt = listing.seller?.avatar?.alt || `${sellerName} avatar`;
+  const sellerName = listing.seller?.name?.trim() || "Unknown seller";
+  const sellerAvatarUrl = listing.seller?.avatar?.url?.trim() || "";
+  const sellerAvatarAlt =
+    listing.seller?.avatar?.alt?.trim() || `${sellerName} avatar`;
 
-  const visibleTags = listing.tags.filter((tag) => tag.trim().length > 0);
+  const visibleTags = (listing.tags ?? []).filter(
+    (tag) => tag.trim().length > 0,
+  );
   const loginRedirectUrl = `${ROUTES.singleListing}?id=${listing.id}`;
   const loginToBidUrl = `${ROUTES.login}?redirect=${encodeURIComponent(loginRedirectUrl)}`;
   const countdownTone = getCountdownTone(listing.endsAt);
 
   const thumbnailGallery =
-    mediaItems.length > 1
+    validMediaItems.length > 1
       ? `
         <div
           id="thumbnail-gallery"
           class="grid grid-cols-3 gap-3 sm:grid-cols-4"
           aria-label="Listing image gallery"
         >
-          ${mediaItems
+          ${validMediaItems
             .map(
               (mediaItem, index) => `
                 <button
@@ -52,13 +59,13 @@ export function createSingleListingPage(
                       : "border-border-neutral"
                   } bg-surface transition hover:border-primary-action focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2"
                   data-image-url="${mediaItem.url}"
-                  data-image-alt="${mediaItem.alt || `Listing image ${index + 1}`}"
+                  data-image-alt="${mediaItem.alt?.trim() || `Listing image ${index + 1}`}"
                   aria-label="Show image ${index + 1}"
                   aria-pressed="${index === 0 ? "true" : "false"}"
                 >
                   <img
                     src="${mediaItem.url}"
-                    alt="${mediaItem.alt || `Listing image ${index + 1}`}"
+                    alt="${mediaItem.alt?.trim() || `Listing image ${index + 1}`}"
                     class="h-20 w-full object-cover sm:h-24"
                   />
                 </button>
@@ -80,7 +87,7 @@ export function createSingleListingPage(
               (bid) => `
                 <li class="flex items-center justify-between rounded-lg bg-background px-4 py-3">
                   <span class="text-sm text-text-main">
-                    ${bid.bidder?.name || "Unknown bidder"}
+                    ${bid.bidder?.name?.trim() || "Unknown bidder"}
                   </span>
                   <span class="text-sm font-semibold text-text-main">
                     ${bid.amount} credits
@@ -112,7 +119,11 @@ export function createSingleListingPage(
             .join("")}
         </div>
       `
-      : "";
+      : `
+        <p class="text-sm text-text-muted">
+          No tags added.
+        </p>
+      `;
 
   let bidSectionMarkup = "";
 
@@ -238,7 +249,7 @@ export function createSingleListingPage(
       <header class="space-y-3">
         <p class="text-sm font-medium text-text-muted">Listing details</p>
         <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-          ${listing.title}
+          ${title}
         </h1>
       </header>
 
@@ -247,13 +258,13 @@ export function createSingleListingPage(
           <section class="${cardStyles.base}">
             <div class="space-y-4">
               ${
-                mainImage
+                mainImage?.url?.trim()
                   ? `
                     <div class="flex h-80 w-full items-center justify-center rounded-lg bg-background p-2 md:h-105">
                       <img
                         id="main-listing-image"
                         src="${mainImage.url}"
-                        alt="${mainImage.alt || listing.title}"
+                        alt="${mainImage.alt?.trim() || title}"
                         class="h-full w-full rounded-lg object-contain"
                       />
                     </div>

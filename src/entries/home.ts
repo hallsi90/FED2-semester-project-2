@@ -41,9 +41,9 @@ function filterListings(
   selectedCategory: string,
 ): Listing[] {
   return listings.filter((listing) => {
-    const title = listing.title.toLowerCase();
+    const title = (listing.title || "").toLowerCase();
     const description = listing.description?.toLowerCase() || "";
-    const tags = listing.tags.map((tag) => tag.toLowerCase());
+    const tags = (listing.tags || []).map((tag) => tag.toLowerCase());
 
     const matchesSearch =
       !searchTerm ||

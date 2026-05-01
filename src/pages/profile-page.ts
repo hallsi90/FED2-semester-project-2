@@ -17,14 +17,15 @@ interface ProfilePageData {
 
 // Creates the profile page layout.
 export function createProfilePage(data: ProfilePageData): string {
-  const bannerUrl = data.profile.banner?.url || "";
-  const bannerAlt = data.profile.banner?.alt || `${data.profile.name} banner`;
+  const profileName = data.profile.name?.trim() || "Unknown user";
+  const bannerUrl = data.profile.banner?.url?.trim() || "";
+  const bannerAlt = data.profile.banner?.alt?.trim() || `${profileName} banner`;
 
-  const avatarUrl = data.profile.avatar?.url || "";
-  const avatarAlt = data.profile.avatar?.alt || `${data.profile.name} avatar`;
+  const avatarUrl = data.profile.avatar?.url?.trim() || "";
+  const avatarAlt = data.profile.avatar?.alt?.trim() || `${profileName} avatar`;
   const bio = data.profile.bio?.trim() || "No bio added yet.";
   const credits = data.profile.credits ?? 0;
-  const profileInitial = data.profile.name.charAt(0).toUpperCase();
+  const profileInitial = profileName.charAt(0).toUpperCase();
 
   const avatarMarkup = avatarUrl
     ? `
@@ -37,7 +38,7 @@ export function createProfilePage(data: ProfilePageData): string {
     : `
       <div
         class="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-white bg-background text-2xl font-semibold text-text-main shadow-sm md:h-32 md:w-32"
-        aria-label="${data.profile.name} avatar placeholder"
+        aria-label="${profileName} avatar placeholder"
       >
         ${profileInitial}
       </div>
@@ -74,9 +75,12 @@ export function createProfilePage(data: ProfilePageData): string {
               return createListingCard(listing);
             }
 
-            const imageUrl = listing.media[0]?.url;
-            const imageAlt =
-              listing.media[0]?.alt || listing.title || "Listing image";
+            const title = listing.title?.trim() || "Untitled listing";
+            const mediaItems = listing.media ?? [];
+            const firstImage = mediaItems[0];
+            const imageUrl = firstImage?.url?.trim() || "";
+            const imageAlt = firstImage?.alt?.trim() || title;
+
             const description =
               listing.description?.trim() || "No description available.";
             const shortDescription =
@@ -110,7 +114,7 @@ export function createProfilePage(data: ProfilePageData): string {
                 <div class="flex flex-1 flex-col space-y-4">
                   <div class="space-y-1">
                     <h3 class="text-2xl font-semibold leading-tight text-text-main">
-                      ${listing.title}
+                      ${title}
                     </h3>
                     <p class="text-sm font-medium text-primary-dark">
                       Ends ${formatDateTime(listing.endsAt)}
@@ -156,7 +160,7 @@ export function createProfilePage(data: ProfilePageData): string {
             ${
               data.isOwnProfile
                 ? "You have not created any listings yet."
-                : `${data.profile.name} has not created any listings yet.`
+                : `${profileName} has not created any listings yet.`
             }
           </p>
         </div>
@@ -177,7 +181,7 @@ export function createProfilePage(data: ProfilePageData): string {
     <section class="space-y-8">
       <header>
         <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-          ${data.profile.name}
+          ${profileName}
         </h1>
       </header>
 
@@ -277,7 +281,7 @@ export function createProfilePage(data: ProfilePageData): string {
         >
           <div class="space-y-1">
             <h2 class="text-2xl font-semibold text-text-main transition group-hover:text-primary-action">
-              ${data.isOwnProfile ? "My listings" : `${data.profile.name}'s listings`}
+              ${data.isOwnProfile ? "My listings" : `${profileName}'s listings`}
             </h2>
             <p class="text-sm text-text-muted transition group-hover:text-primary-action">
               ${

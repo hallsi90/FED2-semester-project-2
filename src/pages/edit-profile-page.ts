@@ -3,6 +3,12 @@ import type { Profile } from "../types/api";
 
 // Creates the edit profile page layout.
 export function createEditProfilePage(profile: Profile): string {
+  const bio = profile.bio?.trim() || "";
+  const avatarUrl = profile.avatar?.url?.trim() || "";
+  const avatarAlt = profile.avatar?.alt?.trim() || "";
+  const bannerUrl = profile.banner?.url?.trim() || "";
+  const bannerAlt = profile.banner?.alt?.trim() || "";
+
   return `
     <section class="mx-auto w-full max-w-2xl space-y-8">
       <header class="space-y-3">
@@ -28,7 +34,7 @@ export function createEditProfilePage(profile: Profile): string {
               rows="4"
               placeholder="Write a short bio"
               class="${formStyles.textarea}"
-            >${profile.bio || ""}</textarea>
+            >${bio}</textarea>
           </div>
 
           <div class="space-y-2">
@@ -41,7 +47,7 @@ export function createEditProfilePage(profile: Profile): string {
               type="url"
               placeholder="https://example.com/avatar.jpg"
               class="${formStyles.input}"
-              value="${profile.avatar?.url || ""}"
+              value="${avatarUrl}"
             />
           </div>
 
@@ -55,7 +61,7 @@ export function createEditProfilePage(profile: Profile): string {
               type="text"
               placeholder="Describe the avatar image"
               class="${formStyles.input}"
-              value="${profile.avatar?.alt || ""}"
+              value="${avatarAlt}"
             />
           </div>
 
@@ -69,7 +75,7 @@ export function createEditProfilePage(profile: Profile): string {
               type="url"
               placeholder="https://example.com/banner.jpg"
               class="${formStyles.input}"
-              value="${profile.banner?.url || ""}"
+              value="${bannerUrl}"
             />
           </div>
 
@@ -83,7 +89,7 @@ export function createEditProfilePage(profile: Profile): string {
               type="text"
               placeholder="Describe the banner image"
               class="${formStyles.input}"
-              value="${profile.banner?.alt || ""}"
+              value="${bannerAlt}"
             />
           </div>
 

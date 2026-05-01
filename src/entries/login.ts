@@ -85,8 +85,14 @@ if (app) {
           saveApiKey(apiKey);
         }
 
+        const profileName = response.data.name || "";
+
+        if (!profileName) {
+          throw new Error("Profile name is missing from login response.");
+        }
+
         const freshProfile = await getProfileByName(
-          response.data.name,
+          profileName,
           response.data.accessToken,
           apiKey,
         );

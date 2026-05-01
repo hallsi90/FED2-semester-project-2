@@ -340,7 +340,7 @@ if (app) {
           title: titleInput.value,
           endsAt: endsAtInput.value,
           media: media.map((item) => ({
-            url: item.url,
+            url: item.url || "",
             alt: item.alt || "",
           })),
         });

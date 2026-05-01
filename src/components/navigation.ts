@@ -1,6 +1,4 @@
-// navigation.ts
 // Creates the shared navigation markup for logged-out and logged-in users across desktop and mobile views.
-
 import { ROUTES } from "../constants/routes";
 import { getAuthState } from "../utils/auth-state";
 
@@ -37,6 +35,10 @@ function createLoggedInDesktopNavigation(
   avatarUrl?: string,
   avatarAlt?: string,
 ): string {
+  const safeProfileName = profileName.trim() || "User";
+  const safeAvatarUrl = avatarUrl?.trim() || "";
+  const safeAvatarAlt = avatarAlt?.trim() || `${safeProfileName} avatar`;
+
   return `
     <nav aria-label="Desktop navigation" class="hidden md:block">
       <ul class="flex items-center gap-6 text-sm font-medium">
@@ -65,16 +67,16 @@ function createLoggedInDesktopNavigation(
             class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
           >
             ${
-              avatarUrl
+              safeAvatarUrl
                 ? `
                   <img
-                    src="${avatarUrl}"
-                    alt="${avatarAlt || `${profileName} avatar`}"
+                    src="${safeAvatarUrl}"
+                    alt="${safeAvatarAlt}"
                     class="h-full w-full object-cover"
                   />
                 `
                 : `
-                  <span class="text-sm font-semibold">${profileName.charAt(0).toUpperCase()}</span>
+                  <span class="text-sm font-semibold">${safeProfileName.charAt(0).toUpperCase()}</span>
                 `
             }
           </button>
@@ -210,12 +212,12 @@ export function createNavigation(): string {
     return `
       <div class="relative flex items-center gap-3">
         ${createLoggedInDesktopNavigation(
-          authState.profile.name,
-          authState.profile.credits,
+          authState.profile.name?.trim() || "User",
+          authState.profile.credits ?? 0,
           authState.profile.avatar?.url,
           authState.profile.avatar?.alt,
         )}
-        ${createLoggedInMobileNavigation(authState.profile.credits)}
+        ${createLoggedInMobileNavigation(authState.profile.credits ?? 0)}
       </div>
     `;
   }

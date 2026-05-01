@@ -9,8 +9,11 @@ import type { Listing } from "../types/api";
 
 // Creates a reusable listing card.
 export function createListingCard(listing: Listing): string {
-  const imageUrl = listing.media[0]?.url;
-  const imageAlt = listing.media[0]?.alt || listing.title || "Listing image";
+  const title = listing.title?.trim() || "Untitled listing";
+  const mediaItems = listing.media ?? [];
+  const firstImage = mediaItems[0];
+  const imageUrl = firstImage?.url?.trim() || "";
+  const imageAlt = firstImage?.alt?.trim() || title;
 
   const description =
     listing.description?.trim() || "No description available.";
@@ -27,7 +30,7 @@ export function createListingCard(listing: Listing): string {
       <a
         href="${listingUrl}"
         class="${cardStyles.interactive} group flex h-full flex-col focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2"
-        aria-label="View listing: ${listing.title}"
+        aria-label="View listing: ${title}"
       >
         ${
           imageUrl
@@ -48,7 +51,7 @@ export function createListingCard(listing: Listing): string {
         <div class="flex flex-1 flex-col space-y-4">
           <div class="space-y-1">
             <h2 class="text-2xl font-semibold leading-tight text-text-main transition group-hover:text-primary-action">
-              ${listing.title}
+              ${title}
             </h2>
             <p class="text-sm font-medium text-primary-dark">
               Ends ${formatDateTime(listing.endsAt)}

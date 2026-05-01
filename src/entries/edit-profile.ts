@@ -87,11 +87,13 @@ async function renderEditProfilePage(): Promise<void> {
     return;
   }
 
+  const profileName = storedProfile.name;
+
   renderLoadingState();
 
   try {
     const profile: Profile = await getProfileByName(
-      storedProfile.name,
+      profileName,
       accessToken,
       apiKey,
     );
@@ -211,7 +213,7 @@ async function renderEditProfilePage(): Promise<void> {
         message.className = alertStyles.info;
 
         const updatedProfile = await updateProfile(
-          profile.name,
+          profileName,
           profileData,
           accessToken,
           apiKey,

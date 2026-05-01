@@ -478,7 +478,7 @@ function initializeEditListingForm(listingId: string): void {
     const validationErrors = validateUpdateListingForm({
       title: titleInput.value,
       media: media.map((item) => ({
-        url: item.url,
+        url: item.url || "",
         alt: item.alt || "",
       })),
     });
