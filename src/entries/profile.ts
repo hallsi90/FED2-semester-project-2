@@ -3,6 +3,7 @@ import { getProfileBids } from "../api/profile/get-profile-bids";
 import { getProfileByName } from "../api/profile/get-profile";
 import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createLayout } from "../components/layout";
+import { createLoadingState } from "../components/loading-state";
 import {
   initializeLogout,
   initializeMobileMenu,
@@ -38,13 +39,11 @@ function renderLoadingState(): void {
     return;
   }
 
-  app.innerHTML = createLayout(`
-    <section class="space-y-4">
-      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-        Loading profile...
-      </h1>
-    </section>
-  `);
+  app.innerHTML = createLayout(
+    createLoadingState({
+      title: "Loading profile...",
+    }),
+  );
 
   initializePage();
 }

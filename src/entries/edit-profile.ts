@@ -3,6 +3,7 @@ import { getProfileByName } from "../api/profile/get-profile";
 import { updateProfile } from "../api/profile/update-profile";
 import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createLayout } from "../components/layout";
+import { createLoadingState } from "../components/loading-state";
 import {
   initializeLogout,
   initializeMobileMenu,
@@ -34,16 +35,12 @@ function renderLoadingState(): void {
     return;
   }
 
-  app.innerHTML = createLayout(`
-    <section class="space-y-4">
-      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-        Loading profile...
-      </h1>
-      <p class="text-base text-text-muted">
-        Please wait while the edit profile form is prepared.
-      </p>
-    </section>
-  `);
+  app.innerHTML = createLayout(
+    createLoadingState({
+      title: "Loading profile...",
+      message: "Please wait while the edit profile form is prepared.",
+    }),
+  );
 
   initializeNavigation();
 }

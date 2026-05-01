@@ -1,6 +1,7 @@
 import "../style.css";
 import { getListings } from "../api/listings/get-listings";
 import { createLayout } from "../components/layout";
+import { createLoadingState } from "../components/loading-state";
 import {
   initializeLogout,
   initializeMobileMenu,
@@ -93,16 +94,12 @@ function renderLoadingState(): void {
     return;
   }
 
-  app.innerHTML = createLayout(`
-    <section class="space-y-4">
-      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-        Browse auctions
-      </h1>
-      <p class="text-base text-text-muted">
-        Loading listings...
-      </p>
-    </section>
-  `);
+  app.innerHTML = createLayout(
+    createLoadingState({
+      title: "Browse auctions",
+      message: "Loading listings...",
+    }),
+  );
 
   initializeNavigation();
 }
