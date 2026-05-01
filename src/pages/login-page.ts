@@ -1,6 +1,6 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 
-// Creates the login page layout for preview and later authentication logic.
+// Creates the login page layout for authentication logic.
 export function createLoginPage(): string {
   return `
     <section class="mx-auto w-full max-w-md space-y-8">
@@ -15,7 +15,12 @@ export function createLoginPage(): string {
 
       <section class="${cardStyles.base}">
         <form class="space-y-5" novalidate>
-          <div id="login-message" class="hidden"></div>
+          <div
+            id="login-message"
+            class="hidden"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
 
           <div class="space-y-2">
             <label for="email" class="${formStyles.label}">
@@ -28,7 +33,17 @@ export function createLoginPage(): string {
               placeholder="name@stud.noroff.no"
               class="${formStyles.input}"
               autocomplete="email"
+              inputmode="email"
+              autocapitalize="off"
+              spellcheck="false"
+              required
+              aria-describedby="email-error"
             />
+            <p
+              id="email-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div class="space-y-2">
@@ -42,7 +57,16 @@ export function createLoginPage(): string {
               placeholder="Enter your password"
               class="${formStyles.input}"
               autocomplete="current-password"
+              autocapitalize="off"
+              spellcheck="false"
+              required
+              aria-describedby="password-error"
             />
+            <p
+              id="password-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <button type="submit" class="${buttonStyles.primary} w-full">

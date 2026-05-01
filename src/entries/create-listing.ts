@@ -1,5 +1,6 @@
 import "../style.css";
 import { createListing } from "../api/listings/create-listing";
+import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createLayout } from "../components/layout";
 import {
   initializeLogout,
@@ -7,9 +8,8 @@ import {
   initializeProfileMenu,
 } from "../components/navigation-events";
 import { alertStyles, buttonStyles, formStyles } from "../components/ui";
-import { renderAuthRequiredState } from "../components/auth-required-state";
-import { createCreateListingPage } from "../pages/create-listing-page";
 import { ROUTES } from "../constants/routes";
+import { createCreateListingPage } from "../pages/create-listing-page";
 import { getAccessToken, getApiKey } from "../utils/auth-storage";
 import { validateCreateListingForm } from "../utils/validation";
 import type { CreateListingBody, MediaItem } from "../types/api";
@@ -182,6 +182,7 @@ function renumberMediaFields(): void {
     if (urlInput) {
       urlInput.id = `image-url-${index}`;
       urlInput.name = `image-url-${index}`;
+      urlInput.setAttribute("aria-describedby", "media-helper media-error");
     }
 
     if (altLabel) {
@@ -191,6 +192,7 @@ function renumberMediaFields(): void {
     if (altInput) {
       altInput.id = `image-alt-${index}`;
       altInput.name = `image-alt-${index}`;
+      altInput.setAttribute("aria-describedby", "media-helper media-error");
     }
   });
 }
@@ -230,6 +232,10 @@ function createMediaField(index: number): string {
           type="url"
           placeholder="https://example.com/image.jpg"
           class="${formStyles.input}"
+          inputmode="url"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-describedby="media-helper media-error"
         />
       </div>
 
@@ -243,6 +249,7 @@ function createMediaField(index: number): string {
           type="text"
           placeholder="Describe the listing image"
           class="${formStyles.input}"
+          aria-describedby="media-helper media-error"
         />
       </div>
     </section>
@@ -301,6 +308,25 @@ function initializeMediaGallery(): void {
   });
 }
 
+function clearFieldError(
+  input: HTMLInputElement | HTMLTextAreaElement,
+  errorElement: HTMLElement,
+): void {
+  input.setAttribute("aria-invalid", "false");
+  errorElement.textContent = "";
+  errorElement.classList.add("hidden");
+}
+
+function showFieldError(
+  input: HTMLInputElement | HTMLTextAreaElement,
+  errorElement: HTMLElement,
+  errorMessage: string,
+): void {
+  input.setAttribute("aria-invalid", "true");
+  errorElement.textContent = errorMessage;
+  errorElement.classList.remove("hidden");
+}
+
 if (app) {
   const accessToken = getAccessToken();
   const apiKey = getApiKey();
@@ -323,16 +349,42 @@ if (app) {
     const tagsInput = document.querySelector<HTMLInputElement>("#tags");
     const endsAtInput = document.querySelector<HTMLInputElement>("#ends-at");
 
+    const titleError =
+      document.querySelector<HTMLParagraphElement>("#title-error");
+    const endsAtError =
+      document.querySelector<HTMLParagraphElement>("#ends-at-error");
+    const mediaError =
+      document.querySelector<HTMLParagraphElement>("#media-error");
+
     if (
       form &&
       message &&
       titleInput &&
       descriptionInput &&
       tagsInput &&
-      endsAtInput
+      endsAtInput &&
+      titleError &&
+      endsAtError &&
+      mediaError
     ) {
+      titleInput.addEventListener("input", () => {
+        clearFieldError(titleInput, titleError);
+      });
+
+      endsAtInput.addEventListener("input", () => {
+        clearFieldError(endsAtInput, endsAtError);
+      });
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
+
+        message.textContent = "";
+        message.className = "hidden";
+
+        clearFieldError(titleInput, titleError);
+        clearFieldError(endsAtInput, endsAtError);
+        mediaError.textContent = "";
+        mediaError.classList.add("hidden");
 
         const media = getMedia();
 
@@ -345,15 +397,34 @@ if (app) {
           })),
         });
 
-        const errorMessages = [
-          validationErrors.title,
-          validationErrors.endsAt,
-          validationErrors.media,
-        ].filter(Boolean);
+        if (
+          validationErrors.title ||
+          validationErrors.endsAt ||
+          validationErrors.media
+        ) {
+          if (validationErrors.title) {
+            showFieldError(titleInput, titleError, validationErrors.title);
+          }
 
-        if (errorMessages.length > 0) {
-          message.textContent = errorMessages.join(" ");
+          if (validationErrors.endsAt) {
+            showFieldError(endsAtInput, endsAtError, validationErrors.endsAt);
+          }
+
+          if (validationErrors.media) {
+            mediaError.textContent = validationErrors.media;
+            mediaError.classList.remove("hidden");
+          }
+
+          message.textContent = "Please correct the highlighted fields.";
           message.className = alertStyles.error;
+          message.setAttribute("role", "alert");
+
+          if (validationErrors.title) {
+            titleInput.focus();
+          } else if (validationErrors.endsAt) {
+            endsAtInput.focus();
+          }
+
           return;
         }
 
@@ -368,6 +439,7 @@ if (app) {
         try {
           message.textContent = "Creating listing...";
           message.className = alertStyles.info;
+          message.setAttribute("role", "status");
 
           const createdListing = await createListing(
             listingData,
@@ -377,6 +449,7 @@ if (app) {
 
           message.textContent = "Listing created successfully. Redirecting...";
           message.className = alertStyles.success;
+          message.setAttribute("role", "status");
 
           form.reset();
 
@@ -389,8 +462,25 @@ if (app) {
               ? error.message
               : "Something went wrong while creating the listing.";
 
+          const firstImageUrlInput = document.querySelector<HTMLInputElement>(
+            'input[name^="image-url-"]',
+          );
+
+          if (errorMessage.toLowerCase().includes("image")) {
+            mediaError.textContent = errorMessage;
+            mediaError.classList.remove("hidden");
+
+            message.textContent = "Please correct the highlighted fields.";
+            message.className = alertStyles.error;
+            message.setAttribute("role", "alert");
+
+            firstImageUrlInput?.focus();
+            return;
+          }
+
           message.textContent = errorMessage;
           message.className = alertStyles.error;
+          message.setAttribute("role", "alert");
         }
       });
     }

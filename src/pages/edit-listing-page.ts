@@ -61,6 +61,10 @@ export function createEditListingPage(listing: Listing): string {
               placeholder="https://example.com/image.jpg"
               class="${formStyles.input}"
               value="${imageUrl}"
+              inputmode="url"
+              autocapitalize="off"
+              spellcheck="false"
+              aria-describedby="media-helper media-error"
             />
           </div>
 
@@ -75,6 +79,7 @@ export function createEditListingPage(listing: Listing): string {
               placeholder="Describe the listing image"
               class="${formStyles.input}"
               value="${imageAlt}"
+              aria-describedby="media-helper media-error"
             />
           </div>
         </section>
@@ -95,7 +100,12 @@ export function createEditListingPage(listing: Listing): string {
 
       <section class="${cardStyles.base}">
         <form class="space-y-5" novalidate>
-          <div id="edit-listing-message" class="hidden"></div>
+          <div
+            id="edit-listing-message"
+            class="hidden"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
 
           <div class="space-y-2">
             <label for="title" class="${formStyles.label}">
@@ -108,7 +118,15 @@ export function createEditListingPage(listing: Listing): string {
               placeholder="Enter listing title"
               class="${formStyles.input}"
               value="${listing.title || ""}"
+              autocomplete="off"
+              aria-describedby="title-error"
+              required
             />
+            <p
+              id="title-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div class="space-y-2">
@@ -121,7 +139,11 @@ export function createEditListingPage(listing: Listing): string {
               rows="5"
               placeholder="Describe the item"
               class="${formStyles.textarea}"
+              aria-describedby="description-helper"
             >${listing.description || ""}</textarea>
+            <p id="description-helper" class="${formStyles.helperText}">
+              Update the item details if needed.
+            </p>
           </div>
 
           <div class="space-y-2">
@@ -135,8 +157,11 @@ export function createEditListingPage(listing: Listing): string {
               placeholder="camera, vintage, electronics"
               class="${formStyles.input}"
               value="${(listing.tags || []).join(", ")}"
+              autocomplete="off"
+              spellcheck="false"
+              aria-describedby="tags-helper"
             />
-            <p class="${formStyles.helperText}">
+            <p id="tags-helper" class="${formStyles.helperText}">
               Separate tags with commas.
             </p>
           </div>
@@ -144,9 +169,14 @@ export function createEditListingPage(listing: Listing): string {
           <div class="space-y-3">
             <div class="space-y-1">
               <h2 class="text-xl font-semibold text-text-main">Media gallery</h2>
-              <p class="${formStyles.helperText}">
+              <p id="media-helper" class="${formStyles.helperText}">
                 Manage your listing images below.
               </p>
+              <p
+                id="media-error"
+                class="${formStyles.errorText} hidden"
+                aria-live="polite"
+              ></p>
             </div>
 
             <div id="media-fields" class="space-y-4">

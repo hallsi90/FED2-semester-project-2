@@ -79,14 +79,39 @@ function initializeLiveCountdown(): void {
   countdownIntervalId = window.setInterval(updateCountdowns, 1000);
 }
 
+function clearFieldError(
+  input: HTMLInputElement,
+  errorElement: HTMLElement,
+): void {
+  input.setAttribute("aria-invalid", "false");
+  errorElement.textContent = "";
+  errorElement.classList.add("hidden");
+}
+
+function showFieldError(
+  input: HTMLInputElement,
+  errorElement: HTMLElement,
+  errorMessage: string,
+): void {
+  input.setAttribute("aria-invalid", "true");
+  errorElement.textContent = errorMessage;
+  errorElement.classList.remove("hidden");
+}
+
 async function initializeBidForm(): Promise<void> {
   const form = document.querySelector<HTMLFormElement>("#bid-form");
   const message = document.querySelector<HTMLDivElement>("#bid-message");
   const amountInput = document.querySelector<HTMLInputElement>("#bid-amount");
+  const amountError =
+    document.querySelector<HTMLParagraphElement>("#bid-amount-error");
 
-  if (!form || !message || !amountInput) {
+  if (!form || !message || !amountInput || !amountError) {
     return;
   }
+
+  amountInput.addEventListener("input", () => {
+    clearFieldError(amountInput, amountError);
+  });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -96,37 +121,45 @@ async function initializeBidForm(): Promise<void> {
     const apiKey = getApiKey();
     const storedProfile = getStoredProfile();
 
+    message.textContent = "";
+    message.className = "hidden";
+    clearFieldError(amountInput, amountError);
+
     const errors = validateBidForm({
       amount: amountInput.value,
     });
 
     if (errors.amount) {
-      message.textContent = errors.amount;
-      message.className = alertStyles.error;
+      showFieldError(amountInput, amountError, errors.amount);
+      amountInput.focus();
       return;
     }
 
     if (!listingId) {
       message.textContent = "Listing id is missing.";
       message.className = alertStyles.error;
+      message.setAttribute("role", "alert");
       return;
     }
 
     if (!accessToken) {
       message.textContent = "You must be logged in to place a bid.";
       message.className = alertStyles.error;
+      message.setAttribute("role", "alert");
       return;
     }
 
     if (!apiKey) {
       message.textContent = "API key is missing. Please log in again.";
       message.className = alertStyles.error;
+      message.setAttribute("role", "alert");
       return;
     }
 
     try {
       message.textContent = "Submitting bid...";
       message.className = alertStyles.info;
+      message.setAttribute("role", "status");
 
       await placeBid(
         listingId,
@@ -153,6 +186,7 @@ async function initializeBidForm(): Promise<void> {
 
       message.textContent = errorMessage;
       message.className = alertStyles.error;
+      message.setAttribute("role", "alert");
     }
   });
 }

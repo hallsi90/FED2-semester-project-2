@@ -22,7 +22,12 @@ export function createEditProfilePage(profile: Profile): string {
 
       <section class="${cardStyles.base}">
         <form class="space-y-5" novalidate>
-          <div id="edit-profile-message" class="hidden"></div>
+          <div
+            id="edit-profile-message"
+            class="hidden"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
 
           <div class="space-y-2">
             <label for="bio" class="${formStyles.label}">
@@ -34,7 +39,16 @@ export function createEditProfilePage(profile: Profile): string {
               rows="4"
               placeholder="Write a short bio"
               class="${formStyles.textarea}"
+              aria-describedby="bio-helper bio-error"
             >${bio}</textarea>
+            <p id="bio-helper" class="${formStyles.helperText}">
+              Keep your bio short and clear. Maximum 160 characters.
+            </p>
+            <p
+              id="bio-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div class="space-y-2">
@@ -48,7 +62,16 @@ export function createEditProfilePage(profile: Profile): string {
               placeholder="https://example.com/avatar.jpg"
               class="${formStyles.input}"
               value="${avatarUrl}"
+              inputmode="url"
+              autocapitalize="off"
+              spellcheck="false"
+              aria-describedby="avatar-url-error"
             />
+            <p
+              id="avatar-url-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div class="space-y-2">
@@ -76,7 +99,16 @@ export function createEditProfilePage(profile: Profile): string {
               placeholder="https://example.com/banner.jpg"
               class="${formStyles.input}"
               value="${bannerUrl}"
+              inputmode="url"
+              autocapitalize="off"
+              spellcheck="false"
+              aria-describedby="banner-url-error"
             />
+            <p
+              id="banner-url-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div class="space-y-2">

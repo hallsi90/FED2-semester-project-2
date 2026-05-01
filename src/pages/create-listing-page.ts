@@ -1,6 +1,6 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 
-// Creates the create listing page layout for preview and later listing logic.
+// Creates the create listing page layout for listing logic.
 export function createCreateListingPage(): string {
   return `
     <section class="mx-auto w-full max-w-2xl space-y-8">
@@ -15,7 +15,12 @@ export function createCreateListingPage(): string {
 
       <section class="${cardStyles.base}">
         <form class="space-y-5" novalidate>
-          <div id="create-listing-message" class="hidden"></div>
+          <div
+            id="create-listing-message"
+            class="hidden"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
 
           <div class="space-y-2">
             <label for="title" class="${formStyles.label}">
@@ -27,7 +32,15 @@ export function createCreateListingPage(): string {
               type="text"
               placeholder="Enter listing title"
               class="${formStyles.input}"
+              autocomplete="off"
+              aria-describedby="title-error"
+              required
             />
+            <p
+              id="title-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div class="space-y-2">
@@ -40,7 +53,11 @@ export function createCreateListingPage(): string {
               rows="5"
               placeholder="Describe the item"
               class="${formStyles.textarea}"
+              aria-describedby="description-helper"
             ></textarea>
+            <p id="description-helper" class="${formStyles.helperText}">
+              Add a short and clear description of the item you are listing.
+            </p>
           </div>
 
           <div class="space-y-2">
@@ -53,8 +70,11 @@ export function createCreateListingPage(): string {
               type="text"
               placeholder="camera, vintage, electronics"
               class="${formStyles.input}"
+              autocomplete="off"
+              spellcheck="false"
+              aria-describedby="tags-helper"
             />
-            <p class="${formStyles.helperText}">
+            <p id="tags-helper" class="${formStyles.helperText}">
               Separate tags with commas.
             </p>
           </div>
@@ -62,9 +82,14 @@ export function createCreateListingPage(): string {
           <div class="space-y-3">
             <div class="space-y-1">
               <h2 class="text-xl font-semibold text-text-main">Media gallery</h2>
-              <p class="${formStyles.helperText}">
+              <p id="media-helper" class="${formStyles.helperText}">
                 Add one or more images for your listing.
               </p>
+              <p
+                id="media-error"
+                class="${formStyles.errorText} hidden"
+                aria-live="polite"
+              ></p>
             </div>
 
             <div id="media-fields" class="space-y-4">
@@ -94,6 +119,10 @@ export function createCreateListingPage(): string {
                     type="url"
                     placeholder="https://example.com/image.jpg"
                     class="${formStyles.input}"
+                    inputmode="url"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    aria-describedby="media-helper media-error"
                   />
                 </div>
 
@@ -107,6 +136,7 @@ export function createCreateListingPage(): string {
                     type="text"
                     placeholder="Describe the listing image"
                     class="${formStyles.input}"
+                    aria-describedby="media-helper media-error"
                   />
                 </div>
               </section>
@@ -130,7 +160,17 @@ export function createCreateListingPage(): string {
               name="ends-at"
               type="datetime-local"
               class="${formStyles.input}"
+              aria-describedby="ends-at-error ends-at-helper"
+              required
             />
+            <p id="ends-at-helper" class="${formStyles.helperText}">
+              Choose a future date and time for when the auction should end.
+            </p>
+            <p
+              id="ends-at-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div class="flex flex-col gap-3 sm:flex-row">

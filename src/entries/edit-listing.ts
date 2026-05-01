@@ -212,6 +212,7 @@ function renumberMediaFields(): void {
     if (urlInput) {
       urlInput.id = `image-url-${index}`;
       urlInput.name = `image-url-${index}`;
+      urlInput.setAttribute("aria-describedby", "media-helper media-error");
     }
 
     if (altLabel) {
@@ -221,6 +222,7 @@ function renumberMediaFields(): void {
     if (altInput) {
       altInput.id = `image-alt-${index}`;
       altInput.name = `image-alt-${index}`;
+      altInput.setAttribute("aria-describedby", "media-helper media-error");
     }
   });
 }
@@ -260,6 +262,10 @@ function createMediaField(index: number): string {
           type="url"
           placeholder="https://example.com/image.jpg"
           class="${formStyles.input}"
+          inputmode="url"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-describedby="media-helper media-error"
         />
       </div>
 
@@ -273,6 +279,7 @@ function createMediaField(index: number): string {
           type="text"
           placeholder="Describe the listing image"
           class="${formStyles.input}"
+          aria-describedby="media-helper media-error"
         />
       </div>
     </section>
@@ -377,15 +384,19 @@ function initializeDeleteListingButton(listingId: string): void {
   }
 
   const deleteModal = modal;
+  let previousFocusedElement: HTMLElement | null = null;
 
   function openModal(): void {
+    previousFocusedElement = document.activeElement as HTMLElement;
     deleteModal.classList.remove("hidden");
     deleteModal.classList.add("flex");
+    confirmDeleteButton?.focus();
   }
 
   function closeModal(): void {
     deleteModal.classList.add("hidden");
     deleteModal.classList.remove("flex");
+    previousFocusedElement?.focus();
   }
 
   deleteButton.addEventListener("click", () => {
@@ -413,6 +424,7 @@ function initializeDeleteListingButton(listingId: string): void {
       closeModal();
       message.textContent = "You must be logged in to delete a listing.";
       message.className = alertStyles.error;
+      message.setAttribute("role", "alert");
       return;
     }
 
@@ -421,11 +433,13 @@ function initializeDeleteListingButton(listingId: string): void {
 
       message.textContent = "Deleting listing...";
       message.className = alertStyles.info;
+      message.setAttribute("role", "status");
 
       await deleteListing(listingId, accessToken, apiKey);
 
       message.textContent = "Listing deleted successfully. Redirecting...";
       message.className = alertStyles.success;
+      message.setAttribute("role", "status");
 
       setTimeout(() => {
         window.location.href = ROUTES.profile;
@@ -438,8 +452,28 @@ function initializeDeleteListingButton(listingId: string): void {
 
       message.textContent = errorMessage;
       message.className = alertStyles.error;
+      message.setAttribute("role", "alert");
     }
   });
+}
+
+function clearFieldError(
+  input: HTMLInputElement | HTMLTextAreaElement,
+  errorElement: HTMLElement,
+): void {
+  input.setAttribute("aria-invalid", "false");
+  errorElement.textContent = "";
+  errorElement.classList.add("hidden");
+}
+
+function showFieldError(
+  input: HTMLInputElement | HTMLTextAreaElement,
+  errorElement: HTMLElement,
+  errorMessage: string,
+): void {
+  input.setAttribute("aria-invalid", "true");
+  errorElement.textContent = errorMessage;
+  errorElement.classList.remove("hidden");
 }
 
 function initializeEditListingForm(listingId: string): void {
@@ -455,16 +489,41 @@ function initializeEditListingForm(listingId: string): void {
     document.querySelector<HTMLTextAreaElement>("#description");
   const tagsInput = document.querySelector<HTMLInputElement>("#tags");
 
-  if (!form || !message || !titleInput || !descriptionInput || !tagsInput) {
+  const titleError =
+    document.querySelector<HTMLParagraphElement>("#title-error");
+  const mediaError =
+    document.querySelector<HTMLParagraphElement>("#media-error");
+
+  if (
+    !form ||
+    !message ||
+    !titleInput ||
+    !descriptionInput ||
+    !tagsInput ||
+    !titleError ||
+    !mediaError
+  ) {
     return;
   }
+
+  titleInput.addEventListener("input", () => {
+    clearFieldError(titleInput, titleError);
+  });
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
 
+    message.textContent = "";
+    message.className = "hidden";
+
+    clearFieldError(titleInput, titleError);
+    mediaError.textContent = "";
+    mediaError.classList.add("hidden");
+
     if (!accessToken || !apiKey) {
       message.textContent = "You must be logged in to update a listing.";
       message.className = alertStyles.error;
+      message.setAttribute("role", "alert");
       return;
     }
 
@@ -478,14 +537,24 @@ function initializeEditListingForm(listingId: string): void {
       })),
     });
 
-    const errorMessages = [
-      validationErrors.title,
-      validationErrors.media,
-    ].filter(Boolean);
+    if (validationErrors.title || validationErrors.media) {
+      if (validationErrors.title) {
+        showFieldError(titleInput, titleError, validationErrors.title);
+      }
 
-    if (errorMessages.length > 0) {
-      message.textContent = errorMessages.join(" ");
+      if (validationErrors.media) {
+        mediaError.textContent = validationErrors.media;
+        mediaError.classList.remove("hidden");
+      }
+
+      message.textContent = "Please correct the highlighted fields.";
       message.className = alertStyles.error;
+      message.setAttribute("role", "alert");
+
+      if (validationErrors.title) {
+        titleInput.focus();
+      }
+
       return;
     }
 
@@ -499,6 +568,7 @@ function initializeEditListingForm(listingId: string): void {
     try {
       message.textContent = "Saving changes...";
       message.className = alertStyles.info;
+      message.setAttribute("role", "status");
 
       const updatedListing = await updateListing(
         listingId,
@@ -509,6 +579,7 @@ function initializeEditListingForm(listingId: string): void {
 
       message.textContent = "Listing updated successfully. Redirecting...";
       message.className = alertStyles.success;
+      message.setAttribute("role", "status");
 
       setTimeout(() => {
         window.location.href = `${ROUTES.singleListing}?id=${updatedListing.id}`;
@@ -519,8 +590,25 @@ function initializeEditListingForm(listingId: string): void {
           ? error.message
           : "Something went wrong while updating the listing.";
 
+      const firstImageUrlInput = document.querySelector<HTMLInputElement>(
+        'input[name^="image-url-"]',
+      );
+
+      if (errorMessage.toLowerCase().includes("image")) {
+        mediaError.textContent = errorMessage;
+        mediaError.classList.remove("hidden");
+
+        message.textContent = "Please correct the highlighted fields.";
+        message.className = alertStyles.error;
+        message.setAttribute("role", "alert");
+
+        firstImageUrlInput?.focus();
+        return;
+      }
+
       message.textContent = errorMessage;
       message.className = alertStyles.error;
+      message.setAttribute("role", "alert");
     }
   });
 }

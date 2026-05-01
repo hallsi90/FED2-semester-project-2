@@ -1,15 +1,35 @@
 import "../style.css";
+import { registerUser } from "../api/auth/register";
 import { createLayout } from "../components/layout";
 import {
   initializeLogout,
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
-import { registerUser } from "../api/auth/register";
+import { alertStyles } from "../components/ui";
 import { createRegisterPage } from "../pages/register-page";
 import { validateRegisterForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
+
+function clearFieldError(
+  input: HTMLInputElement,
+  errorElement: HTMLElement,
+): void {
+  input.setAttribute("aria-invalid", "false");
+  errorElement.textContent = "";
+  errorElement.classList.add("hidden");
+}
+
+function showFieldError(
+  input: HTMLInputElement,
+  errorElement: HTMLElement,
+  message: string,
+): void {
+  input.setAttribute("aria-invalid", "true");
+  errorElement.textContent = message;
+  errorElement.classList.remove("hidden");
+}
 
 if (app) {
   app.innerHTML = createLayout(createRegisterPage());
@@ -23,10 +43,43 @@ if (app) {
   const nameInput = document.querySelector<HTMLInputElement>("#name");
   const emailInput = document.querySelector<HTMLInputElement>("#email");
   const passwordInput = document.querySelector<HTMLInputElement>("#password");
+  const nameError = document.querySelector<HTMLParagraphElement>("#name-error");
+  const emailError =
+    document.querySelector<HTMLParagraphElement>("#email-error");
+  const passwordError =
+    document.querySelector<HTMLParagraphElement>("#password-error");
 
-  if (form && message && nameInput && emailInput && passwordInput) {
+  if (
+    form &&
+    message &&
+    nameInput &&
+    emailInput &&
+    passwordInput &&
+    nameError &&
+    emailError &&
+    passwordError
+  ) {
+    nameInput.addEventListener("input", () => {
+      clearFieldError(nameInput, nameError);
+    });
+
+    emailInput.addEventListener("input", () => {
+      clearFieldError(emailInput, emailError);
+    });
+
+    passwordInput.addEventListener("input", () => {
+      clearFieldError(passwordInput, passwordError);
+    });
+
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+
+      message.textContent = "";
+      message.className = "hidden";
+
+      clearFieldError(nameInput, nameError);
+      clearFieldError(emailInput, emailError);
+      clearFieldError(passwordInput, passwordError);
 
       const formValues = {
         name: nameInput.value.trim(),
@@ -37,26 +90,44 @@ if (app) {
       const errors = validateRegisterForm(formValues);
 
       if (errors.name || errors.email || errors.password) {
-        const errorMessages = Object.values(errors).filter(Boolean).join(" ");
+        if (errors.name) {
+          showFieldError(nameInput, nameError, errors.name);
+        }
 
-        message.textContent = errorMessages;
-        message.className =
-          "rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error";
+        if (errors.email) {
+          showFieldError(emailInput, emailError, errors.email);
+        }
+
+        if (errors.password) {
+          showFieldError(passwordInput, passwordError, errors.password);
+        }
+
+        message.textContent = "Please correct the highlighted fields.";
+        message.className = alertStyles.error;
+        message.setAttribute("role", "alert");
+
+        if (errors.name) {
+          nameInput.focus();
+        } else if (errors.email) {
+          emailInput.focus();
+        } else {
+          passwordInput.focus();
+        }
 
         return;
       }
 
       try {
         message.textContent = "Creating your account...";
-        message.className =
-          "rounded-xl border border-primary-action/20 bg-primary-action/10 px-4 py-3 text-sm text-primary-action";
+        message.className = alertStyles.info;
+        message.setAttribute("role", "status");
 
         await registerUser(formValues);
 
         message.textContent =
           "Registration successful. Redirecting to login...";
-        message.className =
-          "rounded-xl border border-success/20 bg-success/10 px-4 py-3 text-sm text-success";
+        message.className = alertStyles.success;
+        message.setAttribute("role", "status");
 
         form.reset();
 
@@ -70,8 +141,8 @@ if (app) {
             : "Something went wrong. Please try again.";
 
         message.textContent = errorMessage;
-        message.className =
-          "rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error";
+        message.className = alertStyles.error;
+        message.setAttribute("role", "alert");
       }
     });
   }

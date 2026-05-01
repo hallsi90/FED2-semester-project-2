@@ -1,6 +1,6 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 
-// Creates the registration page layout for preview and later authentication logic.
+// Creates the registration page layout for authentication logic.
 export function createRegisterPage(): string {
   return `
     <section class="mx-auto w-full max-w-md space-y-8">
@@ -15,7 +15,12 @@ export function createRegisterPage(): string {
 
       <section class="${cardStyles.base}">
         <form class="space-y-5" novalidate>
-          <div id="register-message" class="hidden"></div>
+          <div
+            id="register-message"
+            class="hidden"
+            aria-live="polite"
+            aria-atomic="true"
+          ></div>
 
           <div class="space-y-2">
             <label for="name" class="${formStyles.label}">
@@ -27,8 +32,17 @@ export function createRegisterPage(): string {
               type="text"
               placeholder="Enter your name"
               class="${formStyles.input}"
-              autocomplete="name"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false"
+              required
+              aria-describedby="name-error"
             />
+            <p
+              id="name-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div class="space-y-2">
@@ -42,7 +56,17 @@ export function createRegisterPage(): string {
               placeholder="name@stud.noroff.no"
               class="${formStyles.input}"
               autocomplete="email"
+              inputmode="email"
+              autocapitalize="off"
+              spellcheck="false"
+              required
+              aria-describedby="email-error"
             />
+            <p
+              id="email-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <div class="space-y-2">
@@ -56,7 +80,19 @@ export function createRegisterPage(): string {
               placeholder="Create a password"
               class="${formStyles.input}"
               autocomplete="new-password"
+              autocapitalize="off"
+              spellcheck="false"
+              required
+              aria-describedby="password-error password-helper"
             />
+            <p id="password-helper" class="${formStyles.helperText}">
+              Password must be at least 8 characters long.
+            </p>
+            <p
+              id="password-error"
+              class="${formStyles.errorText} hidden"
+              aria-live="polite"
+            ></p>
           </div>
 
           <button type="submit" class="${buttonStyles.primary} w-full">

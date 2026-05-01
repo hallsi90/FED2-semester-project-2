@@ -36,6 +36,25 @@ function getRedirectUrl(): string {
   return redirect;
 }
 
+function clearFieldError(
+  input: HTMLInputElement,
+  errorElement: HTMLElement,
+): void {
+  input.setAttribute("aria-invalid", "false");
+  errorElement.textContent = "";
+  errorElement.classList.add("hidden");
+}
+
+function showFieldError(
+  input: HTMLInputElement,
+  errorElement: HTMLElement,
+  message: string,
+): void {
+  input.setAttribute("aria-invalid", "true");
+  errorElement.textContent = message;
+  errorElement.classList.remove("hidden");
+}
+
 if (app) {
   app.innerHTML = createLayout(createLoginPage());
 
@@ -47,10 +66,35 @@ if (app) {
   const message = document.querySelector<HTMLDivElement>("#login-message");
   const emailInput = document.querySelector<HTMLInputElement>("#email");
   const passwordInput = document.querySelector<HTMLInputElement>("#password");
+  const emailError =
+    document.querySelector<HTMLParagraphElement>("#email-error");
+  const passwordError =
+    document.querySelector<HTMLParagraphElement>("#password-error");
 
-  if (form && message && emailInput && passwordInput) {
+  if (
+    form &&
+    message &&
+    emailInput &&
+    passwordInput &&
+    emailError &&
+    passwordError
+  ) {
+    emailInput.addEventListener("input", () => {
+      clearFieldError(emailInput, emailError);
+    });
+
+    passwordInput.addEventListener("input", () => {
+      clearFieldError(passwordInput, passwordError);
+    });
+
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+
+      message.textContent = "";
+      message.className = "hidden";
+
+      clearFieldError(emailInput, emailError);
+      clearFieldError(passwordInput, passwordError);
 
       const formValues = {
         email: emailInput.value.trim(),
@@ -60,16 +104,31 @@ if (app) {
       const errors = validateLoginForm(formValues);
 
       if (errors.email || errors.password) {
-        const errorMessages = Object.values(errors).filter(Boolean).join(" ");
+        if (errors.email) {
+          showFieldError(emailInput, emailError, errors.email);
+        }
 
-        message.textContent = errorMessages;
+        if (errors.password) {
+          showFieldError(passwordInput, passwordError, errors.password);
+        }
+
+        message.textContent = "Please correct the highlighted fields.";
         message.className = alertStyles.error;
+        message.setAttribute("role", "alert");
+
+        if (errors.email) {
+          emailInput.focus();
+        } else {
+          passwordInput.focus();
+        }
+
         return;
       }
 
       try {
         message.textContent = "Logging you in...";
         message.className = alertStyles.info;
+        message.setAttribute("role", "status");
 
         const response = await loginUser(formValues);
 
@@ -101,6 +160,7 @@ if (app) {
 
         message.textContent = "Login successful. Redirecting...";
         message.className = alertStyles.success;
+        message.setAttribute("role", "status");
 
         form.reset();
 
@@ -117,6 +177,7 @@ if (app) {
 
         message.textContent = errorMessage;
         message.className = alertStyles.error;
+        message.setAttribute("role", "alert");
       }
     });
   }

@@ -61,6 +61,25 @@ function renderErrorState(message: string): void {
   initializeNavigation();
 }
 
+function clearFieldError(
+  input: HTMLInputElement | HTMLTextAreaElement,
+  errorElement: HTMLElement,
+): void {
+  input.setAttribute("aria-invalid", "false");
+  errorElement.textContent = "";
+  errorElement.classList.add("hidden");
+}
+
+function showFieldError(
+  input: HTMLInputElement | HTMLTextAreaElement,
+  errorElement: HTMLElement,
+  errorMessage: string,
+): void {
+  input.setAttribute("aria-invalid", "true");
+  errorElement.textContent = errorMessage;
+  errorElement.classList.remove("hidden");
+}
+
 async function renderEditProfilePage(): Promise<void> {
   if (!app) {
     return;
@@ -110,6 +129,12 @@ async function renderEditProfilePage(): Promise<void> {
     const bannerAltInput =
       document.querySelector<HTMLInputElement>("#banner-alt");
 
+    const bioError = document.querySelector<HTMLParagraphElement>("#bio-error");
+    const avatarUrlError =
+      document.querySelector<HTMLParagraphElement>("#avatar-url-error");
+    const bannerUrlError =
+      document.querySelector<HTMLParagraphElement>("#banner-url-error");
+
     if (
       !form ||
       !message ||
@@ -117,13 +142,35 @@ async function renderEditProfilePage(): Promise<void> {
       !avatarUrlInput ||
       !avatarAltInput ||
       !bannerUrlInput ||
-      !bannerAltInput
+      !bannerAltInput ||
+      !bioError ||
+      !avatarUrlError ||
+      !bannerUrlError
     ) {
       return;
     }
 
+    bioInput.addEventListener("input", () => {
+      clearFieldError(bioInput, bioError);
+    });
+
+    avatarUrlInput.addEventListener("input", () => {
+      clearFieldError(avatarUrlInput, avatarUrlError);
+    });
+
+    bannerUrlInput.addEventListener("input", () => {
+      clearFieldError(bannerUrlInput, bannerUrlError);
+    });
+
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+
+      message.textContent = "";
+      message.className = "hidden";
+
+      clearFieldError(bioInput, bioError);
+      clearFieldError(avatarUrlInput, avatarUrlError);
+      clearFieldError(bannerUrlInput, bannerUrlError);
 
       const validationErrors = validateEditProfileForm({
         bio: bioInput.value,
@@ -131,15 +178,43 @@ async function renderEditProfilePage(): Promise<void> {
         bannerUrl: bannerUrlInput.value,
       });
 
-      const errorMessages = [
-        validationErrors.bio,
-        validationErrors.avatarUrl,
-        validationErrors.bannerUrl,
-      ].filter(Boolean);
+      if (
+        validationErrors.bio ||
+        validationErrors.avatarUrl ||
+        validationErrors.bannerUrl
+      ) {
+        if (validationErrors.bio) {
+          showFieldError(bioInput, bioError, validationErrors.bio);
+        }
 
-      if (errorMessages.length > 0) {
-        message.textContent = errorMessages.join(" ");
+        if (validationErrors.avatarUrl) {
+          showFieldError(
+            avatarUrlInput,
+            avatarUrlError,
+            validationErrors.avatarUrl,
+          );
+        }
+
+        if (validationErrors.bannerUrl) {
+          showFieldError(
+            bannerUrlInput,
+            bannerUrlError,
+            validationErrors.bannerUrl,
+          );
+        }
+
+        message.textContent = "Please correct the highlighted fields.";
         message.className = alertStyles.error;
+        message.setAttribute("role", "alert");
+
+        if (validationErrors.bio) {
+          bioInput.focus();
+        } else if (validationErrors.avatarUrl) {
+          avatarUrlInput.focus();
+        } else {
+          bannerUrlInput.focus();
+        }
+
         return;
       }
 
@@ -195,17 +270,20 @@ async function renderEditProfilePage(): Promise<void> {
           message.textContent =
             "Removing avatar or banner images is not supported. Add a new image URL to replace the current one.";
           message.className = alertStyles.error;
+          message.setAttribute("role", "alert");
           return;
         }
 
         message.textContent = "Make at least one change before saving.";
         message.className = alertStyles.error;
+        message.setAttribute("role", "alert");
         return;
       }
 
       try {
         message.textContent = "Saving profile changes...";
         message.className = alertStyles.info;
+        message.setAttribute("role", "status");
 
         const updatedProfile = await updateProfile(
           profileName,
@@ -218,6 +296,7 @@ async function renderEditProfilePage(): Promise<void> {
 
         message.textContent = "Profile updated successfully. Redirecting...";
         message.className = alertStyles.success;
+        message.setAttribute("role", "status");
 
         setTimeout(() => {
           window.location.href = ROUTES.profile;
@@ -230,6 +309,7 @@ async function renderEditProfilePage(): Promise<void> {
 
         message.textContent = errorMessage;
         message.className = alertStyles.error;
+        message.setAttribute("role", "alert");
       }
     });
   } catch (error) {
