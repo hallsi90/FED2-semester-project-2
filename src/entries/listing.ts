@@ -1,22 +1,22 @@
 import "../style.css";
 import { getListingById } from "../api/listings/get-listing";
 import { placeBid } from "../api/listings/place-bid";
+import { getProfileByName } from "../api/profile/get-profile";
 import { createLayout } from "../components/layout";
 import {
   initializeLogout,
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
-import { alertStyles } from "../components/ui";
+import { createPageState } from "../components/page-state";
 import { createSingleListingPage } from "../pages/single-listing-page";
-import { getCountdownTone, formatLiveTimeRemaining } from "../utils/helpers";
+import { formatLiveTimeRemaining, getCountdownTone } from "../utils/helpers";
 import {
   getAccessToken,
   getApiKey,
   getProfile as getStoredProfile,
   saveProfile,
 } from "../utils/auth-storage";
-import { getProfileByName } from "../api/profile/get-profile";
 import { validateBidForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
@@ -100,31 +100,36 @@ async function initializeBidForm(): Promise<void> {
 
     if (errors.amount) {
       message.textContent = errors.amount;
-      message.className = alertStyles.error;
+      message.className =
+        "rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error";
       return;
     }
 
     if (!listingId) {
       message.textContent = "Listing id is missing.";
-      message.className = alertStyles.error;
+      message.className =
+        "rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error";
       return;
     }
 
     if (!accessToken) {
       message.textContent = "You must be logged in to place a bid.";
-      message.className = alertStyles.error;
+      message.className =
+        "rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error";
       return;
     }
 
     if (!apiKey) {
       message.textContent = "API key is missing. Please log in again.";
-      message.className = alertStyles.error;
+      message.className =
+        "rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error";
       return;
     }
 
     try {
       message.textContent = "Submitting bid...";
-      message.className = alertStyles.info;
+      message.className =
+        "rounded-xl border border-primary-action/20 bg-primary-action/10 px-4 py-3 text-sm text-primary-action";
 
       await placeBid(
         listingId,
@@ -150,7 +155,8 @@ async function initializeBidForm(): Promise<void> {
           : "Something went wrong while placing the bid.";
 
       message.textContent = errorMessage;
-      message.className = alertStyles.error;
+      message.className =
+        "rounded-xl border border-error/20 bg-error/10 px-4 py-3 text-sm text-error";
     }
   });
 }
@@ -213,17 +219,14 @@ function renderErrorState(message: string): void {
     return;
   }
 
-  app.innerHTML = createLayout(`
-    <section class="space-y-4">
-      <p class="text-sm font-medium text-text-muted">Listing details</p>
-      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-        Listing unavailable
-      </h1>
-      <div class="${alertStyles.error}">
-        ${message}
-      </div>
-    </section>
-  `);
+  app.innerHTML = createLayout(
+    createPageState({
+      eyebrow: "Listing details",
+      title: "Listing unavailable",
+      message,
+      tone: "error",
+    }),
+  );
 
   initializeNavigation();
 }

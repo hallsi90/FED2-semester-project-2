@@ -1,6 +1,6 @@
 import "../style.css";
-import { getProfileByName } from "../api/profile/get-profile";
 import { getProfileBids } from "../api/profile/get-profile-bids";
+import { getProfileByName } from "../api/profile/get-profile";
 import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createLayout } from "../components/layout";
 import {
@@ -8,8 +8,8 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
+import { createPageState } from "../components/page-state";
 import { initializeProfileSections } from "../components/profile-events";
-import { alertStyles } from "../components/ui";
 import { createProfilePage } from "../pages/profile-page";
 import type { Bid, Listing, Profile } from "../types/api";
 import {
@@ -54,16 +54,13 @@ function renderErrorState(message: string): void {
     return;
   }
 
-  app.innerHTML = createLayout(`
-    <section class="space-y-4">
-      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-        Profile unavailable
-      </h1>
-      <div class="${alertStyles.error}">
-        ${message}
-      </div>
-    </section>
-  `);
+  app.innerHTML = createLayout(
+    createPageState({
+      title: "Profile unavailable",
+      message,
+      tone: "error",
+    }),
+  );
 
   initializePage();
 }

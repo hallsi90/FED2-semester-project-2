@@ -8,9 +8,10 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
+import { createPageState } from "../components/page-state";
 import { alertStyles } from "../components/ui";
-import { createEditProfilePage } from "../pages/edit-profile-page";
 import { ROUTES } from "../constants/routes";
+import { createEditProfilePage } from "../pages/edit-profile-page";
 import {
   getAccessToken,
   getApiKey,
@@ -52,16 +53,13 @@ function renderErrorState(message: string): void {
     return;
   }
 
-  app.innerHTML = createLayout(`
-    <section class="space-y-4">
-      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-        Edit profile unavailable
-      </h1>
-      <div class="${alertStyles.error}">
-        ${message}
-      </div>
-    </section>
-  `);
+  app.innerHTML = createLayout(
+    createPageState({
+      title: "Edit profile unavailable",
+      message,
+      tone: "error",
+    }),
+  );
 
   initializeNavigation();
 }

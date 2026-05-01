@@ -6,7 +6,7 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
-import { alertStyles } from "../components/ui";
+import { createPageState } from "../components/page-state";
 import { createListingsPage } from "../pages/listings-page";
 import type { Listing } from "../types/api";
 
@@ -112,16 +112,13 @@ function renderErrorState(message: string): void {
     return;
   }
 
-  app.innerHTML = createLayout(`
-    <section class="space-y-4">
-      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-        Browse auctions
-      </h1>
-      <div class="${alertStyles.error}">
-        ${message}
-      </div>
-    </section>
-  `);
+  app.innerHTML = createLayout(
+    createPageState({
+      title: "Browse auctions",
+      message,
+      tone: "error",
+    }),
+  );
 
   initializeNavigation();
 }

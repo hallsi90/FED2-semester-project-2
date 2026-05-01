@@ -2,16 +2,17 @@ import "../style.css";
 import { deleteListing } from "../api/listings/delete-listing";
 import { getListingById } from "../api/listings/get-listing";
 import { updateListing } from "../api/listings/update-listing";
+import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createLayout } from "../components/layout";
 import {
   initializeLogout,
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
+import { createPageState } from "../components/page-state";
 import { alertStyles, buttonStyles, formStyles } from "../components/ui";
-import { renderAuthRequiredState } from "../components/auth-required-state";
-import { createEditListingPage } from "../pages/edit-listing-page";
 import { ROUTES } from "../constants/routes";
+import { createEditListingPage } from "../pages/edit-listing-page";
 import {
   getAccessToken,
   getApiKey,
@@ -57,16 +58,13 @@ function renderErrorState(message: string): void {
     return;
   }
 
-  app.innerHTML = createLayout(`
-    <section class="space-y-4">
-      <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-        Edit listing unavailable
-      </h1>
-      <div class="${alertStyles.error}">
-        ${message}
-      </div>
-    </section>
-  `);
+  app.innerHTML = createLayout(
+    createPageState({
+      title: "Edit listing unavailable",
+      message,
+      tone: "error",
+    }),
+  );
 
   initializeNavigation();
 }
