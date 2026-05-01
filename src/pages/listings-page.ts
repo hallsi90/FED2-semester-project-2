@@ -1,3 +1,4 @@
+import { createEmptyState } from "../components/empty-state";
 import { createFilterControls } from "../components/filter-controls";
 import { createListingCard } from "../components/listing-card";
 import { createSearchBar } from "../components/search-bar";
@@ -7,6 +8,19 @@ import type { Listing } from "../types/api";
 // Creates the main listings page layout with a page intro,
 // search, sort, filter controls, and a listings grid.
 export function createListingsPage(listings: Listing[]): string {
+  const listingsMarkup =
+    listings.length > 0
+      ? `
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          ${listings.map((listing) => createListingCard(listing)).join("")}
+        </div>
+      `
+      : createEmptyState({
+          title: "No listings found",
+          message:
+            "Try changing your search, category, or sort options to see more results.",
+        });
+
   return `
     <section class="space-y-8">
       <header class="space-y-3">
@@ -76,9 +90,7 @@ export function createListingsPage(listings: Listing[]): string {
           </p>
         </div>
 
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          ${listings.map((listing) => createListingCard(listing)).join("")}
-        </div>
+        ${listingsMarkup}
       </section>
     </section>
   `;

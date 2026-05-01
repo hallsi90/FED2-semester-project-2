@@ -1,3 +1,4 @@
+import { createEmptyState } from "../components/empty-state";
 import { buttonStyles, cardStyles } from "../components/ui";
 import { createListingCard } from "../components/listing-card";
 import { ROUTES } from "../constants/routes";
@@ -154,28 +155,23 @@ export function createProfilePage(data: ProfilePageData): string {
             `;
           })
           .join("")
-      : `
-        <div class="${cardStyles.base} md:col-span-2">
-          <p class="text-sm text-text-muted">
-            ${
-              data.isOwnProfile
-                ? "You have not created any listings yet."
-                : `${profileName} has not created any listings yet.`
-            }
-          </p>
-        </div>
-      `;
+      : createEmptyState({
+          title: data.isOwnProfile ? "No listings yet" : "No listings yet",
+          message: data.isOwnProfile
+            ? "You have not created any listings yet."
+            : `${profileName} has not created any listings yet.`,
+          actionHref: data.isOwnProfile ? ROUTES.createListing : undefined,
+          actionLabel: data.isOwnProfile ? "Create listing" : undefined,
+        });
 
   const bidListingsMarkup =
     sortedBidListings.length > 0
       ? sortedBidListings.map((listing) => createListingCard(listing)).join("")
-      : `
-        <div class="${cardStyles.base} md:col-span-2">
-          <p class="text-sm text-text-muted">
-            You have not placed any bids yet.
-          </p>
-        </div>
-      `;
+      : createEmptyState({
+          title: "No bids yet",
+          message: "You have not placed any bids yet.",
+          compact: true,
+        });
 
   return `
     <section class="space-y-8">

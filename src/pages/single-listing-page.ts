@@ -1,3 +1,4 @@
+import { createEmptyState } from "../components/empty-state";
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 import { ROUTES } from "../constants/routes";
 import {
@@ -98,11 +99,11 @@ export function createSingleListingPage(
             .join("")}
         </ul>
       `
-      : `
-        <p class="text-sm text-text-muted">
-          No bids have been placed yet.
-        </p>
-      `;
+      : createEmptyState({
+          title: "No bids yet",
+          message: "No bids have been placed yet.",
+          compact: true,
+        });
 
   const tagsMarkup =
     visibleTags.length > 0
