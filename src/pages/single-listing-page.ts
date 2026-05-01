@@ -1,4 +1,3 @@
-import { createEmptyState } from "../components/empty-state";
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 import { ROUTES } from "../constants/routes";
 import {
@@ -99,11 +98,11 @@ export function createSingleListingPage(
             .join("")}
         </ul>
       `
-      : createEmptyState({
-          title: "No bids yet",
-          message: "No bids have been placed yet.",
-          compact: true,
-        });
+      : `
+        <p class="text-sm text-text-muted">
+          No bids have been placed yet.
+        </p>
+      `;
 
   const tagsMarkup =
     visibleTags.length > 0
@@ -172,7 +171,12 @@ export function createSingleListingPage(
           </span>
         </div>
 
-        <div id="bid-message" class="hidden"></div>
+        <div
+          id="bid-message"
+          class="hidden"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
 
         <div class="space-y-2 rounded-xl bg-background px-4 py-3">
           <p class="text-sm font-medium text-text-muted">
@@ -203,7 +207,14 @@ export function createSingleListingPage(
             step="1"
             placeholder="Enter your bid"
             class="${formStyles.input}"
+            aria-describedby="bid-amount-error"
+            required
           />
+          <p
+            id="bid-amount-error"
+            class="${formStyles.errorText} hidden"
+            aria-live="polite"
+          ></p>
         </div>
 
         <button type="submit" class="${buttonStyles.primary}">
