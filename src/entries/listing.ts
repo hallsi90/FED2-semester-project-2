@@ -14,10 +14,14 @@ import {
   getAccessToken,
   getApiKey,
   getProfile as getStoredProfile,
+  saveProfile,
 } from "../utils/auth-storage";
+import { getProfileByName } from "../api/profile/get-profile";
 import { validateBidForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
+
+let countdownIntervalId: number | null = null;
 
 function initializeNavigation(): void {
   initializeMobileMenu();
@@ -30,7 +34,16 @@ function getListingIdFromUrl(): string | null {
   return params.get("id");
 }
 
+function clearLiveCountdown(): void {
+  if (countdownIntervalId !== null) {
+    window.clearInterval(countdownIntervalId);
+    countdownIntervalId = null;
+  }
+}
+
 function initializeLiveCountdown(): void {
+  clearLiveCountdown();
+
   const countdownElements =
     document.querySelectorAll<HTMLElement>("#listing-countdown");
 
@@ -61,7 +74,7 @@ function initializeLiveCountdown(): void {
   }
 
   updateCountdowns();
-  window.setInterval(updateCountdowns, 1000);
+  countdownIntervalId = window.setInterval(updateCountdowns, 1000);
 }
 
 async function initializeBidForm(): Promise<void> {
@@ -79,6 +92,7 @@ async function initializeBidForm(): Promise<void> {
     const listingId = getListingIdFromUrl();
     const accessToken = getAccessToken();
     const apiKey = getApiKey();
+    const storedProfile = getStoredProfile();
 
     const errors = validateBidForm({
       amount: amountInput.value,
@@ -119,10 +133,16 @@ async function initializeBidForm(): Promise<void> {
         apiKey,
       );
 
-      message.textContent = "Bid placed successfully.";
-      message.className = alertStyles.success;
+      if (storedProfile?.name) {
+        const freshProfile = await getProfileByName(
+          storedProfile.name,
+          accessToken,
+          apiKey,
+        );
+        saveProfile(freshProfile);
+      }
 
-      form.reset();
+      await renderListingPage();
     } catch (error) {
       const errorMessage =
         error instanceof Error
@@ -220,6 +240,7 @@ async function renderListingPage(): Promise<void> {
     return;
   }
 
+  clearLiveCountdown();
   renderLoadingState();
 
   try {
