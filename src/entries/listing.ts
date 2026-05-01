@@ -9,6 +9,7 @@ import {
 } from "../components/navigation-events";
 import { alertStyles } from "../components/ui";
 import { createSingleListingPage } from "../pages/single-listing-page";
+import { getCountdownTone, formatLiveTimeRemaining } from "../utils/helpers";
 import {
   getAccessToken,
   getApiKey,
@@ -27,6 +28,40 @@ function initializeNavigation(): void {
 function getListingIdFromUrl(): string | null {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
+}
+
+function initializeLiveCountdown(): void {
+  const countdownElements =
+    document.querySelectorAll<HTMLElement>("#listing-countdown");
+
+  if (countdownElements.length === 0) {
+    return;
+  }
+
+  function updateCountdowns(): void {
+    countdownElements.forEach((element) => {
+      const endsAt = element.dataset.endsAt;
+
+      if (!endsAt) {
+        return;
+      }
+
+      element.textContent = formatLiveTimeRemaining(endsAt);
+      element.classList.remove(
+        "text-text-main",
+        "text-text-muted",
+        "text-orange-600",
+        "text-red-600",
+        "font-medium",
+      );
+
+      const toneClasses = getCountdownTone(endsAt).split(" ");
+      element.classList.add(...toneClasses);
+    });
+  }
+
+  updateCountdowns();
+  window.setInterval(updateCountdowns, 1000);
 }
 
 async function initializeBidForm(): Promise<void> {
@@ -204,6 +239,7 @@ async function renderListingPage(): Promise<void> {
 
     initializeNavigation();
     initializeImageGallery();
+    initializeLiveCountdown();
 
     if (!isOwner) {
       await initializeBidForm();

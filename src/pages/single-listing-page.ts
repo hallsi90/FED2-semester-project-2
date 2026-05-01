@@ -1,6 +1,10 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 import { ROUTES } from "../constants/routes";
-import { formatDate } from "../utils/helpers";
+import {
+  formatDateTime,
+  formatLiveTimeRemaining,
+  getCountdownTone,
+} from "../utils/helpers";
 import type { Listing } from "../types/api";
 
 interface SingleListingPageOptions {
@@ -27,6 +31,7 @@ export function createSingleListingPage(
   const visibleTags = listing.tags.filter((tag) => tag.trim().length > 0);
   const loginRedirectUrl = `${ROUTES.singleListing}?id=${listing.id}`;
   const loginToBidUrl = `${ROUTES.login}?redirect=${encodeURIComponent(loginRedirectUrl)}`;
+  const countdownTone = getCountdownTone(listing.endsAt);
 
   const thumbnailGallery =
     mediaItems.length > 1
@@ -125,6 +130,19 @@ export function createSingleListingPage(
           You own this listing, so bidding is disabled.
         </p>
 
+        <div class="space-y-2 rounded-xl bg-background px-4 py-3">
+          <p class="text-sm font-medium text-text-muted">
+            Ends ${formatDateTime(listing.endsAt)}
+          </p>
+          <p
+            id="listing-countdown"
+            data-ends-at="${listing.endsAt}"
+            class="text-sm font-semibold ${countdownTone}"
+          >
+            ${formatLiveTimeRemaining(listing.endsAt)}
+          </p>
+        </div>
+
         <div class="flex flex-col gap-3 sm:flex-row">
           <a href="${ROUTES.editListing}?id=${listing.id}" class="${buttonStyles.primary}">
             Edit listing
@@ -143,6 +161,19 @@ export function createSingleListingPage(
         </div>
 
         <div id="bid-message" class="hidden"></div>
+
+        <div class="space-y-2 rounded-xl bg-background px-4 py-3">
+          <p class="text-sm font-medium text-text-muted">
+            Ends ${formatDateTime(listing.endsAt)}
+          </p>
+          <p
+            id="listing-countdown"
+            data-ends-at="${listing.endsAt}"
+            class="text-sm font-semibold ${countdownTone}"
+          >
+            ${formatLiveTimeRemaining(listing.endsAt)}
+          </p>
+        </div>
 
         <p class="text-sm text-text-muted">
           Enter your bid amount below.
@@ -176,6 +207,19 @@ export function createSingleListingPage(
           <span class="text-sm font-medium text-text-muted">
             ${bidCount} bid${bidCount === 1 ? "" : "s"}
           </span>
+        </div>
+
+        <div class="space-y-2 rounded-xl bg-background px-4 py-3">
+          <p class="text-sm font-medium text-text-muted">
+            Ends ${formatDateTime(listing.endsAt)}
+          </p>
+          <p
+            id="listing-countdown"
+            data-ends-at="${listing.endsAt}"
+            class="text-sm font-semibold ${countdownTone}"
+          >
+            ${formatLiveTimeRemaining(listing.endsAt)}
+          </p>
         </div>
 
         <p class="text-sm text-text-muted">
@@ -231,7 +275,7 @@ export function createSingleListingPage(
             <div class="space-y-4">
               <div class="space-y-2">
                 <p class="text-sm font-medium text-primary-dark">
-                  Ends ${formatDate(listing.endsAt)}
+                  Ends ${formatDateTime(listing.endsAt)}
                 </p>
                 <h2 class="text-2xl font-semibold text-text-main">
                   Description

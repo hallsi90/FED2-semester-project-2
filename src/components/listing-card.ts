@@ -1,6 +1,10 @@
 import { buttonStyles, cardStyles } from "./ui";
 import { ROUTES } from "../constants/routes";
-import { formatDate } from "../utils/helpers";
+import {
+  formatDateTime,
+  formatTimeRemaining,
+  getCountdownTone,
+} from "../utils/helpers";
 import type { Listing } from "../types/api";
 
 // Creates a reusable listing card.
@@ -16,6 +20,7 @@ export function createListingCard(listing: Listing): string {
 
   const bidCount = listing._count?.bids ?? 0;
   const listingUrl = `${ROUTES.singleListing}?id=${listing.id}`;
+  const countdownTone = getCountdownTone(listing.endsAt);
 
   return `
     <article class="h-full">
@@ -46,7 +51,10 @@ export function createListingCard(listing: Listing): string {
               ${listing.title}
             </h2>
             <p class="text-sm font-medium text-primary-dark">
-              Ends ${formatDate(listing.endsAt)}
+              Ends ${formatDateTime(listing.endsAt)}
+            </p>
+            <p class="text-sm ${countdownTone}">
+              ${formatTimeRemaining(listing.endsAt)}
             </p>
           </div>
 

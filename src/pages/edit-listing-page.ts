@@ -1,7 +1,8 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
+import { formatDateTime } from "../utils/helpers";
 import type { Listing } from "../types/api";
 
-// Creates the edit listing page layout for preview and later update logic.
+// Creates the edit listing page layout.
 export function createEditListingPage(listing: Listing): string {
   const mediaItems =
     listing.media.length > 0 ? listing.media : [{ url: "", alt: "" }];
@@ -162,7 +163,7 @@ export function createEditListingPage(listing: Listing): string {
           <div class="rounded-xl bg-background px-5 py-4">
             <p class="text-sm font-medium text-text-muted">Ends at</p>
             <p class="mt-2 text-base font-semibold text-text-main">
-              ${listing.endsAt}
+              ${formatDateTime(listing.endsAt)}
             </p>
             <p class="mt-2 ${formStyles.helperText}">
               The auction end date cannot be changed after a listing is created.

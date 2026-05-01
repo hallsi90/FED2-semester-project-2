@@ -1,7 +1,11 @@
 import { buttonStyles, cardStyles } from "../components/ui";
 import { createListingCard } from "../components/listing-card";
 import { ROUTES } from "../constants/routes";
-import { formatDate } from "../utils/helpers";
+import {
+  formatDateTime,
+  formatTimeRemaining,
+  getCountdownTone,
+} from "../utils/helpers";
 import type { Listing, Profile } from "../types/api";
 
 interface ProfilePageData {
@@ -83,6 +87,7 @@ export function createProfilePage(data: ProfilePageData): string {
             const bidCount = listing._count?.bids ?? 0;
             const listingUrl = `${ROUTES.singleListing}?id=${listing.id}`;
             const editUrl = `${ROUTES.editListing}?id=${listing.id}`;
+            const countdownTone = getCountdownTone(listing.endsAt);
 
             return `
               <article class="${cardStyles.interactive} flex h-full flex-col">
@@ -108,7 +113,10 @@ export function createProfilePage(data: ProfilePageData): string {
                       ${listing.title}
                     </h3>
                     <p class="text-sm font-medium text-primary-dark">
-                      Ends ${formatDate(listing.endsAt)}
+                      Ends ${formatDateTime(listing.endsAt)}
+                    </p>
+                    <p class="text-sm ${countdownTone}">
+                      ${formatTimeRemaining(listing.endsAt)}
                     </p>
                   </div>
 
