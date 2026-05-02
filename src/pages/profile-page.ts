@@ -19,6 +19,7 @@ interface ProfilePageData {
 // Creates the profile page layout.
 export function createProfilePage(data: ProfilePageData): string {
   const profileName = data.profile.name?.trim() || "Unknown user";
+  const profileEmail = data.profile.email?.trim() || "";
   const bannerUrl = data.profile.banner?.url?.trim() || "";
   const bannerAlt = data.profile.banner?.alt?.trim() || `${profileName} banner`;
 
@@ -34,12 +35,12 @@ export function createProfilePage(data: ProfilePageData): string {
       <img
         src="${avatarUrl}"
         alt="${avatarAlt}"
-        class="h-28 w-28 shrink-0 rounded-full border-4 border-white object-cover shadow-sm md:h-32 md:w-32"
+        class="h-28 w-28 shrink-0 rounded-full border-4 border-white object-cover shadow-sm md:h-20 md:w-20 lg:h-24 lg:w-24"
       />
     `
     : `
       <div
-        class="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-white bg-background text-2xl font-semibold text-text-main shadow-sm md:h-32 md:w-32"
+        class="flex h-28 w-28 shrink-0 items-center justify-center rounded-full border-4 border-white bg-background text-xl font-semibold text-text-main shadow-sm md:h-20 md:w-20 lg:h-24 lg:w-24"
         aria-label="${profileName} avatar placeholder"
       >
         ${profileInitial}
@@ -119,7 +120,7 @@ export function createProfilePage(data: ProfilePageData): string {
 
                 <div class="flex flex-1 flex-col space-y-4">
                   <div class="space-y-1">
-                    <h3 class="text-2xl font-semibold leading-tight text-text-main">
+                    <h3 class="text-xl font-semibold leading-tight text-text-main md:text-2xl">
                       ${title}
                     </h3>
                     <p class="text-sm font-medium text-primary-dark">
@@ -189,55 +190,77 @@ export function createProfilePage(data: ProfilePageData): string {
 
   return `
     <section class="space-y-8">
-      <header>
-        <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-          ${profileName}
-        </h1>
-      </header>
+      <section class="overflow-hidden rounded-xl border border-border-neutral bg-surface shadow-sm">
+        <div class="relative">
+  ${
+    bannerUrl
+      ? `
+        <div class="h-36 w-full overflow-hidden rounded-t-xl md:h-44 lg:h-48">
+          <img
+            src="${bannerUrl}"
+            alt="${bannerAlt}"
+            class="h-full w-full object-cover"
+          />
+        </div>
+      `
+      : `
+        <div class="h-28 w-full rounded-t-xl bg-background md:h-36"></div>
+      `
+  }
+          
 
-      <section class="${cardStyles.base} overflow-hidden p-0">
-        ${
-          bannerUrl
-            ? `
-              <div class="h-48 w-full overflow-hidden rounded-t-2xl md:h-64">
-                <img
-                  src="${bannerUrl}"
-                  alt="${bannerAlt}"
-                  class="h-full w-full rounded-t-2xl object-cover"
-                />
-              </div>
-            `
-            : `
-              <div class="h-24 w-full rounded-t-2xl bg-background md:h-28"></div>
-            `
-        }
+          ${
+            data.isOwnProfile
+              ? `
+                <div class="absolute right-3 top-3 md:right-4 md:top-4">
+                  <a
+                    href="/profile/edit/"
+                    class="inline-flex items-center justify-center rounded-lg bg-white px-3 py-2 text-sm font-medium text-text-main shadow-sm transition hover:bg-background"
+                  >
+                    Edit profile
+                  </a>
+                </div>
+              `
+              : ""
+          }
+        </div>
 
-        <div class="px-5 pb-5 pt-0 md:hidden">
-          <div class="flex flex-col items-center text-center">
-            <div class="-mt-9 mb-1">
+        <div class="px-5 pb-5 pt-4 md:hidden">
+          <div class="flex flex-col items-center text-center gap-3">
+            <div>
               ${avatarMarkup}
             </div>
 
-            <div class="w-full max-w-xs">
-              <p class="whitespace-pre-line text-base leading-7 text-text-muted">
-                ${bio}
-              </p>
+            <div class="space-y-0">
+              <h1 class="text-3xl font-bold text-text-main">
+                ${profileName}
+              </h1>
+
+              ${
+                data.isOwnProfile && profileEmail
+                  ? `
+                    <p class="text-sm text-text-muted">
+                      ${profileEmail}
+                    </p>
+                  `
+                  : ""
+              }
             </div>
+
+            <p class="max-w-xs whitespace-pre-line text-base leading-7 text-text-muted">
+              ${bio}
+            </p>
 
             ${
               data.isOwnProfile
                 ? `
-                  <div class="mt-6 w-full rounded-xl bg-background px-5 py-4 text-left">
-                    <p class="text-sm font-medium text-text-muted">Credits balance</p>
-                    <p class="mt-2 text-3xl font-bold text-primary-action">
+                  <div class="w-full max-w-55 rounded-xl bg-background px-4 py-4 text-center">
+                    <p class="text-sm font-medium text-text-muted">
+                      Credits
+                    </p>
+                    <p class="mt-2 text-2xl font-bold text-primary-action">
                       ${credits}
                     </p>
-                  </div>
-
-                  <div class="mt-5 w-full text-left">
-                    <a href="/profile/edit/" class="${buttonStyles.secondary}">
-                      Edit profile
-                    </a>
                   </div>
                 `
                 : ""
@@ -245,15 +268,29 @@ export function createProfilePage(data: ProfilePageData): string {
           </div>
         </div>
 
-        <div class="hidden px-6 pb-6 pt-0 md:block">
-          <div class="-mt-16 space-y-6">
-            <div class="grid grid-cols-[8rem_minmax(0,1fr)] gap-6">
-              <div>
+        <div class="hidden md:block px-6 py-5 lg:px-8 lg:py-6">
+          <div class="flex items-center justify-between gap-6 lg:gap-8">
+            <div class="flex min-w-0 items-center gap-4 lg:gap-5">
+              <div class="shrink-0">
                 ${avatarMarkup}
               </div>
 
-              <div class="pt-14">
-                <p class="whitespace-pre-line text-base leading-8 text-text-muted">
+              <div class="min-w-0 space-y-0">
+                <h1 class="text-3xl font-bold leading-none text-text-main">
+                  ${profileName}
+                </h1>
+
+                ${
+                  data.isOwnProfile && profileEmail
+                    ? `
+                      <p class="truncate text-sm text-text-muted">
+                        ${profileEmail}
+                      </p>
+                    `
+                    : ""
+                }
+
+                <p class="mt-1 max-w-md whitespace-pre-line text-sm leading-5 text-text-muted lg:max-w-lg">
                   ${bio}
                 </p>
               </div>
@@ -262,17 +299,13 @@ export function createProfilePage(data: ProfilePageData): string {
             ${
               data.isOwnProfile
                 ? `
-                  <div class="rounded-xl bg-background px-5 py-4 text-left">
-                    <p class="text-sm font-medium text-text-muted">Credits balance</p>
+                  <div class="shrink-0 rounded-xl bg-background px-5 py-4 text-center">
+                    <p class="text-sm font-medium text-text-muted">
+                      Credits
+                    </p>
                     <p class="mt-2 text-3xl font-bold text-primary-action">
                       ${credits}
                     </p>
-                  </div>
-
-                  <div class="text-left">
-                    <a href="/profile/edit/" class="${buttonStyles.secondary}">
-                      Edit profile
-                    </a>
                   </div>
                 `
                 : ""
