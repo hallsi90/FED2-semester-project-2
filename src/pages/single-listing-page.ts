@@ -85,13 +85,21 @@ export function createSingleListingPage(
             .sort((a, b) => b.amount - a.amount)
             .map(
               (bid) => `
-                <li class="flex items-center justify-between rounded-lg bg-background px-4 py-3">
-                  <span class="text-sm text-text-main">
-                    ${bid.bidder?.name?.trim() || "Unknown bidder"}
-                  </span>
-                  <span class="text-sm font-semibold text-text-main">
-                    ${bid.amount} credits
-                  </span>
+                <li class="rounded-lg bg-background px-4 py-3">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="space-y-1">
+                      <p class="text-sm font-medium text-text-main">
+                        ${bid.bidder?.name?.trim() || "Unknown bidder"}
+                      </p>
+                      <p class="text-xs text-text-muted">
+                        ${formatDateTime(bid.created)}
+                      </p>
+                    </div>
+
+                    <span class="text-sm font-semibold text-text-main">
+                      ${bid.amount} credits
+                    </span>
+                  </div>
                 </li>
               `,
             )
