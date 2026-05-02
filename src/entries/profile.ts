@@ -78,16 +78,24 @@ function getUniqueBidListingIds(bids: Bid[]): string[] {
   return Array.from(uniqueIds);
 }
 
-async function getBidListingsWithCounts(
-  listingIds: string[],
-): Promise<Listing[]> {
+function getUniqueListingIds(listings: Listing[]): string[] {
+  const uniqueIds = new Set<string>();
+
+  listings.forEach((listing) => {
+    if (listing.id) {
+      uniqueIds.add(listing.id);
+    }
+  });
+
+  return Array.from(uniqueIds);
+}
+
+async function getListingsWithCounts(listingIds: string[]): Promise<Listing[]> {
   const listings = await Promise.all(
     listingIds.map((listingId) => getListingById(listingId)),
   );
 
-  return listings.sort((a, b) => {
-    return new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime();
-  });
+  return listings;
 }
 
 async function renderProfilePage(): Promise<void> {
@@ -141,8 +149,13 @@ async function renderProfilePage(): Promise<void> {
 
     const bidListingIds = isOwnProfile ? getUniqueBidListingIds(bids) : [];
     const bidListings = isOwnProfile
-      ? await getBidListingsWithCounts(bidListingIds)
+      ? await getListingsWithCounts(bidListingIds)
       : [];
+
+    const winListingIds = isOwnProfile
+      ? getUniqueListingIds(profile.wins ?? [])
+      : [];
+    const wins = isOwnProfile ? await getListingsWithCounts(winListingIds) : [];
 
     if (isOwnProfile) {
       saveProfile(profile);
@@ -150,7 +163,10 @@ async function renderProfilePage(): Promise<void> {
 
     app.innerHTML = createLayout(
       createProfilePage({
-        profile,
+        profile: {
+          ...profile,
+          wins,
+        },
         createdListings,
         bidListings,
         isOwnProfile,
