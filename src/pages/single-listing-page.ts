@@ -127,11 +127,7 @@ export function createSingleListingPage(
             .join("")}
         </div>
       `
-      : `
-        <p class="text-sm text-text-muted">
-          No tags added.
-        </p>
-      `;
+      : "";
 
   let bidSectionMarkup = "";
 
