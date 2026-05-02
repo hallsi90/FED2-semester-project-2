@@ -5,8 +5,7 @@ import { createSearchBar } from "../components/search-bar";
 import { formStyles } from "../components/ui";
 import type { Listing } from "../types/api";
 
-// Creates the main listings page layout with a page intro,
-// search, sort, filter controls, and a listings grid.
+// Creates the main listings page layout with a page intro, search, sort, filter controls, and a listings grid.
 export function createListingsPage(listings: Listing[]): string {
   const listingsMarkup =
     listings.length > 0
@@ -25,10 +24,10 @@ export function createListingsPage(listings: Listing[]): string {
     <section class="space-y-8">
       <header class="space-y-3">
         <h1 class="text-3xl font-bold text-text-main md:text-4xl">
-          Browse auctions
+          Bid. Win. Own.
         </h1>
         <p class="max-w-2xl text-base leading-7 text-text-muted">
-          Discover student listings, place bids, and explore active auctions in one place.
+          From rare finds to everyday steals, explore auctions and claim something extraordinary.
         </p>
       </header>
 
