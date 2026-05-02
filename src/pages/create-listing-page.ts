@@ -3,7 +3,7 @@ import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 // Creates the create listing page layout for listing logic.
 export function createCreateListingPage(): string {
   return `
-    <section class="mx-auto w-full max-w-2xl space-y-8">
+    <section class="mx-auto w-full max-w-2xl space-y-8 lg:max-w-3xl">
       <header class="space-y-3">
         <h1 class="text-3xl font-bold text-text-main md:text-4xl">
           Create listing

@@ -10,7 +10,7 @@ export function createEditProfilePage(profile: Profile): string {
   const bannerAlt = profile.banner?.alt?.trim() || "";
 
   return `
-    <section class="mx-auto w-full max-w-2xl space-y-8">
+    <section class="mx-auto w-full max-w-2xl space-y-8 lg:max-w-3xl">
       <header class="space-y-3">
         <h1 class="text-3xl font-bold text-text-main md:text-4xl">
           Edit profile

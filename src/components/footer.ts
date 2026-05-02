@@ -3,7 +3,7 @@ export function createFooter(): string {
   return `
     <footer class="border-t border-border-neutral bg-white">
       <div class="mx-auto w-full max-w-6xl px-4 py-10 md:px-6 lg:px-8">
-        <div class="grid gap-10 text-center md:grid-cols-3 md:text-left">
+        <div class="grid gap-8 text-center md:grid-cols-3 md:text-left">
           <section>
             <h2 class="mb-4 text-lg font-semibold text-text-main">About</h2>
             <ul class="space-y-3 text-base text-text-muted">

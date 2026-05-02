@@ -50,7 +50,7 @@ export function createListingCard(listing: Listing): string {
 
         <div class="flex flex-1 flex-col space-y-4">
           <div class="space-y-1">
-            <h2 class="text-2xl font-semibold leading-tight text-text-main transition group-hover:text-primary-action">
+            <h2 class="text-xl font-semibold leading-tight text-text-main transition group-hover:text-primary-action">
               ${title}
             </h2>
             <p class="text-sm font-medium text-primary-dark">

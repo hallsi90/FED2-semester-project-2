@@ -3,7 +3,7 @@ import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 // Creates the login page layout for authentication logic.
 export function createLoginPage(): string {
   return `
-    <section class="mx-auto w-full max-w-md space-y-8">
+    <section class="mx-auto w-full max-w-md space-y-8 lg:max-w-xl">
       <header class="space-y-3 text-center">
         <h1 class="text-3xl font-bold text-text-main md:text-4xl">
           Log in
