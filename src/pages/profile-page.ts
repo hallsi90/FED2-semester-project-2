@@ -27,6 +27,7 @@ export function createProfilePage(data: ProfilePageData): string {
   const bio = data.profile.bio?.trim() || "No bio added yet.";
   const credits = data.profile.credits ?? 0;
   const profileInitial = profileName.charAt(0).toUpperCase();
+  const wins = data.profile.wins ?? [];
 
   const avatarMarkup = avatarUrl
     ? `
@@ -66,6 +67,10 @@ export function createProfilePage(data: ProfilePageData): string {
 
   const sortedBidListings = [...data.bidListings].sort((a, b) => {
     return new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime();
+  });
+
+  const sortedWins = [...wins].sort((a, b) => {
+    return new Date(b.endsAt).getTime() - new Date(a.endsAt).getTime();
   });
 
   const createdListingsMarkup =
@@ -156,7 +161,7 @@ export function createProfilePage(data: ProfilePageData): string {
           })
           .join("")
       : createEmptyState({
-          title: data.isOwnProfile ? "No listings yet" : "No listings yet",
+          title: "No listings yet",
           message: data.isOwnProfile
             ? "You have not created any listings yet."
             : `${profileName} has not created any listings yet.`,
@@ -170,6 +175,15 @@ export function createProfilePage(data: ProfilePageData): string {
       : createEmptyState({
           title: "No bids yet",
           message: "You have not placed any bids yet.",
+          compact: true,
+        });
+
+  const winsMarkup =
+    sortedWins.length > 0
+      ? sortedWins.map((listing) => createListingCard(listing)).join("")
+      : createEmptyState({
+          title: "No wins yet",
+          message: "You have not won any listings yet.",
           compact: true,
         });
 
@@ -343,6 +357,42 @@ export function createProfilePage(data: ProfilePageData): string {
 
               <div id="bid-listings-content" class="hidden gap-6 md:grid-cols-2">
                 ${bidListingsMarkup}
+              </div>
+            </section>
+
+            <section class="space-y-4">
+              <button
+                id="wins-toggle"
+                type="button"
+                aria-expanded="false"
+                aria-controls="wins-content"
+                class="group flex w-full cursor-pointer items-end justify-between gap-4 text-left transition"
+              >
+                <div class="space-y-1">
+                  <h2 class="text-2xl font-semibold text-text-main transition group-hover:text-primary-action">
+                    Won listings
+                  </h2>
+                  <p class="text-sm text-text-muted transition group-hover:text-primary-action">
+                    Ended listings you have won.
+                  </p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                  <p class="text-sm text-text-muted transition group-hover:text-primary-action">
+                    ${wins.length} win${wins.length === 1 ? "" : "s"}
+                  </p>
+                  <span
+                    id="wins-icon"
+                    class="flex h-5 w-5 items-center justify-center text-text-muted transition duration-200 group-hover:text-primary-action"
+                    aria-hidden="true"
+                  >
+                    ${chevronIcon}
+                  </span>
+                </div>
+              </button>
+
+              <div id="wins-content" class="hidden gap-6 md:grid-cols-2">
+                ${winsMarkup}
               </div>
             </section>
           `

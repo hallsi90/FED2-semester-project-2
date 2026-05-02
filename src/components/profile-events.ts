@@ -38,4 +38,19 @@ export function initializeProfileSections(): void {
       bidIcon.classList.toggle("rotate-180", !isExpanded);
     });
   }
+
+  const winsToggle = document.querySelector<HTMLButtonElement>("#wins-toggle");
+  const winsContent = document.querySelector<HTMLDivElement>("#wins-content");
+  const winsIcon = document.querySelector<HTMLSpanElement>("#wins-icon");
+
+  if (winsToggle && winsContent && winsIcon) {
+    winsToggle.addEventListener("click", () => {
+      const isExpanded = winsToggle.getAttribute("aria-expanded") === "true";
+
+      winsToggle.setAttribute("aria-expanded", String(!isExpanded));
+      winsContent.classList.toggle("hidden");
+      winsContent.classList.toggle("grid");
+      winsIcon.classList.toggle("rotate-180", !isExpanded);
+    });
+  }
 }

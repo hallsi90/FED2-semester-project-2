@@ -4,6 +4,7 @@ import type { ApiResponse, Profile } from "../../types/api";
 
 interface GetProfileOptions {
   includeListings?: boolean;
+  includeWins?: boolean;
 }
 
 // Fetches a single profile by name.
@@ -17,6 +18,10 @@ export async function getProfileByName(
 
   if (options.includeListings) {
     queryParams.set("_listings", "true");
+  }
+
+  if (options.includeWins) {
+    queryParams.set("_wins", "true");
   }
 
   const queryString = queryParams.toString();

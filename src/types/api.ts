@@ -21,6 +21,7 @@ export interface Profile {
   credits?: number;
   _count?: ProfileCount;
   listings?: Listing[];
+  wins?: Listing[];
 }
 
 export interface Bid {

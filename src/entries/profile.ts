@@ -1,6 +1,8 @@
 import "../style.css";
+import { getListingById } from "../api/listings/get-listing";
 import { getProfileBids } from "../api/profile/get-profile-bids";
 import { getProfileByName } from "../api/profile/get-profile";
+import { getProfileListings } from "../api/profile/get-profile-listings";
 import { renderAuthRequiredState } from "../components/auth-required-state";
 import { createLayout } from "../components/layout";
 import { createLoadingState } from "../components/loading-state";
@@ -64,30 +66,28 @@ function renderErrorState(message: string): void {
   initializePage();
 }
 
-function getBidListings(bids: Bid[]): Listing[] {
-  const listingsMap = new Map<string, Listing>();
+function getUniqueBidListingIds(bids: Bid[]): string[] {
+  const uniqueIds = new Set<string>();
 
   bids.forEach((bid) => {
-    if (!bid.listing?.id) {
-      return;
-    }
-
-    const existingListing = listingsMap.get(bid.listing.id);
-
-    if (!existingListing) {
-      listingsMap.set(bid.listing.id, bid.listing);
-      return;
-    }
-
-    const existingDate = new Date(existingListing.updated).getTime();
-    const nextDate = new Date(bid.listing.updated).getTime();
-
-    if (nextDate > existingDate) {
-      listingsMap.set(bid.listing.id, bid.listing);
+    if (bid.listing?.id) {
+      uniqueIds.add(bid.listing.id);
     }
   });
 
-  return Array.from(listingsMap.values());
+  return Array.from(uniqueIds);
+}
+
+async function getBidListingsWithCounts(
+  listingIds: string[],
+): Promise<Listing[]> {
+  const listings = await Promise.all(
+    listingIds.map((listingId) => getListingById(listingId)),
+  );
+
+  return listings.sort((a, b) => {
+    return new Date(a.endsAt).getTime() - new Date(b.endsAt).getTime();
+  });
 }
 
 async function renderProfilePage(): Promise<void> {
@@ -122,21 +122,27 @@ async function renderProfilePage(): Promise<void> {
       accessToken,
       apiKey,
       {
-        includeListings: true,
+        includeWins: isOwnProfile,
       },
+    );
+
+    const listingsPromise = getProfileListings(
+      targetProfileName,
+      accessToken,
+      apiKey,
     );
 
     const bidsPromise = isOwnProfile
       ? getProfileBids(storedProfile.name, accessToken, apiKey)
       : Promise.resolve([]);
 
-    const [profile, bids]: [Profile, Bid[]] = await Promise.all([
-      profilePromise,
-      bidsPromise,
-    ]);
+    const [profile, createdListings, bids]: [Profile, Listing[], Bid[]] =
+      await Promise.all([profilePromise, listingsPromise, bidsPromise]);
 
-    const createdListings = profile.listings ?? [];
-    const bidListings = isOwnProfile ? getBidListings(bids) : [];
+    const bidListingIds = isOwnProfile ? getUniqueBidListingIds(bids) : [];
+    const bidListings = isOwnProfile
+      ? await getBidListingsWithCounts(bidListingIds)
+      : [];
 
     if (isOwnProfile) {
       saveProfile(profile);
