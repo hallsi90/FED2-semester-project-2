@@ -2,15 +2,15 @@
 
 export const buttonStyles = {
   primary:
-    "inline-flex items-center justify-center rounded-xl bg-primary-action px-4 py-2 text-base font-semibold text-white transition hover:bg-primary-action-hover focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2",
+    "inline-flex cursor-pointer items-center justify-center rounded-xl bg-primary-action px-4 py-2 text-base font-semibold text-white transition hover:bg-primary-action-hover focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2",
   secondary:
-    "inline-flex items-center justify-center rounded-xl border border-border-neutral bg-white px-4 py-2 text-base font-semibold text-primary-dark transition hover:border-primary-action hover:bg-background hover:text-primary-action focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2",
+    "inline-flex cursor-pointer items-center justify-center rounded-xl border border-border-neutral bg-white px-4 py-2 text-base font-semibold text-primary-dark transition hover:border-primary-action hover:bg-background hover:text-primary-action focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2",
   danger:
-    "inline-flex items-center justify-center rounded-xl bg-error px-4 py-2 text-base font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-error focus:ring-offset-2",
+    "inline-flex cursor-pointer items-center justify-center rounded-xl bg-error px-4 py-2 text-base font-semibold text-white transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-error focus:ring-offset-2",
   ghost:
-    "inline-flex items-center justify-center rounded-xl px-4 py-2 text-base font-semibold text-primary-action transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2",
+    "inline-flex cursor-pointer items-center justify-center rounded-xl px-4 py-2 text-base font-semibold text-primary-action transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2",
   remove:
-    "inline-flex items-center justify-center rounded-lg border border-error bg-surface px-3 py-2 text-sm font-semibold text-error transition hover:bg-error/10 focus:outline-none focus:ring-2 focus:ring-error focus:ring-offset-2",
+    "inline-flex cursor-pointer items-center justify-center rounded-lg border border-error bg-surface px-3 py-2 text-sm font-semibold text-error transition hover:bg-error/10 focus:outline-none focus:ring-2 focus:ring-error focus:ring-offset-2",
 } as const;
 
 export const formStyles = {
@@ -20,7 +20,7 @@ export const formStyles = {
   textarea:
     "w-full rounded-[10px] border border-border-neutral bg-surface px-4 py-3 text-base text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-action focus:ring-2 focus:ring-primary-action/20",
   select:
-    "w-full appearance-none rounded-[10px] border border-border-neutral bg-surface px-4 py-3 pr-12 text-base text-text-main outline-none transition focus:border-primary-action focus:ring-2 focus:ring-primary-action/20",
+    "w-full cursor-pointer appearance-none rounded-[10px] border border-border-neutral bg-surface px-4 py-3 pr-12 text-base text-text-main outline-none transition focus:border-primary-action focus:ring-2 focus:ring-primary-action/20",
   helperText: "mt-2 text-sm text-text-muted",
   errorText: "mt-2 text-sm text-error",
 } as const;

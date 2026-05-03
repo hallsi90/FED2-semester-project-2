@@ -100,7 +100,7 @@ function createLoggedInDesktopNavigation(
             aria-label="Open profile menu"
             aria-expanded="false"
             aria-controls="profile-menu"
-            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
+            class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
           >
             ${
               safeAvatarUrl
@@ -131,7 +131,7 @@ function createLoggedInDesktopNavigation(
                 <button
                   id="logout-button-desktop"
                   type="button"
-                  class="block text-text-main transition hover:text-primary-action"
+                  class="block text-text-main transition hover:text-primary-action cursor-pointer"
                 >
                   Log out
                 </button>
@@ -153,7 +153,7 @@ function createLoggedOutMobileNavigation(): string {
         aria-label="Open menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
-        class="flex h-10 w-10 items-center justify-center rounded-lg border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
+        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
       >
         ${createMenuButtonIcon()}
       </button>
@@ -195,7 +195,7 @@ function createLoggedInMobileNavigation(credits: number): string {
         aria-label="Open menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
-        class="flex h-10 w-10 items-center justify-center rounded-lg border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
+        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
       >
         ${createMenuButtonIcon()}
       </button>
@@ -229,7 +229,7 @@ function createLoggedInMobileNavigation(credits: number): string {
               <button
                 id="logout-button-mobile"
                 type="button"
-                class="block text-text-main transition hover:text-primary-action"
+                class="block text-text-main transition hover:text-primary-action cursor-pointer"
               >
                 Log out
               </button>

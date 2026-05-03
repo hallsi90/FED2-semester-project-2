@@ -37,7 +37,7 @@ export function createLayout(content: string): string {
         id="scroll-to-top-button"
         type="button"
         aria-label="Scroll back to top"
-        class="fixed bottom-5 right-4 z-50 hidden h-12 w-12 items-center justify-center rounded-full border border-accent/40 bg-white text-accent shadow-2xl ring-1 ring-black/10 transition hover:border-accent hover:bg-accent/10 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 md:bottom-6 md:right-6"
+        class="fixed bottom-5 right-4 z-50 hidden h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-accent/40 bg-white text-accent shadow-2xl ring-1 ring-black/10 transition hover:border-accent hover:bg-accent/10 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 md:bottom-6 md:right-6"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
