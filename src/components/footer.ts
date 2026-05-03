@@ -8,13 +8,13 @@ export function createFooter(): string {
             <h2 class="mb-4 text-lg font-semibold text-text-main">About</h2>
             <ul class="space-y-3 text-base text-text-muted">
               <li>
-                <a href="/" class="transition hover:text-primary-action">About us</a>
+                <a href="#" class="transition hover:text-primary-action">About us</a>
               </li>
               <li>
-                <a href="/" class="transition hover:text-primary-action">How it works</a>
+                <a href="#" class="transition hover:text-primary-action">How it works</a>
               </li>
               <li>
-                <a href="/" class="transition hover:text-primary-action">Contact</a>
+                <a href="#" class="transition hover:text-primary-action">Contact</a>
               </li>
             </ul>
           </section>
@@ -23,16 +23,16 @@ export function createFooter(): string {
             <h2 class="mb-4 text-lg font-semibold text-text-main">Support</h2>
             <ul class="space-y-3 text-base text-text-muted">
               <li>
-                <a href="/" class="transition hover:text-primary-action">Help center</a>
+                <a href="#" class="transition hover:text-primary-action">Help center</a>
               </li>
               <li>
-                <a href="/" class="transition hover:text-primary-action">Safety</a>
+                <a href="#" class="transition hover:text-primary-action">Safety</a>
               </li>
               <li>
-                <a href="/" class="transition hover:text-primary-action">Terms of service</a>
+                <a href="#" class="transition hover:text-primary-action">Terms of service</a>
               </li>
               <li>
-                <a href="/" class="transition hover:text-primary-action">Privacy policy</a>
+                <a href="#" class="transition hover:text-primary-action">Privacy policy</a>
               </li>
             </ul>
           </section>
@@ -51,7 +51,7 @@ export function createFooter(): string {
               />
               <button
                 type="submit"
-                class="rounded-xl bg-primary-dark px-5 py-3 text-base font-semibold text-white transition hover:bg-text-main"
+                class="rounded-xl bg-primary-dark px-5 py-3 text-base font-semibold text-white transition hover:bg-text-main cursor-pointer"
               >
                 Subscribe
               </button>
