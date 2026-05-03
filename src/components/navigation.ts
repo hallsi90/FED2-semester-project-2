@@ -123,7 +123,7 @@ function createLoggedInDesktopNavigation(
           >
             <ul class="space-y-2 text-sm font-medium">
               <li>
-                <a href="${ROUTES.profile}" class="block text-text-main transition hover:text-primary-action">
+                <a href="${ROUTES.profile}" class="block rounded-lg px-2 py-2.5 text-text-main transition hover:bg-background hover:text-primary-action">
                   Profile
                 </a>
               </li>
@@ -131,7 +131,7 @@ function createLoggedInDesktopNavigation(
                 <button
                   id="logout-button-desktop"
                   type="button"
-                  class="block text-text-main transition hover:text-primary-action cursor-pointer"
+                  class="block w-full rounded-lg px-2 py-2.5 text-left text-text-main transition hover:bg-background hover:text-primary-action cursor-pointer"
                 >
                   Log out
                 </button>
@@ -163,19 +163,19 @@ function createLoggedOutMobileNavigation(): string {
         class="absolute right-0 top-full z-50 mt-4 hidden w-64 rounded-2xl border border-border-neutral bg-white p-4 shadow-2xl ring-1 ring-black/10"
       >
         <nav aria-label="Mobile navigation">
-          <ul class="space-y-3 text-sm font-medium">
+          <ul class="space-y-1 text-sm font-medium">
             <li>
-              <a href="${ROUTES.home}" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.home}" class="block rounded-lg px-2 py-2.5 text-text-main transition hover:bg-background hover:text-primary-action">
                 Listings
               </a>
             </li>
             <li>
-              <a href="${ROUTES.login}" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.login}" class="block rounded-lg px-2 py-2.5 text-text-main transition hover:bg-background hover:text-primary-action">
                 Log in
               </a>
             </li>
             <li>
-              <a href="${ROUTES.register}" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.register}" class="block rounded-lg px-2 py-2.5 text-text-main transition hover:bg-background hover:text-primary-action">
                 Register
               </a>
             </li>
@@ -230,19 +230,19 @@ function createLoggedInMobileNavigation(
         </div>
 
         <nav aria-label="Mobile navigation">
-          <ul class="space-y-3 text-sm font-medium">
+          <ul class="space-y-1 text-sm font-medium">
             <li>
-              <a href="${ROUTES.home}" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.home}" class="block rounded-lg px-2 py-2.5 text-text-main transition hover:bg-background hover:text-primary-action">
                 Listings
               </a>
             </li>
             <li>
-              <a href="${ROUTES.createListing}" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.createListing}" class="block rounded-lg px-2 py-2.5 text-text-main transition hover:bg-background hover:text-primary-action">
                 Create listing
               </a>
             </li>
             <li>
-              <a href="${ROUTES.profile}" class="block text-text-main transition hover:text-primary-action">
+              <a href="${ROUTES.profile}" class="block rounded-lg px-2 py-2.5 text-text-main transition hover:bg-background hover:text-primary-action">
                 Profile
               </a>
             </li>
@@ -250,7 +250,7 @@ function createLoggedInMobileNavigation(
               <button
                 id="logout-button-mobile"
                 type="button"
-                class="block cursor-pointer text-text-main transition hover:text-primary-action"
+                class="block w-full rounded-lg px-2 py-2.5 text-left text-text-main transition hover:bg-background hover:text-primary-action cursor-pointer"
               >
                 Log out
               </button>
