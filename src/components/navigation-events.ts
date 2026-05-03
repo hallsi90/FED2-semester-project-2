@@ -16,9 +16,27 @@ export function initializeMobileMenu(): void {
   const mobileMenuButton = menuButton;
   const mobileMenuElement = mobileMenu;
 
+  const openIcon = mobileMenuButton.querySelector<SVGElement>(
+    '[data-menu-icon="open"]',
+  );
+  const closeIcon = mobileMenuButton.querySelector<SVGElement>(
+    '[data-menu-icon="close"]',
+  );
+
+  function updateMenuIcons(isExpanded: boolean): void {
+    if (openIcon) {
+      openIcon.classList.toggle("hidden", isExpanded);
+    }
+
+    if (closeIcon) {
+      closeIcon.classList.toggle("hidden", !isExpanded);
+    }
+  }
+
   function closeMobileMenu(): void {
     mobileMenuButton.setAttribute("aria-expanded", "false");
     mobileMenuElement.classList.add("hidden");
+    updateMenuIcons(false);
   }
 
   function toggleMobileMenu(): void {
@@ -27,7 +45,10 @@ export function initializeMobileMenu(): void {
 
     mobileMenuButton.setAttribute("aria-expanded", String(!isExpanded));
     mobileMenuElement.classList.toggle("hidden");
+    updateMenuIcons(!isExpanded);
   }
+
+  updateMenuIcons(false);
 
   mobileMenuButton.addEventListener("click", (event) => {
     event.stopPropagation();

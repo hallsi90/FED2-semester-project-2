@@ -3,21 +3,38 @@ import { getAuthState } from "../utils/auth-state";
 
 // Creates the shared navigation markup for logged-out and logged-in users across desktop and mobile views.
 
-function createMenuIcon(): string {
+function createMenuButtonIcon(): string {
   return `
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      class="h-5 w-5"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-    >
-      <path d="M4 7h16" />
-      <path d="M4 12h16" />
-      <path d="M4 17h16" />
-    </svg>
+    <span class="relative flex h-5 w-5 items-center justify-center">
+      <svg
+        data-menu-icon="open"
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="M4 7h16" />
+        <path d="M4 12h16" />
+        <path d="M4 17h16" />
+      </svg>
+
+      <svg
+        data-menu-icon="close"
+        xmlns="http://www.w3.org/2000/svg"
+        class="hidden h-5 w-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+      >
+        <path d="M6 6l12 12" />
+        <path d="M18 6L6 18" />
+      </svg>
+    </span>
   `;
 }
 
@@ -138,7 +155,7 @@ function createLoggedOutMobileNavigation(): string {
         aria-controls="mobile-menu"
         class="flex h-10 w-10 items-center justify-center rounded-lg border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
       >
-        ${createMenuIcon()}
+        ${createMenuButtonIcon()}
       </button>
 
       <div
@@ -180,7 +197,7 @@ function createLoggedInMobileNavigation(credits: number): string {
         aria-controls="mobile-menu"
         class="flex h-10 w-10 items-center justify-center rounded-lg border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
       >
-        ${createMenuIcon()}
+        ${createMenuButtonIcon()}
       </button>
 
       <div
