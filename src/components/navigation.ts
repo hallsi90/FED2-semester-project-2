@@ -1,6 +1,25 @@
-// Creates the shared navigation markup for logged-out and logged-in users across desktop and mobile views.
 import { ROUTES } from "../constants/routes";
 import { getAuthState } from "../utils/auth-state";
+
+// Creates the shared navigation markup for logged-out and logged-in users across desktop and mobile views.
+
+function createMenuIcon(): string {
+  return `
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      class="h-5 w-5"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+    >
+      <path d="M4 7h16" />
+      <path d="M4 12h16" />
+      <path d="M4 17h16" />
+    </svg>
+  `;
+}
 
 function createLoggedOutDesktopNavigation(): string {
   return `
@@ -83,7 +102,7 @@ function createLoggedInDesktopNavigation(
 
           <div
             id="profile-menu"
-            class="absolute right-0 top-full z-50 mt-3 hidden w-44 rounded-2xl border border-border-neutral bg-white p-3 shadow-md"
+            class="absolute right-0 top-full z-50 mt-4 hidden w-44 rounded-2xl border border-border-neutral bg-white p-3 shadow-2xl ring-1 ring-black/10 md:mt-5 lg:mt-6"
           >
             <ul class="space-y-2 text-sm font-medium">
               <li>
@@ -119,12 +138,12 @@ function createLoggedOutMobileNavigation(): string {
         aria-controls="mobile-menu"
         class="flex h-10 w-10 items-center justify-center rounded-lg border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
       >
-        <span class="text-xl leading-none">☰</span>
+        ${createMenuIcon()}
       </button>
 
       <div
         id="mobile-menu"
-        class="absolute right-0 top-full z-50 mt-3 hidden w-64 rounded-2xl border border-border-neutral bg-white p-4 shadow-md"
+        class="absolute right-0 top-full z-50 mt-4 hidden w-64 rounded-2xl border border-border-neutral bg-white p-4 shadow-2xl ring-1 ring-black/10"
       >
         <nav aria-label="Mobile navigation">
           <ul class="space-y-3 text-sm font-medium">
@@ -161,12 +180,12 @@ function createLoggedInMobileNavigation(credits: number): string {
         aria-controls="mobile-menu"
         class="flex h-10 w-10 items-center justify-center rounded-lg border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
       >
-        <span class="text-xl leading-none">☰</span>
+        ${createMenuIcon()}
       </button>
 
       <div
         id="mobile-menu"
-        class="absolute right-0 top-full z-50 mt-3 hidden w-64 rounded-2xl border border-border-neutral bg-white p-4 shadow-md"
+        class="absolute right-0 top-full z-50 mt-4 hidden w-64 rounded-2xl border border-border-neutral bg-white p-4 shadow-2xl ring-1 ring-black/10"
       >
         <div class="mb-4 rounded-xl bg-background px-3 py-2 text-sm font-semibold text-primary-action">
           Credits: ${(credits ?? 0).toLocaleString("en-US")}
