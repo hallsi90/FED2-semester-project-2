@@ -6,6 +6,7 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
+import { initializeScrollToTop } from "../components/scroll-to-top";
 import { alertStyles } from "../components/ui";
 import { createRegisterPage } from "../pages/register-page";
 import { validateRegisterForm } from "../utils/validation";
@@ -37,6 +38,7 @@ if (app) {
   initializeMobileMenu();
   initializeProfileMenu();
   initializeLogout();
+  initializeScrollToTop();
 
   const form = document.querySelector<HTMLFormElement>("form");
   const message = document.querySelector<HTMLDivElement>("#register-message");

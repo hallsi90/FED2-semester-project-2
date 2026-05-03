@@ -8,6 +8,7 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
+import { initializeScrollToTop } from "../components/scroll-to-top";
 import { alertStyles } from "../components/ui";
 import { createLoginPage } from "../pages/login-page";
 import { ROUTES } from "../constants/routes";
@@ -61,6 +62,7 @@ if (app) {
   initializeMobileMenu();
   initializeProfileMenu();
   initializeLogout();
+  initializeScrollToTop();
 
   const form = document.querySelector<HTMLFormElement>("form");
   const message = document.querySelector<HTMLDivElement>("#login-message");

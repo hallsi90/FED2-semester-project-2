@@ -7,6 +7,7 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
+import { initializeScrollToTop } from "../components/scroll-to-top";
 import { alertStyles, buttonStyles, formStyles } from "../components/ui";
 import { ROUTES } from "../constants/routes";
 import { createCreateListingPage } from "../pages/create-listing-page";
@@ -20,6 +21,7 @@ function initializeNavigation(): void {
   initializeMobileMenu();
   initializeProfileMenu();
   initializeLogout();
+  initializeScrollToTop();
 }
 
 function renderUnauthorizedState(): void {

@@ -11,6 +11,7 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
+import { initializeScrollToTop } from "../components/scroll-to-top";
 import { createPageState } from "../components/page-state";
 import { initializeProfileSections } from "../components/profile-events";
 import { createProfilePage } from "../pages/profile-page";
@@ -29,6 +30,7 @@ function initializePage(): void {
   initializeProfileMenu();
   initializeProfileSections();
   initializeLogout();
+  initializeScrollToTop();
 }
 
 function getProfileNameFromUrl(): string | null {

@@ -9,6 +9,7 @@ import {
   initializeMobileMenu,
   initializeProfileMenu,
 } from "../components/navigation-events";
+import { initializeScrollToTop } from "../components/scroll-to-top";
 import { createPageState } from "../components/page-state";
 import { alertStyles } from "../components/ui";
 import { ROUTES } from "../constants/routes";
@@ -28,6 +29,7 @@ function initializeNavigation(): void {
   initializeMobileMenu();
   initializeProfileMenu();
   initializeLogout();
+  initializeScrollToTop();
 }
 
 function renderLoadingState(): void {

@@ -3,7 +3,8 @@ import logoMark from "../assets/auction-house-logo-mark.png";
 import { createNavigation } from "./navigation";
 import { createFooter } from "./footer";
 
-// Creates the shared page layout with header, main content area, and footer wrapper used across the application.
+// Creates the shared page layout with header, main content area, footer,
+// and a reusable scroll-to-top button shown across the application.
 export function createLayout(content: string): string {
   return `
     <div class="flex min-h-screen flex-col bg-background text-text-main">
@@ -31,6 +32,28 @@ export function createLayout(content: string): string {
       </main>
 
       ${createFooter()}
+
+      <button
+        id="scroll-to-top-button"
+        type="button"
+        aria-label="Scroll back to top"
+        class="fixed bottom-5 right-4 z-50 hidden h-12 w-12 items-center justify-center rounded-full border border-accent/40 bg-white text-accent shadow-2xl ring-1 ring-black/10 transition hover:border-accent hover:bg-accent/10 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 md:bottom-6 md:right-6"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-6 w-6"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 19V5" />
+          <path d="m5 12 7-7 7 7" />
+        </svg>
+      </button>
     </div>
   `;
 }
