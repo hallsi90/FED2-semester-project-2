@@ -22,6 +22,8 @@ import { validateLoginForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+document.title = "Log in | Auction House";
+
 function getRedirectUrl(): string {
   const params = new URLSearchParams(window.location.search);
   const redirect = params.get("redirect");

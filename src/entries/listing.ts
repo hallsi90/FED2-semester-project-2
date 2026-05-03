@@ -24,6 +24,11 @@ import { validateBidForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+function setListingPageTitle(title?: string): void {
+  const safeTitle = title?.trim() || "Listing";
+  document.title = `${safeTitle} | Auction House`;
+}
+
 let countdownIntervalId: number | null = null;
 
 function initializeNavigation(): void {
@@ -242,6 +247,8 @@ function renderLoadingState(): void {
   );
 
   initializeNavigation();
+
+  document.title = "Loading listing... | Auction House";
 }
 
 function renderErrorState(message: string): void {
@@ -259,6 +266,8 @@ function renderErrorState(message: string): void {
   );
 
   initializeNavigation();
+
+  document.title = "Listing unavailable | Auction House";
 }
 
 async function renderListingPage(): Promise<void> {
@@ -278,6 +287,7 @@ async function renderListingPage(): Promise<void> {
 
   try {
     const listing = await getListingById(listingId);
+    setListingPageTitle(listing.title);
     const storedProfile = getStoredProfile();
     const isLoggedIn = Boolean(getAccessToken());
     const isOwner =

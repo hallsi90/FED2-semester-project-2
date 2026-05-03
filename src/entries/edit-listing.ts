@@ -25,6 +25,11 @@ import type { Listing, MediaItem, UpdateListingBody } from "../types/api";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+function setEditListingPageTitle(title?: string): void {
+  const safeTitle = title?.trim() || "Listing";
+  document.title = `Edit ${safeTitle} | Auction House`;
+}
+
 function initializeNavigation(): void {
   initializeMobileMenu();
   initializeProfileMenu();
@@ -50,6 +55,8 @@ function renderLoadingState(): void {
   );
 
   initializeNavigation();
+
+  document.title = "Loading listing... | Auction House";
 }
 
 function renderErrorState(message: string): void {
@@ -66,6 +73,8 @@ function renderErrorState(message: string): void {
   );
 
   initializeNavigation();
+
+  document.title = "Edit listing unavailable | Auction House";
 }
 
 function getTags(tagsValue: string): string[] {
@@ -644,6 +653,8 @@ async function renderEditListingPage(): Promise<void> {
 
   try {
     const listing: Listing = await getListingById(listingId);
+
+    setEditListingPageTitle(listing.title);
 
     if (!listing.seller?.name) {
       renderErrorState("This listing has no owner information.");

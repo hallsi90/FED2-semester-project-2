@@ -25,6 +25,11 @@ import {
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+function setProfilePageTitle(name?: string): void {
+  const safeName = name?.trim() || "Profile";
+  document.title = `${safeName} | Auction House`;
+}
+
 function initializePage(): void {
   initializeMobileMenu();
   initializeProfileMenu();
@@ -50,6 +55,8 @@ function renderLoadingState(): void {
   );
 
   initializePage();
+
+  document.title = "Loading profile... | Auction House";
 }
 
 function renderErrorState(message: string): void {
@@ -66,6 +73,8 @@ function renderErrorState(message: string): void {
   );
 
   initializePage();
+
+  document.title = "Profile unavailable | Auction House";
 }
 
 function getUniqueBidListingIds(bids: Bid[]): string[] {
@@ -148,6 +157,8 @@ async function renderProfilePage(): Promise<void> {
 
     const [profile, createdListings, bids]: [Profile, Listing[], Bid[]] =
       await Promise.all([profilePromise, listingsPromise, bidsPromise]);
+
+    setProfilePageTitle(profile.name);
 
     const bidListingIds = isOwnProfile ? getUniqueBidListingIds(bids) : [];
     const bidListings = isOwnProfile

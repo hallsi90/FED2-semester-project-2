@@ -25,6 +25,8 @@ import type { Profile } from "../types/api";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+document.title = "Edit profile | Auction House";
+
 function initializeNavigation(): void {
   initializeMobileMenu();
   initializeProfileMenu();
@@ -61,6 +63,8 @@ function renderErrorState(message: string): void {
   );
 
   initializeNavigation();
+
+  document.title = "Edit profile unavailable | Auction House";
 }
 
 function clearFieldError(

@@ -17,6 +17,8 @@ import type { CreateListingBody, MediaItem } from "../types/api";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+document.title = "Create listing | Auction House";
+
 function initializeNavigation(): void {
   initializeMobileMenu();
   initializeProfileMenu();

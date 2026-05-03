@@ -13,6 +13,8 @@ import { validateRegisterForm } from "../utils/validation";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+document.title = "Register | Auction House";
+
 function clearFieldError(
   input: HTMLInputElement,
   errorElement: HTMLElement,

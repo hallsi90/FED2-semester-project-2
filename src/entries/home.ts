@@ -14,6 +14,8 @@ import type { Listing } from "../types/api";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
+document.title = "Bid. Win. Own. | Auction House";
+
 let allListings: Listing[] = [];
 
 function initializeNavigation(): void {
