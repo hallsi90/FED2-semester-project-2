@@ -186,18 +186,39 @@ function createLoggedOutMobileNavigation(): string {
   `;
 }
 
-function createLoggedInMobileNavigation(credits: number): string {
+function createLoggedInMobileNavigation(
+  profileName: string,
+  credits: number,
+  avatarUrl?: string,
+  avatarAlt?: string,
+): string {
+  const safeProfileName = profileName.trim() || "User";
+  const safeAvatarUrl = avatarUrl?.trim() || "";
+  const safeAvatarAlt = avatarAlt?.trim() || `${safeProfileName} avatar`;
+
   return `
     <div class="relative md:hidden">
       <button
         id="mobile-menu-button"
         type="button"
-        aria-label="Open menu"
+        aria-label="Open account menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
-        class="flex h-10 w-10 cursor-pointer items-center justify-center rounded-lg border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
+        class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full border border-border-neutral bg-white text-text-main transition hover:border-primary-action hover:text-primary-action"
       >
-        ${createMenuButtonIcon()}
+        ${
+          safeAvatarUrl
+            ? `
+              <img
+                src="${safeAvatarUrl}"
+                alt="${safeAvatarAlt}"
+                class="h-full w-full object-cover"
+              />
+            `
+            : `
+              <span class="text-sm font-semibold">${safeProfileName.charAt(0).toUpperCase()}</span>
+            `
+        }
       </button>
 
       <div
@@ -229,7 +250,7 @@ function createLoggedInMobileNavigation(credits: number): string {
               <button
                 id="logout-button-mobile"
                 type="button"
-                class="block text-text-main transition hover:text-primary-action cursor-pointer"
+                class="block cursor-pointer text-text-main transition hover:text-primary-action"
               >
                 Log out
               </button>
@@ -253,7 +274,12 @@ export function createNavigation(): string {
           authState.profile.avatar?.url,
           authState.profile.avatar?.alt,
         )}
-        ${createLoggedInMobileNavigation(authState.profile.credits ?? 0)}
+        ${createLoggedInMobileNavigation(
+          authState.profile.name?.trim() || "User",
+          authState.profile.credits ?? 0,
+          authState.profile.avatar?.url,
+          authState.profile.avatar?.alt,
+        )}
       </div>
     `;
   }
