@@ -27,6 +27,7 @@ export function createSingleListingPage(
   const description =
     listing.description?.trim() || "No description available.";
   const bidCount = listing._count?.bids ?? 0;
+  const isEnded = new Date(listing.endsAt).getTime() <= Date.now();
 
   const sellerName = listing.seller?.name?.trim() || "Unknown seller";
   const sellerAvatarUrl = listing.seller?.avatar?.url?.trim() || "";
@@ -131,7 +132,31 @@ export function createSingleListingPage(
 
   let bidSectionMarkup = "";
 
-  if (options.isOwner) {
+  if (isEnded) {
+    bidSectionMarkup = `
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-text-main">Auction ended</h2>
+          <span class="text-sm font-medium text-text-muted">
+            ${bidCount} bid${bidCount === 1 ? "" : "s"}
+          </span>
+        </div>
+
+        <div class="space-y-2 rounded-xl bg-background px-4 py-3">
+          <p class="text-sm font-medium text-text-muted">
+            Ended ${formatDateTime(listing.endsAt)}
+          </p>
+          <p class="text-sm font-semibold text-red-600">
+            Auction ended
+          </p>
+        </div>
+
+        <p class="text-sm text-text-muted">
+          Bidding is no longer available for this listing.
+        </p>
+      </div>
+    `;
+  } else if (options.isOwner) {
     bidSectionMarkup = `
       <div class="space-y-4">
         <div class="flex items-center justify-between">
@@ -195,9 +220,7 @@ export function createSingleListingPage(
           </p>
         </div>
 
-        <p class="text-sm text-text-muted">
-          Enter your bid amount below.
-        </p>
+       
 
         <div class="space-y-2">
           <label for="bid-amount" class="${formStyles.label}">
@@ -302,7 +325,7 @@ export function createSingleListingPage(
             <div class="space-y-4">
               <div class="space-y-2">
                 <p class="text-sm font-medium text-primary-dark">
-                  Ends ${formatDateTime(listing.endsAt)}
+                  ${isEnded ? "Ended" : "Ends"} ${formatDateTime(listing.endsAt)}
                 </p>
                 <h2 class="text-2xl font-semibold text-text-main">
                   Description
