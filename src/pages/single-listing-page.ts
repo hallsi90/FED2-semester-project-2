@@ -220,8 +220,6 @@ export function createSingleListingPage(
           </p>
         </div>
 
-       
-
         <div class="space-y-2">
           <label for="bid-amount" class="${formStyles.label}">
             Bid amount
