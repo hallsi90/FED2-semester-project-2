@@ -160,7 +160,7 @@ function createLoggedOutMobileNavigation(): string {
 
       <div
         id="mobile-menu"
-        class="absolute right-0 top-full z-50 mt-4 hidden w-64 rounded-2xl border border-border-neutral bg-white p-4 shadow-2xl ring-1 ring-black/10"
+        class="absolute right-0 top-full z-50 mt-4 hidden w-52 rounded-2xl border border-border-neutral bg-white p-4 shadow-2xl ring-1 ring-black/10 sm:w-56"
       >
         <nav aria-label="Mobile navigation">
           <ul class="space-y-1 text-sm font-medium">
@@ -223,7 +223,7 @@ function createLoggedInMobileNavigation(
 
       <div
         id="mobile-menu"
-        class="absolute right-0 top-full z-50 mt-4 hidden w-64 rounded-2xl border border-border-neutral bg-white p-4 shadow-2xl ring-1 ring-black/10"
+        class="absolute right-0 top-full z-50 mt-4 hidden w-56 rounded-2xl border border-border-neutral bg-white p-4 shadow-2xl ring-1 ring-black/10 sm:w-64"
       >
         <div class="mb-4 rounded-xl bg-background px-3 py-2 text-sm font-semibold text-primary-action">
           Credits: ${(credits ?? 0).toLocaleString("en-US")}
