@@ -1,6 +1,6 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 
-// Creates the create listing page layout for listing logic.
+// Builds the create listing page layout.
 export function createCreateListingPage(): string {
   return `
     <section class="mx-auto w-full max-w-2xl space-y-8 lg:max-w-3xl">

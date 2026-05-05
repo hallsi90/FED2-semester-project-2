@@ -379,6 +379,15 @@ if (app) {
         clearFieldError(endsAtInput, endsAtError);
       });
 
+      const now = new Date();
+      const localDateTime = new Date(
+        now.getTime() - now.getTimezoneOffset() * 60000,
+      )
+        .toISOString()
+        .slice(0, 16);
+
+      endsAtInput.min = localDateTime;
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
 

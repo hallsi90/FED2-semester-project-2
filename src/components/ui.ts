@@ -16,7 +16,7 @@ export const buttonStyles = {
 export const formStyles = {
   label: "mb-2 block text-sm font-medium text-text-main",
   input:
-    "w-full rounded-[10px] border border-border-neutral bg-surface px-4 py-3 text-base text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-action focus:ring-2 focus:ring-primary-action/20",
+    "block w-full min-w-0 rounded-[10px] border border-border-neutral bg-surface px-4 py-3 text-base text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-action focus:ring-2 focus:ring-primary-action/20",
   textarea:
     "w-full rounded-[10px] border border-border-neutral bg-surface px-4 py-3 text-base text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-action focus:ring-2 focus:ring-primary-action/20",
   select:
