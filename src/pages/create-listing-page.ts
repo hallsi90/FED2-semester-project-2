@@ -9,7 +9,7 @@ export function createCreateListingPage(): string {
           Create listing
         </h1>
         <p class="text-base leading-7 text-text-muted">
-          Add a new auction listing with details, tags, image information, and an end date.
+          Add a new auction listing with details, tags, images, and an end date.
         </p>
       </header>
 
@@ -156,7 +156,7 @@ export function createCreateListingPage(): string {
               Auction end
             </label>
 
-            <div class="overflow-hidden rounded-[10px]">
+            <div class="w-full overflow-hidden rounded-[10px]">
               <input
                 id="ends-at"
                 name="ends-at"
@@ -168,7 +168,7 @@ export function createCreateListingPage(): string {
             </div>
 
             <p id="ends-at-helper" class="${formStyles.helperText}">
-              Choose a future date and time for when the auction ends.
+              Choose a date and time for when the auction ends.
             </p>
             <p
               id="ends-at-error"

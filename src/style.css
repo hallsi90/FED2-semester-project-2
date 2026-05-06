@@ -18,13 +18,17 @@
   --color-warning: #ea580c;
 }
 
+/* Custom styles for native date and time inputs (for tablet and phone) */
 @layer components {
   .native-datetime-input {
+    display: block;
     width: 100%;
     min-width: 0;
     max-width: 100%;
     box-sizing: border-box;
     font: inherit;
+    appearance: none;
+    -webkit-appearance: none;
   }
 
   .native-datetime-input::-webkit-date-and-time-value {
@@ -33,15 +37,22 @@
   }
 
   .native-datetime-input::-webkit-datetime-edit {
+    display: inline-flex;
+    align-items: center;
     min-width: 0;
+    max-width: 100%;
     padding: 0;
   }
 
   .native-datetime-input::-webkit-datetime-edit-fields-wrapper {
+    display: inline-flex;
+    align-items: center;
     min-width: 0;
+    max-width: 100%;
   }
 
   .native-datetime-input::-webkit-calendar-picker-indicator {
+    flex-shrink: 0;
     opacity: 1;
   }
 }
