@@ -266,19 +266,25 @@ export function createNavigation(): string {
   const authState = getAuthState();
 
   if (authState.isAuthenticated && authState.profile) {
+    const profile = authState.profile;
+    const profileName = profile.name?.trim() || "User";
+    const profileCredits = profile.credits ?? 0;
+    const profileAvatarUrl = profile.avatar?.url;
+    const profileAvatarAlt = profile.avatar?.alt;
+
     return `
       <div class="relative flex items-center gap-3">
         ${createLoggedInDesktopNavigation(
-          authState.profile.name?.trim() || "User",
-          authState.profile.credits ?? 0,
-          authState.profile.avatar?.url,
-          authState.profile.avatar?.alt,
+          profileName,
+          profileCredits,
+          profileAvatarUrl,
+          profileAvatarAlt,
         )}
         ${createLoggedInMobileNavigation(
-          authState.profile.name?.trim() || "User",
-          authState.profile.credits ?? 0,
-          authState.profile.avatar?.url,
-          authState.profile.avatar?.alt,
+          profileName,
+          profileCredits,
+          profileAvatarUrl,
+          profileAvatarAlt,
         )}
       </div>
     `;

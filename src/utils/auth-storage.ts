@@ -38,11 +38,6 @@ export function getProfile(): Profile | null {
   return getFromStorage<Profile>(STORAGE_KEYS.profile);
 }
 
-// Returns true if the user appears to be logged in.
-export function isLoggedIn(): boolean {
-  return Boolean(getAccessToken());
-}
-
 // Clears all saved authentication data.
 export function clearAuth(): void {
   removeFromStorage(STORAGE_KEYS.profile);

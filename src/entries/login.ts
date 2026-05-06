@@ -24,6 +24,7 @@ const app = document.querySelector<HTMLDivElement>("#app");
 
 document.title = "Log in | Auction House";
 
+// Returns a safe internal redirect path after login.
 function getRedirectUrl(): string {
   const params = new URLSearchParams(window.location.search);
   const redirect = params.get("redirect");

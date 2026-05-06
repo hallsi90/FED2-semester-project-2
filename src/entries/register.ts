@@ -10,6 +10,7 @@ import { initializeScrollToTop } from "../components/scroll-to-top";
 import { alertStyles } from "../components/ui";
 import { createRegisterPage } from "../pages/register-page";
 import { validateRegisterForm } from "../utils/validation";
+import { ROUTES } from "../constants/routes";
 
 const app = document.querySelector<HTMLDivElement>("#app");
 
@@ -136,7 +137,7 @@ if (app) {
         form.reset();
 
         setTimeout(() => {
-          window.location.href = "/login/";
+          window.location.href = ROUTES.login;
         }, 1500);
       } catch (error) {
         const errorMessage =

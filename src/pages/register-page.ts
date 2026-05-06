@@ -1,6 +1,7 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
+import { ROUTES } from "../constants/routes";
 
-// Creates the registration page layout for authentication logic.
+// Creates the registration page layout.
 export function createRegisterPage(): string {
   return `
     <section class="mx-auto w-full max-w-md space-y-8 lg:max-w-xl">
@@ -104,7 +105,7 @@ export function createRegisterPage(): string {
       <p class="text-center text-sm text-text-muted">
         Already have an account?
         <a
-          href="/login/"
+          href="${ROUTES.login}"
           class="font-semibold text-primary-action transition hover:text-primary-action-hover"
         >
           Log in here
