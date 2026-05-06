@@ -1,4 +1,5 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
+import { ROUTES } from "../constants/routes";
 
 // Builds the create listing page layout.
 export function createCreateListingPage(): string {
@@ -182,7 +183,7 @@ export function createCreateListingPage(): string {
               Publish listing
             </button>
 
-            <a href="/" class="${buttonStyles.secondary}">
+            <a href="${ROUTES.home}" class="${buttonStyles.secondary}">
               Cancel
             </a>
           </div>

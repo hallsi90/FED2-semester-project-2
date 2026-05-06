@@ -41,6 +41,7 @@ function renderUnauthorizedState(): void {
   initializeNavigation();
 }
 
+// Returns a cleaned array of tags from the comma-separated tags input.
 function getTags(tagsValue: string): string[] {
   return tagsValue
     .split(",")
@@ -48,6 +49,7 @@ function getTags(tagsValue: string): string[] {
     .filter((tag) => tag.length > 0);
 }
 
+// Collects valid image entries from the current media fields.
 function getMedia(): MediaItem[] {
   const mediaFields = document.querySelectorAll<HTMLElement>(".media-field");
   const mediaItems: MediaItem[] = [];
@@ -84,6 +86,7 @@ function renderEmptyPreview(previewContainer: HTMLElement): void {
   `;
 }
 
+// Updates the image preview for a single media field.
 function updateMediaPreview(mediaField: HTMLElement): void {
   const urlInput = mediaField.querySelector<HTMLInputElement>(
     'input[name^="image-url-"]',
@@ -155,6 +158,7 @@ function initializeAllMediaPreviews(): void {
   });
 }
 
+// Renumbers media field labels and IDs after a field is removed.
 function renumberMediaFields(): void {
   const mediaFields = document.querySelectorAll<HTMLElement>(".media-field");
 
@@ -260,6 +264,7 @@ function createMediaField(index: number): string {
   `;
 }
 
+// Sets up add/remove actions and previews for the media gallery fields.
 function initializeMediaGallery(): void {
   const addImageButton =
     document.querySelector<HTMLButtonElement>("#add-image-button");
