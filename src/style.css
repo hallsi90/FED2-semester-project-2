@@ -18,7 +18,7 @@
   --color-warning: #ea580c;
 }
 
-/* Custom styles for native date and time inputs (for tablet and phone) */
+/* Helps the native datetime-local input fit better on mobile and tablet. */
 @layer components {
   .native-datetime-input {
     display: block;

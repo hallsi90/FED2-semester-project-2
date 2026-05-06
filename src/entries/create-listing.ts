@@ -380,6 +380,7 @@ if (app) {
       });
 
       const now = new Date();
+      // Formats the current local date and time for the datetime-local input.
       const localDateTime = new Date(
         now.getTime() - now.getTimezoneOffset() * 60000,
       )
