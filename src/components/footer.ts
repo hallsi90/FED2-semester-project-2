@@ -44,9 +44,13 @@ export function createFooter(): string {
             </p>
 
             <form class="flex flex-col gap-3 sm:flex-row md:flex-col xl:flex-row">
+              <label for="newsletter-email" class="sr-only">Email address</label>
               <input
+                id="newsletter-email"
+                name="newsletter-email"
                 type="email"
                 placeholder="Your email"
+                autocomplete="email"
                 class="w-full rounded-xl border border-border-neutral bg-white px-4 py-3 text-base text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-action"
               />
               <button
