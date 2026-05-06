@@ -141,15 +141,15 @@ export function validateCreateListingForm(
   }
 
   if (!values.endsAt.trim()) {
-    errors.endsAt = "End date is required.";
+    errors.endsAt = "End date and time are required.";
   } else {
     const selectedDate = new Date(values.endsAt);
     const now = new Date();
 
     if (Number.isNaN(selectedDate.getTime())) {
-      errors.endsAt = "Enter a valid end date.";
+      errors.endsAt = "Enter a valid end date and time.";
     } else if (selectedDate <= now) {
-      errors.endsAt = "End date must be in the future.";
+      errors.endsAt = "End date and time must be in the future.";
     }
   }
 

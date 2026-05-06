@@ -152,19 +152,44 @@ export function createCreateListingPage(): string {
           </div>
 
           <div class="space-y-2">
-            <label for="ends-at" class="${formStyles.label}">
-              End date
-            </label>
-            <input
-              id="ends-at"
-              name="ends-at"
-              type="datetime-local"
-              class="${formStyles.input}"
-              aria-describedby="ends-at-error ends-at-helper"
-              required
-            />
+            <fieldset class="space-y-3">
+              <legend class="${formStyles.label}">
+                Auction end
+              </legend>
+
+              <div class="grid gap-3 sm:grid-cols-2">
+                <div class="space-y-2">
+                  <label for="ends-at-date" class="${formStyles.label}">
+                    Date
+                  </label>
+                  <input
+                    id="ends-at-date"
+                    name="ends-at-date"
+                    type="date"
+                    class="${formStyles.input}"
+                    aria-describedby="ends-at-error ends-at-helper"
+                    required
+                  />
+                </div>
+
+                <div class="space-y-2">
+                  <label for="ends-at-time" class="${formStyles.label}">
+                    Time
+                  </label>
+                  <input
+                    id="ends-at-time"
+                    name="ends-at-time"
+                    type="time"
+                    class="${formStyles.input}"
+                    aria-describedby="ends-at-error ends-at-helper"
+                    required
+                  />
+                </div>
+              </div>
+            </fieldset>
+
             <p id="ends-at-helper" class="${formStyles.helperText}">
-              Choose a future date and time for when the auction should end.
+              Choose a date and time for when the auction ends.
             </p>
             <p
               id="ends-at-error"
