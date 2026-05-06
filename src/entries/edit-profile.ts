@@ -34,6 +34,7 @@ function initializeNavigation(): void {
   initializeScrollToTop();
 }
 
+// Renders the loading state while the edit profile form is being prepared.
 function renderLoadingState(): void {
   if (!app) {
     return;
@@ -49,6 +50,7 @@ function renderLoadingState(): void {
   initializeNavigation();
 }
 
+// Renders a page-level error state for the edit profile page.
 function renderErrorState(message: string): void {
   if (!app) {
     return;
@@ -86,6 +88,7 @@ function showFieldError(
   errorElement.classList.remove("hidden");
 }
 
+// Renders the edit profile page and initializes the form handling.
 async function renderEditProfilePage(): Promise<void> {
   if (!app) {
     return;

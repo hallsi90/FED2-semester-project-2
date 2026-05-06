@@ -1,4 +1,5 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
+import { ROUTES } from "../constants/routes";
 import type { Profile } from "../types/api";
 
 // Creates the edit profile page layout.
@@ -130,7 +131,7 @@ export function createEditProfilePage(profile: Profile): string {
               Save changes
             </button>
 
-            <a href="/profile/" class="${buttonStyles.secondary}">
+            <a href="${ROUTES.profile}" class="${buttonStyles.secondary}">
               Cancel
             </a>
           </div>
