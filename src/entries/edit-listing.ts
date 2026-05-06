@@ -37,6 +37,7 @@ function initializeNavigation(): void {
   initializeScrollToTop();
 }
 
+// Returns the listing ID from the current URL.
 function getListingIdFromUrl(): string | null {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
@@ -77,6 +78,7 @@ function renderErrorState(message: string): void {
   document.title = "Edit listing unavailable | Auction House";
 }
 
+// Returns a cleaned array of tags from the comma-separated tags input.
 function getTags(tagsValue: string): string[] {
   return tagsValue
     .split(",")
@@ -84,6 +86,7 @@ function getTags(tagsValue: string): string[] {
     .filter((tag) => tag.length > 0);
 }
 
+// Collects valid image entries from the current media fields.
 function getMedia(): MediaItem[] {
   const mediaFields = document.querySelectorAll<HTMLElement>(".media-field");
   const mediaItems: MediaItem[] = [];
@@ -120,6 +123,7 @@ function renderEmptyPreview(previewContainer: HTMLElement): void {
   `;
 }
 
+// Updates the image preview for a single media field.
 function updateMediaPreview(mediaField: HTMLElement): void {
   const urlInput = mediaField.querySelector<HTMLInputElement>(
     'input[name^="image-url-"]',
@@ -192,6 +196,7 @@ function initializeAllMediaPreviews(): void {
   });
 }
 
+// Renumbers media field labels and IDs after a field is removed.
 function renumberMediaFields(): void {
   const mediaFields = document.querySelectorAll<HTMLElement>(".media-field");
 
@@ -310,6 +315,7 @@ function updateAddImageButtonText(): void {
     mediaFields.length === 0 ? "Add image" : "Add another image";
 }
 
+// Sets up add/remove actions and previews for the media gallery fields.
 function initializeMediaGallery(): void {
   const addImageButton =
     document.querySelector<HTMLButtonElement>("#add-image-button");
@@ -366,6 +372,7 @@ function initializeMediaGallery(): void {
   });
 }
 
+// Sets up the delete listing modal and delete action.
 function initializeDeleteListingButton(listingId: string): void {
   const accessToken = getAccessToken();
   const apiKey = getApiKey();
@@ -487,6 +494,7 @@ function showFieldError(
   errorElement.classList.remove("hidden");
 }
 
+// Sets up the edit listing form validation and submit handling.
 function initializeEditListingForm(listingId: string): void {
   const accessToken = getAccessToken();
   const apiKey = getApiKey();
@@ -624,6 +632,7 @@ function initializeEditListingForm(listingId: string): void {
   });
 }
 
+// Renders the edit listing page and initializes related interactions.
 async function renderEditListingPage(): Promise<void> {
   if (!app) {
     return;
@@ -632,7 +641,7 @@ async function renderEditListingPage(): Promise<void> {
   const listingId = getListingIdFromUrl();
 
   if (!listingId) {
-    renderErrorState("No listing id was provided.");
+    renderErrorState("No listing ID was provided.");
     return;
   }
 

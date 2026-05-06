@@ -1,6 +1,7 @@
 import { buttonStyles, cardStyles, formStyles } from "../components/ui";
 import { formatDateTime } from "../utils/helpers";
 import type { Listing } from "../types/api";
+import { ROUTES } from "../constants/routes";
 
 // Creates the edit listing page layout.
 export function createEditListingPage(listing: Listing): string {
@@ -207,7 +208,7 @@ export function createEditListingPage(listing: Listing): string {
               Save changes
             </button>
 
-            <a href="/profile/" class="${buttonStyles.secondary}">
+            <a href="${ROUTES.profile}" class="${buttonStyles.secondary}">
               Cancel
             </a>
 
