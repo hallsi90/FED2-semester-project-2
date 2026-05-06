@@ -25,6 +25,7 @@ function initializeNavigation(): void {
   initializeScrollToTop();
 }
 
+// Returns the current search term from the listings search input.
 function getSearchTerm(): string {
   const searchInput = document.querySelector<HTMLInputElement>("#search");
   return searchInput?.value.trim().toLowerCase() || "";
@@ -40,6 +41,7 @@ function getSelectedSort(): string {
   return sortSelect?.value || "newest";
 }
 
+// Filters listings by search term and selected category.
 function filterListings(
   listings: Listing[],
   searchTerm: string,
@@ -124,6 +126,7 @@ function renderErrorState(message: string): void {
   initializeNavigation();
 }
 
+// Applies the current search, category, and sort controls to the listings.
 function applyListingControls(): void {
   const searchTerm = getSearchTerm();
   const selectedCategory = getSelectedCategory();

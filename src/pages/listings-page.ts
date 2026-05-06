@@ -5,7 +5,7 @@ import { createSearchBar } from "../components/search-bar";
 import { formStyles } from "../components/ui";
 import type { Listing } from "../types/api";
 
-// Creates the main listings page layout with a page intro, search, sort, filter controls, and a listings grid.
+// Creates the listings page layout.
 export function createListingsPage(listings: Listing[]): string {
   const listingsMarkup =
     listings.length > 0
