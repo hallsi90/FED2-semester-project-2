@@ -38,11 +38,13 @@ function initializeNavigation(): void {
   initializeScrollToTop();
 }
 
+// Returns the listing ID from the current URL.
 function getListingIdFromUrl(): string | null {
   const params = new URLSearchParams(window.location.search);
   return params.get("id");
 }
 
+// Clears the active live countdown interval.
 function clearLiveCountdown(): void {
   if (countdownIntervalId !== null) {
     window.clearInterval(countdownIntervalId);
@@ -50,6 +52,7 @@ function clearLiveCountdown(): void {
   }
 }
 
+// Starts the live countdown updates for listing countdown elements.
 function initializeLiveCountdown(): void {
   clearLiveCountdown();
 
@@ -105,6 +108,7 @@ function showFieldError(
   errorElement.classList.remove("hidden");
 }
 
+// Sets up the bid form validation and submit handling.
 async function initializeBidForm(): Promise<void> {
   const form = document.querySelector<HTMLFormElement>("#bid-form");
   const message = document.querySelector<HTMLDivElement>("#bid-message");
@@ -143,7 +147,7 @@ async function initializeBidForm(): Promise<void> {
     }
 
     if (!listingId) {
-      message.textContent = "Listing id is missing.";
+      message.textContent = "Listing ID is missing.";
       message.className = alertStyles.error;
       message.setAttribute("role", "alert");
       return;
@@ -270,6 +274,7 @@ function renderErrorState(message: string): void {
   document.title = "Listing unavailable | Auction House";
 }
 
+// Renders the single listing page and initializes related interactions.
 async function renderListingPage(): Promise<void> {
   if (!app) {
     return;
@@ -278,7 +283,7 @@ async function renderListingPage(): Promise<void> {
   const listingId = getListingIdFromUrl();
 
   if (!listingId) {
-    renderErrorState("No listing id was provided.");
+    renderErrorState("No listing ID was provided.");
     return;
   }
 
