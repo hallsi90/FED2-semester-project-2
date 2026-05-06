@@ -17,3 +17,31 @@
   --color-error: #dc2626;
   --color-warning: #ea580c;
 }
+
+@layer components {
+  .native-datetime-input {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    font: inherit;
+  }
+
+  .native-datetime-input::-webkit-date-and-time-value {
+    min-height: 1.5rem;
+    text-align: left;
+  }
+
+  .native-datetime-input::-webkit-datetime-edit {
+    min-width: 0;
+    padding: 0;
+  }
+
+  .native-datetime-input::-webkit-datetime-edit-fields-wrapper {
+    min-width: 0;
+  }
+
+  .native-datetime-input::-webkit-calendar-picker-indicator {
+    opacity: 1;
+  }
+}

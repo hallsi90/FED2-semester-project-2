@@ -76,14 +76,6 @@ function getMedia(): MediaItem[] {
   return mediaItems;
 }
 
-function getEndsAtValue(dateValue: string, timeValue: string): string {
-  if (!dateValue.trim() || !timeValue.trim()) {
-    return "";
-  }
-
-  return `${dateValue}T${timeValue}`;
-}
-
 function renderEmptyPreview(previewContainer: HTMLElement): void {
   previewContainer.innerHTML = `
     <div class="flex h-48 items-center justify-center bg-surface px-4 text-center text-sm text-text-muted">
@@ -359,10 +351,7 @@ if (app) {
     const descriptionInput =
       document.querySelector<HTMLTextAreaElement>("#description");
     const tagsInput = document.querySelector<HTMLInputElement>("#tags");
-    const endsAtDateInput =
-      document.querySelector<HTMLInputElement>("#ends-at-date");
-    const endsAtTimeInput =
-      document.querySelector<HTMLInputElement>("#ends-at-time");
+    const endsAtInput = document.querySelector<HTMLInputElement>("#ends-at");
 
     const titleError =
       document.querySelector<HTMLParagraphElement>("#title-error");
@@ -377,8 +366,7 @@ if (app) {
       titleInput &&
       descriptionInput &&
       tagsInput &&
-      endsAtDateInput &&
-      endsAtTimeInput &&
+      endsAtInput &&
       titleError &&
       endsAtError &&
       mediaError
@@ -387,16 +375,18 @@ if (app) {
         clearFieldError(titleInput, titleError);
       });
 
-      endsAtDateInput.addEventListener("input", () => {
-        clearFieldError(endsAtDateInput, endsAtError);
+      endsAtInput.addEventListener("input", () => {
+        clearFieldError(endsAtInput, endsAtError);
       });
 
-      endsAtTimeInput.addEventListener("input", () => {
-        clearFieldError(endsAtTimeInput, endsAtError);
-      });
+      const now = new Date();
+      const localDateTime = new Date(
+        now.getTime() - now.getTimezoneOffset() * 60000,
+      )
+        .toISOString()
+        .slice(0, 16);
 
-      const today = new Date().toISOString().split("T")[0];
-      endsAtDateInput.min = today;
+      endsAtInput.min = localDateTime;
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -405,20 +395,15 @@ if (app) {
         message.className = "hidden";
 
         clearFieldError(titleInput, titleError);
-        clearFieldError(endsAtDateInput, endsAtError);
-        clearFieldError(endsAtTimeInput, endsAtError);
+        clearFieldError(endsAtInput, endsAtError);
         mediaError.textContent = "";
         mediaError.classList.add("hidden");
 
         const media = getMedia();
-        const endsAtValue = getEndsAtValue(
-          endsAtDateInput.value,
-          endsAtTimeInput.value,
-        );
 
         const validationErrors = validateCreateListingForm({
           title: titleInput.value,
-          endsAt: endsAtValue,
+          endsAt: endsAtInput.value,
           media: media.map((item) => ({
             url: item.url || "",
             alt: item.alt || "",
@@ -435,12 +420,7 @@ if (app) {
           }
 
           if (validationErrors.endsAt) {
-            showFieldError(
-              endsAtDateInput,
-              endsAtError,
-              validationErrors.endsAt,
-            );
-            endsAtTimeInput.setAttribute("aria-invalid", "true");
+            showFieldError(endsAtInput, endsAtError, validationErrors.endsAt);
           }
 
           if (validationErrors.media) {
@@ -455,11 +435,7 @@ if (app) {
           if (validationErrors.title) {
             titleInput.focus();
           } else if (validationErrors.endsAt) {
-            if (!endsAtDateInput.value) {
-              endsAtDateInput.focus();
-            } else {
-              endsAtTimeInput.focus();
-            }
+            endsAtInput.focus();
           }
 
           return;
@@ -470,7 +446,7 @@ if (app) {
           description: descriptionInput.value.trim() || undefined,
           tags: getTags(tagsInput.value),
           media: media.length > 0 ? media : undefined,
-          endsAt: new Date(endsAtValue).toISOString(),
+          endsAt: new Date(endsAtInput.value).toISOString(),
         };
 
         try {

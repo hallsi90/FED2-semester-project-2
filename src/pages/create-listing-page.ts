@@ -152,44 +152,23 @@ export function createCreateListingPage(): string {
           </div>
 
           <div class="space-y-2">
-            <fieldset class="space-y-3">
-              <legend class="${formStyles.label}">
-                Auction end
-              </legend>
+            <label for="ends-at" class="${formStyles.label}">
+              Auction end
+            </label>
 
-              <div class="grid gap-3 sm:grid-cols-2">
-                <div class="space-y-2">
-                  <label for="ends-at-date" class="${formStyles.label}">
-                    Date
-                  </label>
-                  <input
-                    id="ends-at-date"
-                    name="ends-at-date"
-                    type="date"
-                    class="${formStyles.input}"
-                    aria-describedby="ends-at-error ends-at-helper"
-                    required
-                  />
-                </div>
-
-                <div class="space-y-2">
-                  <label for="ends-at-time" class="${formStyles.label}">
-                    Time
-                  </label>
-                  <input
-                    id="ends-at-time"
-                    name="ends-at-time"
-                    type="time"
-                    class="${formStyles.input}"
-                    aria-describedby="ends-at-error ends-at-helper"
-                    required
-                  />
-                </div>
-              </div>
-            </fieldset>
+            <div class="overflow-hidden rounded-[10px]">
+              <input
+                id="ends-at"
+                name="ends-at"
+                type="datetime-local"
+                class="${formStyles.input} native-datetime-input"
+                aria-describedby="ends-at-error ends-at-helper"
+                required
+              />
+            </div>
 
             <p id="ends-at-helper" class="${formStyles.helperText}">
-              Choose a date and time for when the auction ends.
+              Choose a future date and time for when the auction ends.
             </p>
             <p
               id="ends-at-error"
