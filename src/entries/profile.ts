@@ -38,6 +38,7 @@ function initializePage(): void {
   initializeScrollToTop();
 }
 
+// Returns the profile name from the current URL, if provided.
 function getProfileNameFromUrl(): string | null {
   const params = new URLSearchParams(window.location.search);
   return params.get("name");
@@ -77,6 +78,7 @@ function renderErrorState(message: string): void {
   document.title = "Profile unavailable | Auction House";
 }
 
+// Returns unique listing IDs from the user's bids.
 function getUniqueBidListingIds(bids: Bid[]): string[] {
   const uniqueIds = new Set<string>();
 
@@ -89,6 +91,7 @@ function getUniqueBidListingIds(bids: Bid[]): string[] {
   return Array.from(uniqueIds);
 }
 
+// Returns unique listing IDs from a listings array.
 function getUniqueListingIds(listings: Listing[]): string[] {
   const uniqueIds = new Set<string>();
 
@@ -101,6 +104,7 @@ function getUniqueListingIds(listings: Listing[]): string[] {
   return Array.from(uniqueIds);
 }
 
+// Fetches full listing data for the provided listing IDs.
 async function getListingsWithCounts(listingIds: string[]): Promise<Listing[]> {
   const listings = await Promise.all(
     listingIds.map((listingId) => getListingById(listingId)),
@@ -109,6 +113,7 @@ async function getListingsWithCounts(listingIds: string[]): Promise<Listing[]> {
   return listings;
 }
 
+// Renders the profile page and initializes related interactions.
 async function renderProfilePage(): Promise<void> {
   if (!app) {
     return;
