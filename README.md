@@ -93,7 +93,6 @@ The project focused on planning, developing, and documenting a high-quality fron
 ```text
 FED2-semester-project-2/
 ├── docs/
-│   ├── ai-usage-log.md
 │   ├── api-test-notes.md
 │   └── images/
 ├── listing/
@@ -280,7 +279,6 @@ The final project review included:
 The repository also includes supporting project documentation in the docs folder:
 
 - `docs/api-test-notes.md`
-- `docs/ai-usage-log.md`
 
 ---
 
@@ -301,4 +299,4 @@ ingelinn@hotmail.com
 
 - Noroff for the assignment brief and provided Auction House API
 - Noroff documentation for API reference and implementation support
-- ChatGPT was used as a support tool during planning, implementation discussions, debugging, testing review, and documentation. Specific usage is documented in `docs/ai-usage-log.md`
+- ChatGPT was used as a support tool during planning, implementation discussions, debugging, testing review, and documentation.
