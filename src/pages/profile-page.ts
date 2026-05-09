@@ -215,7 +215,7 @@ export function createProfilePage(data: ProfilePageData): string {
                 <div class="absolute right-3 top-3 md:right-4 md:top-4">
                   <a
                     href="${ROUTES.profileEdit}"
-                    class="inline-flex items-center justify-center rounded-lg bg-white px-3 py-2 text-sm font-medium text-text-main shadow-sm transition hover:bg-background"
+                    class="inline-flex items-center justify-center rounded-lg border border-border-neutral bg-white px-3 py-2 text-sm font-medium text-text-main shadow-sm transition hover:border-primary-action hover:text-primary-action"
                   >
                     Edit profile
                   </a>
