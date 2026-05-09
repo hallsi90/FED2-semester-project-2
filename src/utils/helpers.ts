@@ -2,7 +2,7 @@
 export function formatDateTime(dateString: string): string {
   const date = new Date(dateString);
 
-  return new Intl.DateTimeFormat("nb-NO", {
+  return new Intl.DateTimeFormat("en-GB", {
     day: "numeric",
     month: "short",
     year: "numeric",
