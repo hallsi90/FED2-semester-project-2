@@ -108,7 +108,7 @@ export function createRegisterPage(): string {
           href="${ROUTES.login}"
           class="font-semibold text-primary-action transition hover:text-primary-action-hover"
         >
-          Log in here
+          Log in here.
         </a>
       </p>
     </section>

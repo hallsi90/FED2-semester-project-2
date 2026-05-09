@@ -49,7 +49,7 @@ export function createFooter(): string {
                 id="newsletter-email"
                 name="newsletter-email"
                 type="email"
-                placeholder="Your email"
+                placeholder="email@example.com"
                 autocomplete="email"
                 class="w-full rounded-xl border border-border-neutral bg-white px-4 py-3 text-base text-text-main outline-none transition placeholder:text-text-muted focus:border-primary-action"
               />
