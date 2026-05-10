@@ -99,6 +99,8 @@ export function createProfilePage(data: ProfilePageData): string {
             const listingUrl = `${ROUTES.singleListing}?id=${listing.id}`;
             const editUrl = `${ROUTES.editListing}?id=${listing.id}`;
             const countdownTone = getCountdownTone(listing.endsAt);
+            const isEnded = new Date(listing.endsAt).getTime() <= Date.now();
+            const endDateLabel = isEnded ? "Ended" : "Ends";
 
             return `
               <article class="${cardStyles.interactive} flex h-full flex-col">
@@ -124,7 +126,7 @@ export function createProfilePage(data: ProfilePageData): string {
                       ${title}
                     </h3>
                     <p class="text-sm font-medium text-primary-dark">
-                      Ends ${formatDateTime(listing.endsAt)}
+                      ${endDateLabel} ${formatDateTime(listing.endsAt)}
                     </p>
                     <p class="text-sm ${countdownTone}">
                       ${formatTimeRemaining(listing.endsAt)}
@@ -259,7 +261,7 @@ export function createProfilePage(data: ProfilePageData): string {
                       Credits
                     </p>
                     <p class="mt-2 text-2xl font-bold text-primary-action">
-                      ${credits}
+                      ${credits.toLocaleString("en-GB")}
                     </p>
                   </div>
                 `
@@ -304,7 +306,7 @@ export function createProfilePage(data: ProfilePageData): string {
                       Credits
                     </p>
                     <p class="mt-2 text-3xl font-bold text-primary-action">
-                      ${credits}
+                      ${credits.toLocaleString("en-GB")}
                     </p>
                   </div>
                 `

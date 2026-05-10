@@ -24,6 +24,8 @@ export function createListingCard(listing: Listing): string {
   const bidCount = listing._count?.bids ?? 0;
   const listingUrl = `${ROUTES.singleListing}?id=${listing.id}`;
   const countdownTone = getCountdownTone(listing.endsAt);
+  const isEnded = new Date(listing.endsAt).getTime() <= Date.now();
+  const endDateLabel = isEnded ? "Ended" : "Ends";
 
   return `
     <article class="h-full">
@@ -54,7 +56,7 @@ export function createListingCard(listing: Listing): string {
               ${title}
             </h2>
             <p class="text-sm font-medium text-primary-dark">
-              Ends ${formatDateTime(listing.endsAt)}
+              ${endDateLabel} ${formatDateTime(listing.endsAt)}
             </p>
             <p class="text-sm ${countdownTone}">
               ${formatTimeRemaining(listing.endsAt)}

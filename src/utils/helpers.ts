@@ -1,4 +1,4 @@
-// Formats ISO date strings into a readable Norwegian date and time.
+// Formats ISO date strings into a readable date and time.
 export function formatDateTime(dateString: string): string {
   const date = new Date(dateString);
 
