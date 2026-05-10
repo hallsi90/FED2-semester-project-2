@@ -7,8 +7,6 @@ export const buttonStyles = {
     "inline-flex cursor-pointer items-center justify-center rounded-xl border border-border-neutral bg-white px-4 py-2 text-base font-semibold text-primary-dark transition hover:border-primary-action hover:bg-background hover:text-primary-action focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2",
   danger:
     "inline-flex cursor-pointer items-center justify-center rounded-xl border border-error bg-error px-4 py-2 text-base font-semibold text-white transition hover:bg-surface hover:text-error focus:outline-none focus:ring-2 focus:ring-error focus:ring-offset-2",
-  ghost:
-    "inline-flex cursor-pointer items-center justify-center rounded-xl px-4 py-2 text-base font-semibold text-primary-action transition hover:bg-background focus:outline-none focus:ring-2 focus:ring-primary-action focus:ring-offset-2",
   remove:
     "inline-flex cursor-pointer items-center justify-center rounded-lg border border-error bg-surface px-3 py-2 text-sm font-semibold text-error transition hover:bg-error hover:text-white focus:outline-none focus:ring-2 focus:ring-error focus:ring-offset-2",
 } as const;
