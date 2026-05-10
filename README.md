@@ -12,13 +12,21 @@ Auction House is a multi-page auction web application built with **Vite**, **Typ
 
 [GitHub Repository](https://github.com/hallsi90/FED2-semester-project-2)
 
+## Design
+
+[Figma design](https://www.figma.com/design/t4jle0I4FABhP7BkHjhd3p/Semester-Project-2?node-id=0-1&p=f&t=D2L2DkL7sjvxUydD-0)
+
+## Planning
+
+[Project board](https://github.com/users/hallsi90/projects/8)
+
 ---
 
 ## Description
 
 This project was built as Semester Project 2. The goal was to develop a responsive front-end application for the Noroff Auction House API, where users can register, create listings, place bids, and take part in auctions through a dynamic and interactive user experience.
 
-The project focused on planning, developing, and documenting a high-quality front-end solution that integrates with the provided back-end API. The application supports both visitors and authenticated users, with features for browsing listings, managing auctions, and updating profile information.
+The project focused on planning, designing, developing and testing a high-quality front-end solution that integrates with the provided back-end API. The application supports both visitors and authenticated users, with features for browsing listings, managing auctions, bidding, and updating profile information.
 
 ### Visitors can:
 
@@ -47,7 +55,7 @@ The project focused on planning, developing, and documenting a high-quality fron
 
 ## Built with
 
-- [Vite](https://vitejs.dev/)
+- [Vite](https://vite.dev/)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Noroff Auction House API](https://docs.noroff.dev/docs/v2)
@@ -185,39 +193,50 @@ npx tsc --noEmit
 
 ## API
 
-This project uses the Noroff Auction House API.
+This project uses version 2 of the Noroff API, including shared authentication endpoints and Auction House endpoints.
 
-Main endpoints used:
+- [Noroff API v2 documentation](https://docs.noroff.dev/docs/v2)
+- [Authentication documentation](https://docs.noroff.dev/docs/v2/authentication)
+- [Register endpoint documentation](https://docs.noroff.dev/docs/v2/auth/register)
+- [Login endpoint documentation](https://docs.noroff.dev/docs/v2/auth/login)
+- [API key documentation](https://docs.noroff.dev/docs/v2/auth/api-key)
+- [Auction House listings documentation](https://docs.noroff.dev/docs/v2/auction-house/listings)
+- [Auction House profiles documentation](https://docs.noroff.dev/docs/v2/auction-house/profiles)
 
-- POST /auth/register
-- POST /auth/login
-- POST /auth/create-api-key
-- GET /auction/listings?\_active=true
-- GET /auction/listings/{id}?\_seller=true&\_bids=true
-- POST /auction/listings
-- PUT /auction/listings/{id}
-- DELETE /auction/listings/{id}
-- POST /auction/listings/{id}/bids
-- GET /auction/profiles/{name}
-- GET /auction/profiles/{name}?\_wins=true
-- GET /auction/profiles/{name}/listings
-- GET /auction/profiles/{name}/bids?\_listings=true
-- PUT /auction/profiles/{name}
+Main endpoint patterns used:
+
+- `POST /auth/register`
+- `POST /auth/login`
+- `POST /auth/create-api-key`
+- `GET /auction/listings?_active=true`
+- `GET /auction/listings/{id}?_seller=true&_bids=true`
+- `POST /auction/listings`
+- `PUT /auction/listings/{id}`
+- `DELETE /auction/listings/{id}`
+- `POST /auction/listings/{id}/bids`
+- `GET /auction/profiles/{name}`
+- `GET /auction/profiles/{name}?_wins=true`
+- `GET /auction/profiles/{name}/listings`
+- `GET /auction/profiles/{name}/bids?_listings=true`
+- `PUT /auction/profiles/{name}`
 
 ---
 
 ## Technical choices
 
-**Vite multi-page setup**
-This project uses Vite as a multi-page application instead of a single-page application. Each page has its own HTML entry and TypeScript entry file.
+**Vite multi-page setup**  
+This project uses Vite with multiple HTML entry points. This made it possible to structure the application as separate pages while still using shared TypeScript modules, reusable components, and a modern build workflow.
 
-**TypeScript and reusable structure**
+**TypeScript and reusable structure**  
 TypeScript was used to create shared types, reusable API helpers, route constants, storage helpers, validation functions, and UI/state components.
 
-**Tailwind CSS**
+**Tailwind CSS**  
 Tailwind CSS was used for styling, with reusable class groups stored in shared UI objects for consistency across pages.
 
-**Shared states**
+**Reusable API client**  
+A shared API client was used to centralize the base URL, headers, authentication token, API key handling, response parsing, and API error messages.
+
+**Shared states**  
 The application includes reusable UI for:
 
 - loading states
@@ -261,6 +280,7 @@ The final project review included:
 
 ## Known limitations
 
+- The auction end date is shown as read-only on the edit listing page because the API does not update `endsAt` after a listing is created
 - Category filters are currently hardcoded rather than generated dynamically from listing tags
 - Footer links and newsletter form are present as UI elements only
 
@@ -269,8 +289,8 @@ The final project review included:
 ## Future improvements
 
 - Add full keyboard focus trapping to the delete confirmation modal
-- Add pagination or load-more functionality for listings
-- Expand profile statistics and activity views
+- Add pagination or a load-more button so users can browse larger sets of listings more easily
+- Expand the profile page with more activity summaries, such as recent bids, active listings, and won auction statistics
 
 ---
 
@@ -299,4 +319,4 @@ ingelinn@hotmail.com
 
 - Noroff for the assignment brief and provided Auction House API
 - Noroff documentation for API reference and implementation support
-- ChatGPT was used as a support tool during planning, implementation discussions, debugging, testing review, and documentation.
+- ChatGPT was used as a support tool for explaining concepts, debugging support, reviewing code I had written, improving structure/readability, testing review, and documentation wording. Any AI-assisted suggestions were reviewed, adapted, tested, and integrated by me.
